@@ -1,7 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import frc.robot.subsystems.swerve.MathStuff;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.ctre.phoenix.sensors.CANCoder;

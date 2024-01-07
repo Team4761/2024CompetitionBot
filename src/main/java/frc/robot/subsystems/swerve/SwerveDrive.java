@@ -30,10 +30,10 @@ public class SwerveDrive extends SubsystemBase {
     SwerveModuleState[] targetStates = new SwerveModuleState[4];
 
     // motors offset in degrees && i think negative is ccw
-    private SwerveModuleNeo m_frontLeftModule  = new SwerveModuleNeo(3 , 1 , 2 , -98.5, -1.0,  1.0);
-    private SwerveModuleNeo m_frontRightModule = new SwerveModuleNeo(4 , 6 , 4 , -6, -1.0, -1.0);
-    private SwerveModuleNeo m_backLeftModule   = new SwerveModuleNeo(7 , 8 ,3 , 112, -1.0, -1.0);
-    private SwerveModuleNeo m_backRightModule  = new SwerveModuleNeo(5 , 2 , 1 , -53, -1.0,  1.0);
+    private SwerveModuleNeo m_frontLeftModule  = new SwerveModuleNeo(1 , 4 , 1 , -98.5, -1.0,  1.0);
+    private SwerveModuleNeo m_frontRightModule = new SwerveModuleNeo(8 , 5 , 4 , -6, -1.0, -1.0);
+    private SwerveModuleNeo m_backLeftModule   = new SwerveModuleNeo(2 , 3 ,3 , 112, -1.0, -1.0);
+    private SwerveModuleNeo m_backRightModule  = new SwerveModuleNeo(6 , 7 , 2 , -53, -1.0,  1.0);
 
     private SwerveModulePosition[] m_swervePositions= new SwerveModulePosition[] {
         m_frontLeftModule.getPosition(), 
