@@ -5,18 +5,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 // field oriented, move relative to current position, forward should be -y, left +x
 public class SwerveGoCartesianF extends CommandBase {
-    private SwerveDrive m_swerve;
+    private SwerveDriveSubsystem m_swerve;
     private Translation2d target;
     private double Pvalue = 0;
     private double vLimit = 0.7;
 
-    public SwerveGoCartesianF(SwerveDrive swerve, Translation2d trans) {
+    public SwerveGoCartesianF(SwerveDriveSubsystem swerve, Translation2d trans) {
         m_swerve = swerve;
         addRequirements(m_swerve);
         target = m_swerve.getPose().getTranslation().plus(trans);
     }
     // speedlimit 0.0-1.0 i think
-    public SwerveGoCartesianF(SwerveDrive swerve, Translation2d trans, double speedLimit) {
+    public SwerveGoCartesianF(SwerveDriveSubsystem swerve, Translation2d trans, double speedLimit) {
         m_swerve = swerve;
         addRequirements(m_swerve);
         target = m_swerve.getPose().getTranslation().plus(trans);

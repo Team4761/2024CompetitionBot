@@ -5,10 +5,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 // turn x degrees, not to a gyro degree
 public class SwerveTurnDegrees extends CommandBase {
-    private SwerveDrive m_swerve;
+    private SwerveDriveSubsystem m_swerve;
     private Rotation2d target;
 
-    public SwerveTurnDegrees(SwerveDrive swerve, Rotation2d rot) {
+    public SwerveTurnDegrees(SwerveDriveSubsystem swerve, Rotation2d rot) {
         m_swerve = swerve;
         addRequirements(m_swerve);
         target = rot;

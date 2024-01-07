@@ -8,16 +8,20 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
-public class VisionSubSystem extends SubsystemBase {
+
+public class VisionSubsystem extends SubsystemBase {
 
   //**ALL ANGLES IN RADIANS ALL DISTANCES IN METERS**//
   //PhotonCamera mCamera;
-  private static final VisionSubSystem INSTANCE = new VisionSubSystem();
+  private static final VisionSubsystem INSTANCE = new VisionSubsystem();
+  public static VisionSubsystem getInstance(){
+    return INSTANCE;
+  }
   double mCameraHeight = .19;
   double mCameraPitch = Units.degreesToRadians(30);
 
   private boolean mDriverMode = false;
-  public VisionSubSystem(){
+  public VisionSubsystem(){
     //Replace with name of cam
     // mCamera = new PhotonCamera("Main");
   }
@@ -27,9 +31,6 @@ public class VisionSubSystem extends SubsystemBase {
     
   }
 
-  public static VisionSubSystem getInstance(){
-    return INSTANCE;
-  }
 
   // public int getBestTagID(){
   //   return mCamera.getLatestResult().getBestTarget().getFiducialId();

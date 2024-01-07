@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import frc.robot.subsystems.swerve.SwerveModuleTalon;
+import frc.robot.Robot;
 import frc.robot.subsystems.swerve.SwerveModuleNeo;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -20,20 +21,20 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class SwerveDrive extends SubsystemBase {
+public class SwerveDriveSubsystem extends SubsystemBase {
     // inches rn
-    private static final SwerveDrive INSTANCE = new SwerveDrive(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
-    public static SwerveDrive getInstance() {
+    private static final SwerveDriveSubsystem INSTANCE = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
+    public static SwerveDriveSubsystem getInstance() {
         return INSTANCE;
     }
 
     SwerveModuleState[] targetStates = new SwerveModuleState[4];
 
     // motors offset in degrees && i think negative is ccw
-    private SwerveModuleNeo m_frontLeftModule  = new SwerveModuleNeo(1 , 4 , 1 , -98.5, -1.0,  1.0);
-    private SwerveModuleNeo m_frontRightModule = new SwerveModuleNeo(8 , 5 , 4 , -6, -1.0, -1.0);
-    private SwerveModuleNeo m_backLeftModule   = new SwerveModuleNeo(2 , 3 ,3 , 112, -1.0, -1.0);
-    private SwerveModuleNeo m_backRightModule  = new SwerveModuleNeo(6 , 7 , 2 , -53, -1.0,  1.0);
+    private SwerveModuleNeo m_frontLeftModule  = Robot.getMap().swerve_frontLeftModule;
+    private SwerveModuleNeo m_frontRightModule = Robot.getMap().swerve_frontRightModule;
+    private SwerveModuleNeo m_backLeftModule   = Robot.getMap().swerve_backLeftModule;
+    private SwerveModuleNeo m_backRightModule  = Robot.getMap().swerve_backRightModule;
 
     private SwerveModulePosition[] m_swervePositions= new SwerveModulePosition[] {
         m_frontLeftModule.getPosition(), 
@@ -54,7 +55,7 @@ public class SwerveDrive extends SubsystemBase {
 
 
     // positions of the wheels relative to center (meters?)
-    public SwerveDrive (Translation2d fL, Translation2d fR, Translation2d bL, Translation2d bR) {
+    public SwerveDriveSubsystem (Translation2d fL, Translation2d fR, Translation2d bL, Translation2d bR) {
         m_kinematics = new SwerveDriveKinematics(fL, fR, bL, bR);
         m_pose = new Pose2d();
         m_odometry =  new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d(), m_swervePositions, m_pose);

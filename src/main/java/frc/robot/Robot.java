@@ -20,6 +20,9 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
+  private static RobotMap map = new RobotMap(); // Represents all physical objects on our robot
+  public static RobotMap getMap() { return map; }
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
