@@ -4,9 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.swerve.SwerveGoCartesianF;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -22,6 +26,7 @@ public class Robot extends TimedRobot {
 
   private static RobotMap map = new RobotMap(); // Represents all physical objects on our robot
   public static RobotMap getMap() { return map; }
+  public static XboxController controller = new XboxController(0);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -59,11 +64,15 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
+
+    CommandScheduler.getInstance().schedule(new SwerveGoCartesianF(map.swerve, new Translation2d(20, 20)));
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    CommandScheduler.getInstance().run();
+
     switch (m_autoSelected) {
       case kCustomAuto:
         // Put custom auto code here
@@ -79,9 +88,36 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {}
 
+
+  // Apply a deadzone for swerve
+  public static double deadzone (double value, double deadzone) {
+    if (Math.abs(value) > deadzone) {
+        if (value > 0.0) {
+            return (value - deadzone) / (1.0 - deadzone);
+        } else {
+            return (value + deadzone) / (1.0 - deadzone);
+        }
+    } else {
+        return 0.0;
+    }
+  }
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    // Controller Code
+    double xyCof = 0.75/Math.max(0.001, Math.sqrt(Math.pow(deadzone(controller.getLeftX(), 0.1), 2)+Math.pow(deadzone(controller.getLeftY(), 0.1), 2)));
+    map.swerve.swerveDriveF(xyCof*deadzone(controller.getLeftX(), 0.1)*(controller.getLeftTriggerAxis()+controller.getRightTriggerAxis()), -xyCof*deadzone(controller.getLeftY(), 0.1)*(controller.getLeftTriggerAxis()+controller.getRightTriggerAxis()), -deadzone(controller.getRightX(), 0.08));
+  
+    if(controller.getXButtonPressed()) {
+      map.swerve.zeroGyro();
+    }
+    if(controller.getYButtonPressed()) {
+      map.swerve.resetPose();
+    }
+
+    // Run any commands
+    CommandScheduler.getInstance().run();
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
