@@ -13,10 +13,11 @@ public class VisionSubsystem extends SubsystemBase {
 
   //**ALL ANGLES IN RADIANS ALL DISTANCES IN METERS**//
   //PhotonCamera mCamera;
-  private static final VisionSubsystem INSTANCE = new VisionSubsystem();
-  public static VisionSubsystem getInstance(){
-    return INSTANCE;
-  }
+  // Initialization has been moved to RobotMap
+  //private static final VisionSubsystem INSTANCE = new VisionSubsystem();
+  //public static VisionSubsystem getInstance(){
+  //  return INSTANCE;
+  //}
   double mCameraHeight = .19;
   double mCameraPitch = Units.degreesToRadians(30);
 

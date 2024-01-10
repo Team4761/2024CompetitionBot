@@ -23,10 +23,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveDriveSubsystem extends SubsystemBase {
     // inches rn
-    private static final SwerveDriveSubsystem INSTANCE = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
-    public static SwerveDriveSubsystem getInstance() {
-        return INSTANCE;
-    }
+    // Initialization of the subsystem has been moved to the robot map.
+    //private static final SwerveDriveSubsystem INSTANCE = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
+    //public static SwerveDriveSubsystem getInstance() {
+    //    return INSTANCE;
+    //}
 
     SwerveModuleState[] targetStates = new SwerveModuleState[4];
 
