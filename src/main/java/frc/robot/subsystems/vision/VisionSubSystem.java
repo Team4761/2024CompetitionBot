@@ -16,7 +16,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class VisionSubsystem extends SubsystemBase {
 
   //**ALL ANGLES IN RADIANS ALL DISTANCES IN METERS**//
-  //PhotonCamera mCamera;
+  PhotonCamera mCamera;
   // Initialization has been moved to RobotMap
   //private static final VisionSubsystem INSTANCE = new VisionSubsystem();
   //public static VisionSubsystem getInstance(){

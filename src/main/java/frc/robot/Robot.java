@@ -115,6 +115,9 @@ public class Robot extends TimedRobot {
       map.swerve.resetPose();
     }
 
+    if(controller.getAButtonPressed()){
+      map.vision.toString();
+    }
     // Run any commands
     CommandScheduler.getInstance().run();
   }
