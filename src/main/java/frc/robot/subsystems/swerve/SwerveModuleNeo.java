@@ -1,7 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkLowLevel;
 import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,8 +24,8 @@ public class SwerveModuleNeo extends SubsystemBase{
 
     // pass in a ff+pid object or something, o is offset in radians
     public SwerveModuleNeo(int driveID, int steerID, int encoderID, double o, double driveMult, double steerMult) {
-        drive = new CANSparkMax(driveID, CANSparkMaxLowLevel.MotorType.kBrushless);
-        steer = new CANSparkMax(steerID, CANSparkMaxLowLevel.MotorType.kBrushless);
+        drive = new CANSparkMax(driveID, CANSparkLowLevel.MotorType.kBrushless);
+        steer = new CANSparkMax(steerID, CANSparkLowLevel.MotorType.kBrushless);
         encoder = new CANCoder(encoderID);
 
         offset = o;

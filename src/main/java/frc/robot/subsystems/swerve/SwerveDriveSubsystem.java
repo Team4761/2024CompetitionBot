@@ -1,10 +1,10 @@
 package frc.robot.subsystems.swerve;
 
-import frc.robot.subsystems.swerve.SwerveModuleTalon;
+// import frc.robot.subsystems.swerve.SwerveModuleTalon;
 import frc.robot.Robot;
-import frc.robot.subsystems.swerve.SwerveModuleNeo;
+// import frc.robot.subsystems.swerve.SwerveModuleNeo;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+// import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,10 +23,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveDriveSubsystem extends SubsystemBase {
     // inches rn
-    private static final SwerveDriveSubsystem INSTANCE = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
-    public static SwerveDriveSubsystem getInstance() {
-        return INSTANCE;
-    }
+    // Initialization of the subsystem has been moved to the robot map.
+    //private static final SwerveDriveSubsystem INSTANCE = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
+    //public static SwerveDriveSubsystem getInstance() {
+    //    return INSTANCE;
+    //}
 
     SwerveModuleState[] targetStates = new SwerveModuleState[4];
 
