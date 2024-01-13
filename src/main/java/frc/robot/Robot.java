@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
 
   private static RobotMap map = new RobotMap(); // Represents all physical objects on our robot
   public static RobotMap getMap() { return map; }
-  public static XboxController controller = new XboxController(0);
+  public static XboxController controller = new XboxController(Constants.CONTROLLER_PORT);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -104,19 +104,36 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // Controller Code
-    double xyCof = 0.75/Math.max(0.001, Math.sqrt(Math.pow(deadzone(controller.getLeftX(), 0.1), 2)+Math.pow(deadzone(controller.getLeftY(), 0.1), 2)));
-    map.swerve.swerveDriveF(xyCof*deadzone(controller.getLeftX(), 0.1)*(controller.getLeftTriggerAxis()+controller.getRightTriggerAxis()), -xyCof*deadzone(controller.getLeftY(), 0.1)*(controller.getLeftTriggerAxis()+controller.getRightTriggerAxis()), -deadzone(controller.getRightX(), 0.08));
-  
-    if(controller.getXButtonPressed()) {
-      map.swerve.zeroGyro();
-    }
-    if(controller.getYButtonPressed()) {
-      map.swerve.resetPose();
-    }
+    // Swerve
+    if (map.swerve != null) {
+      double xyCof = 1;//0.75/Math.max(0.001, Math.sqrt(Math.pow(deadzone(controller.getLeftX(), 0.1), 2)+Math.pow(deadzone(controller.getLeftY(), 0.1), 2)));
+      double speed = 1;
+      map.swerve.swerveDriveF(
+            speed * -xyCof * deadzone(controller.getLeftX(), 0.1)/* * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,      // Foward/backwards
+            speed * xyCof * deadzone(controller.getLeftY(), 0.1)/*  * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,       // Left/Right
+            speed * deadzone(controller.getRightX(), 0.08));   // Rotation
+    
+      if(controller.getXButtonPressed()) {
+        map.swerve.zeroGyro();
+      }
+      if(controller.getYButtonPressed()) {
+        map.swerve.resetPose();
+      }
 
-    if(controller.getAButtonPressed()){
-      map.vision.toString();
+      if(controller.getAButtonPressed()){
+        map.vision.toString();
+      }
+    }
+    // Intake
+    if (map.intake != null) {
+      map.intake.rotate(deadzone(controller.getRightX(), 0.1));
+
+      if (controller.getLeftBumperPressed()) {
+        map.intake.intake();
+      }
+      else if (controller.getRightBumperPressed()) {
+        map.intake.outtake();
+      }
     }
     // Run any commands
     CommandScheduler.getInstance().run();
