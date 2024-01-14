@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.shooter.Shoot;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
 
 /**
@@ -107,17 +108,17 @@ public class Robot extends TimedRobot {
     // Swerve
     if (map.swerve != null) {
       double xyCof = 1;//0.75/Math.max(0.001, Math.sqrt(Math.pow(deadzone(controller.getLeftX(), 0.1), 2)+Math.pow(deadzone(controller.getLeftY(), 0.1), 2)));
-      double speed = 1;
+      double speed = 0.5;
       map.swerve.swerveDriveF(
-            speed * -xyCof * deadzone(controller.getLeftX(), 0.1)/* * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,      // Foward/backwards
-            speed * xyCof * deadzone(controller.getLeftY(), 0.1)/*  * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,       // Left/Right
+            speed * xyCof * deadzone(controller.getLeftY(), 0.1)/* * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,      // Foward/backwards
+            speed * -xyCof * deadzone(controller.getLeftX(), 0.1)/*  * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,    // Left/Right
             speed * deadzone(controller.getRightX(), 0.08));   // Rotation
     
       if(controller.getXButtonPressed()) {
         map.swerve.zeroGyro();
       }
       if(controller.getYButtonPressed()) {
-        map.swerve.resetPose();
+        map.swerve.resetPose(); 
       }
 
       if(controller.getAButtonPressed()){
@@ -133,6 +134,15 @@ public class Robot extends TimedRobot {
       }
       else if (controller.getRightBumperPressed()) {
         map.intake.outtake();
+      }
+    }
+    // Shooter
+    if (map.shooter != null) {
+      if (controller.getAButtonPressed()) {
+        CommandScheduler.getInstance().schedule(new Shoot(1));
+      }
+      if (controller.getBButtonPressed()) {
+        CommandScheduler.getInstance().schedule(new Shoot(-1));
       }
     }
     // Run any commands

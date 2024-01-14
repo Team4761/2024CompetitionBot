@@ -25,5 +25,9 @@ public class Constants
     public static int INTAKE_RIGHT_ROTATE_PORT = 5; // CAN Port.
     public static int INTAKE_LEFT_ROTATE_PORT = 4;  // CAN Port.
     public static int INTAKE_RIGHT_PORT = 1;        // CAN Port.
-    public static int INTAKE_LEFT_PORT = 3;         // CAN Port
+    public static int INTAKE_LEFT_PORT = 3;         // CAN Port.
+
+    // Shooter
+    public static int SHOOTER_LEFT_MOTOR_PORT = 0;  // CAN Port.
+    public static int SHOOTER_RIGHT_MOTOR_PORT = 4;  // CAN Port.
 }

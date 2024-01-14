@@ -45,7 +45,7 @@ public class SwerveModuleNeo extends SubsystemBase{
         double steerB = Math.signum(steerA)*0.008;
         steer.set(steerA+steerB);
 
-        //if()
+        //if(true)
         double driveA = targetState.speedMetersPerSecond*dM*0.8;
         double driveB = Math.signum(driveA)*0.03;
         drive.set(driveA+driveB);

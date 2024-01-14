@@ -120,28 +120,34 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // drives
     // try applying acceleration cap to inputs in drives instead of on wheels
 
-    private int lastDone = 10;
-    // field oriented, m/s, m/s, rad/s or something, i think x is forward
+    private int lastDone = 10;  // Cycles to sample rotation to make corrections to direction
+    // field oriented, m/s, m/s, rad/s or something, +x is forwards, +y is left
     public void swerveDriveF(double speedX, double speedY, double speedRot) {
         SmartDashboard.putNumber("Gyro Target", pointDir.getDegrees());
 
 
-
+        //Gian: what is the point of this??
         // input squaring
-        double squareFactor = Math.sqrt(speedX*speedX+speedY*speedY);
-        speedX*=squareFactor;
-        speedY*=squareFactor;
+        //double squareFactor = Math.sqrt(speedX*speedX+speedY*speedY);
+        //speedX*=squareFactor;
+        //speedY*=squareFactor;
 
 
         if(lastDone==0) {
-            pointDir = getGyroRotation();
+            pointDir = getGyroRotation();   // Radians
         }
         // if not turning do lock on
         if (speedRot == 0) {
-            double rotP = pointDir.minus(getGyroRotation()).getDegrees()*0.001; // proportional
+            // unsure of unit (degrees or radians???)
+            double rotP = pointDir.minus(getGyroRotation()).getDegrees()*0.001; // proportional // Radians
             //rotP += Math.signum(rotP)*0.00005;
-            if (Math.abs(rotP)<0.001 || lastDone>0) rotP=0;
-            targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, rotP, getGyroRotation()));
+            if (Math.abs(rotP)<0.001 || lastDone>0) 
+                rotP=0;
+            SmartDashboard.putNumber("speedX", speedX);
+            SmartDashboard.putNumber("speedY", speedY);
+            SmartDashboard.putNumber("rotP", rotP);
+            SmartDashboard.putNumber("GyroRotation", getGyroRotation().getRadians());
+            targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, rotP, getGyroRotation()));   // Radians
             
             lastDone--;
         } else { // if turning dont proportional
@@ -185,10 +191,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     // stuff
-    // degrees
+    // Degrees
     public double getGyroAngle() {
         return m_gyro.getRotation2d().minus(gyroOffset).getDegrees();
     }
+    // Radians
     public Rotation2d getGyroRotation() {
         return m_gyro.getRotation2d().minus(gyroOffset);
     }

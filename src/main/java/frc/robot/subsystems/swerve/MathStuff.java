@@ -21,7 +21,8 @@ public class MathStuff {
 
     public static Rotation2d multiply(Rotation2d a, double b) {
         return new Rotation2d(
-        modulus(a.getRadians()*b+Math.PI, Math.PI*2) - Math.PI);
+            a.getRadians()*b);
+        //modulus(a.getRadians()*b+Math.PI, Math.PI*2) - Math.PI);
         //(a%360 - b%360 + 180 ) % 360 - 180;
         // initial mod 360 not needed 
     }

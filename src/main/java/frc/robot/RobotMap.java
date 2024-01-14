@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.swerve.SwerveModuleNeo;
 import frc.robot.subsystems.vision.VisionSubsystem;
@@ -18,17 +19,13 @@ public class RobotMap
     public SwerveDriveSubsystem swerve = null;
     public VisionSubsystem vision = null;
     public IntakeSubsystem intake = null;
+    public ShooterSubsystem shooter = null;
 
 
     public RobotMap() 
     {
-        // swerve_frontLeftModule = new SwerveModuleNeo(1 , 4 , 1 , -98.5, -1.0,  1.0);
-        // swerve_frontRightModule = new SwerveModuleNeo(8 , 5 , 4 , -6, -1.0, -1.0);
-        // swerve_backLeftModule   = new SwerveModuleNeo(2 , 3 ,3 , 112, -1.0, -1.0);
-        // swerve_backRightModule  = new SwerveModuleNeo(6 , 7 , 2 , -53, -1.0,  1.0);
-
         try {
-            swerve = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
+            //swerve = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -39,6 +36,11 @@ public class RobotMap
         }
         try {
             //intake = new IntakeSubsystem();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        try {
+            shooter = new ShooterSubsystem();
         } catch (Exception e) {
             System.out.println(e);
         }
