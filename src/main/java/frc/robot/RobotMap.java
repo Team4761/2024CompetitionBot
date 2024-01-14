@@ -25,7 +25,7 @@ public class RobotMap
     public RobotMap() 
     {
         try {
-            //swerve = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
+            swerve = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -40,7 +40,7 @@ public class RobotMap
             System.out.println(e);
         }
         try {
-            shooter = new ShooterSubsystem();
+            //shooter = new ShooterSubsystem();
         } catch (Exception e) {
             System.out.println(e);
         }

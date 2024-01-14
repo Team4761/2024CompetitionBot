@@ -87,7 +87,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    if (!SmartDashboard.containsKey("Swerve Speed"))
+      SmartDashboard.putNumber("Swerve Speed", 0.5);
+    if (!SmartDashboard.containsKey("Shooter Speed"))
+      SmartDashboard.putNumber("Shooter Speed", 0.5);
+  }
 
 
   // Apply a deadzone for swerve
@@ -108,11 +113,11 @@ public class Robot extends TimedRobot {
     // Swerve
     if (map.swerve != null) {
       double xyCof = 1;//0.75/Math.max(0.001, Math.sqrt(Math.pow(deadzone(controller.getLeftX(), 0.1), 2)+Math.pow(deadzone(controller.getLeftY(), 0.1), 2)));
-      double speed = 0.5;
       map.swerve.swerveDriveF(
-            speed * xyCof * deadzone(controller.getLeftY(), 0.1)/* * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,      // Foward/backwards
-            speed * -xyCof * deadzone(controller.getLeftX(), 0.1)/*  * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,    // Left/Right
-            speed * deadzone(controller.getRightX(), 0.08));   // Rotation
+            // The robot is labeled slightly improperly in relation to the gyro, so the X and Y axis are flipped.
+            SmartDashboard.getNumber("Swerve Speed", 0.5) * -xyCof * deadzone(controller.getLeftX(), 0.1)/* * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,      // Foward/backwards
+            SmartDashboard.getNumber("Swerve Speed", 0.5) * xyCof * deadzone(controller.getLeftY(), 0.1)/*  * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,    // Left/Right
+            SmartDashboard.getNumber("Swerve Speed", 0.5) * deadzone(controller.getRightX(), 0.08));   // Rotation
     
       if(controller.getXButtonPressed()) {
         map.swerve.zeroGyro();
@@ -139,10 +144,10 @@ public class Robot extends TimedRobot {
     // Shooter
     if (map.shooter != null) {
       if (controller.getAButtonPressed()) {
-        CommandScheduler.getInstance().schedule(new Shoot(1));
+        CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
       }
       if (controller.getBButtonPressed()) {
-        CommandScheduler.getInstance().schedule(new Shoot(-1));
+        CommandScheduler.getInstance().schedule(new Shoot(-SmartDashboard.getNumber("Shooter Speed", 0.5)));
       }
     }
     // Run any commands

@@ -139,7 +139,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // if not turning do lock on
         if (speedRot == 0) {
             // unsure of unit (degrees or radians???)
-            double rotP = pointDir.minus(getGyroRotation()).getDegrees()*0.001; // proportional // Radians
+            double rotP = getGyroRotation().minus(pointDir).getDegrees()*0.001; // proportional // Radians
             //rotP += Math.signum(rotP)*0.00005;
             if (Math.abs(rotP)<0.001 || lastDone>0) 
                 rotP=0;
@@ -192,12 +192,16 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     // stuff
     // Degrees
-    public double getGyroAngle() {
-        return m_gyro.getRotation2d().minus(gyroOffset).getDegrees();
+    public double getGyroDegrees() {
+        // Subtracted because the gyro was upside down meaning counter clockwise and clockwise were reversed...
+        return getGyroRotation().getDegrees();
     }
+
+    private final Rotation2d TWOPI = new Rotation2d(Math.PI*2);
     // Radians
     public Rotation2d getGyroRotation() {
-        return m_gyro.getRotation2d().minus(gyroOffset);
+        // Subtracted because the gyro was upside down meaning counter clockwise and clockwise were reversed...
+        return MathStuff.subtract(TWOPI,m_gyro.getRotation2d().minus(gyroOffset));
     }
     
     public Pose2d getPose() {
