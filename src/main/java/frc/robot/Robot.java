@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
 
   private static RobotMap map = new RobotMap(); // Represents all physical objects on our robot
   public static RobotMap getMap() { return map; }
-  public static XboxController controller = new XboxController(Constants.CONTROLLER_PORT);
+  public static RobocketsController controller = new RobocketsController(Constants.CONTROLLER_PORT, map);  // This is literally just an xbox controller
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -95,61 +95,11 @@ public class Robot extends TimedRobot {
   }
 
 
-  // Apply a deadzone for swerve
-  public static double deadzone (double value, double deadzone) {
-    if (Math.abs(value) > deadzone) {
-        if (value > 0.0) {
-            return (value - deadzone) / (1.0 - deadzone);
-        } else {
-            return (value + deadzone) / (1.0 - deadzone);
-        }
-    } else {
-        return 0.0;
-    }
-  }
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // Swerve
-    if (map.swerve != null) {
-      double xyCof = 1;//0.75/Math.max(0.001, Math.sqrt(Math.pow(deadzone(controller.getLeftX(), 0.1), 2)+Math.pow(deadzone(controller.getLeftY(), 0.1), 2)));
-      map.swerve.swerveDriveF(
-            // The robot is labeled slightly improperly in relation to the gyro, so the X and Y axis are flipped.
-            SmartDashboard.getNumber("Swerve Speed", 0.5) * -xyCof * deadzone(controller.getLeftX(), 0.1)/* * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,      // Foward/backwards
-            SmartDashboard.getNumber("Swerve Speed", 0.5) * xyCof * deadzone(controller.getLeftY(), 0.1)/*  * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,    // Left/Right
-            SmartDashboard.getNumber("Swerve Speed", 0.5) * deadzone(controller.getRightX(), 0.08));   // Rotation
+    controller.teleopPeriodic();
     
-      if(controller.getXButtonPressed()) {
-        map.swerve.zeroGyro();
-      }
-      if(controller.getYButtonPressed()) {
-        map.swerve.resetPose(); 
-      }
-
-      if(controller.getAButtonPressed()){
-        map.vision.toString();
-      }
-    }
-    // Intake
-    if (map.intake != null) {
-      map.intake.rotate(deadzone(controller.getRightX(), 0.1));
-
-      if (controller.getLeftBumperPressed()) {
-        map.intake.intake();
-      }
-      else if (controller.getRightBumperPressed()) {
-        map.intake.outtake();
-      }
-    }
-    // Shooter
-    if (map.shooter != null) {
-      if (controller.getAButtonPressed()) {
-        CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
-      }
-      if (controller.getBButtonPressed()) {
-        CommandScheduler.getInstance().schedule(new Shoot(-SmartDashboard.getNumber("Shooter Speed", 0.5)));
-      }
-    }
     // Run any commands
     CommandScheduler.getInstance().run();
   }
