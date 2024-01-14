@@ -46,21 +46,21 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     };
 
     private ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
-    private Rotation2d gyroOffset = new Rotation2d();
+    private Rotation2d gyroOffset = new Rotation2d();   // This is the offset of the gyro where 0 degrees is when the robot is facing away from the alliance wall (forwards).
 
-    private SwerveDriveKinematics m_kinematics;
+    private SwerveDriveKinematics m_kinematics;         // Essentially the built-in math required to use Swerve
 
-    private SwerveDriveOdometry m_odometry;
-    private Pose2d m_pose;
+    private SwerveDriveOdometry m_odometry;             // Stores what the robot THINKS it's position is based on Swerve encoders.
+    private Pose2d m_pose;                              // Stores the robots position ON THE FIELD where 0,0 is the STARTING POSITION of the robot when this subsystem is initialized
 
-    private Rotation2d pointDir = new Rotation2d();
+    private Rotation2d pointDir = new Rotation2d();     // The direction the robot thinks it measured to be looking at between 1-10 cycles ago.
 
 
     // positions of the wheels relative to center (meters?)
     public SwerveDriveSubsystem (Translation2d fL, Translation2d fR, Translation2d bL, Translation2d bR) {
-        m_kinematics = new SwerveDriveKinematics(fL, fR, bL, bR);
-        m_pose = new Pose2d();
-        m_odometry =  new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d(), m_swervePositions, m_pose);
+        m_kinematics = new SwerveDriveKinematics(fL, fR, bL, bR);   // Load the relative positions of all our swerve modules (wheels) in relation to the origin.
+        m_pose = new Pose2d();  // Starts the position at 0,0
+        m_odometry =  new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d(), m_swervePositions, m_pose); // Start the odometry at 0,0
         targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, getGyroRotation()));
     }
 
@@ -99,7 +99,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Gyro Angle", m_gyro.getRotation2d().minus(gyroOffset).getDegrees());
 
-        // set the stuff
+        // Gets the target states from either {swerveDriveF} or {swerveDriveR} and applies them to individual modules (wheels)
         m_frontLeftModule .setTargetState(targetStates[0], true);
         m_frontRightModule.setTargetState(targetStates[1], true);
         m_backLeftModule  .setTargetState(targetStates[2], true);
@@ -120,8 +120,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // drives
     // try applying acceleration cap to inputs in drives instead of on wheels
 
+
     private int lastDone = 10;  // Cycles to sample rotation to make corrections to direction
-    // field oriented, m/s, m/s, rad/s or something, +x is forwards, +y is left
+    // Field Oriented swerve drive, m/s, m/s, rad/s or something, +x is forwards, +y is left
     public void swerveDriveF(double speedX, double speedY, double speedRot) {
         SmartDashboard.putNumber("Gyro Target", pointDir.getDegrees());
 
@@ -133,24 +134,23 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         //speedY*=squareFactor;
 
 
-        if(lastDone==0) {
+        if(lastDone==0) {                   // After moving for 10 cycles, check the rotation of the robot.
             pointDir = getGyroRotation();   // Radians
         }
         // if not turning do lock on
         if (speedRot == 0) {
-            // unsure of unit (degrees or radians???)
-            double rotP = getGyroRotation().minus(pointDir).getDegrees()*0.001; // proportional // Radians
-            //rotP += Math.signum(rotP)*0.00005;
-            if (Math.abs(rotP)<0.001 || lastDone>0) 
-                rotP=0;
+            double rotP = getGyroRotation().minus(pointDir).getDegrees()*0.001; // proportional to keep robot turned properly (finds the distance between expected and actual rotation to apply some opposite rotational speed)
+            if (Math.abs(rotP)<0.001 || lastDone>0) { rotP=0; }                 // If you corrected recently OR the rotational correction isn't much, don't do it at all.
+            // Add the speeds that it is trying to achieve to Smart Dashboard for debugging
             SmartDashboard.putNumber("speedX", speedX);
             SmartDashboard.putNumber("speedY", speedY);
             SmartDashboard.putNumber("rotP", rotP);
             SmartDashboard.putNumber("GyroRotation", getGyroRotation().getRadians());
-            targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, rotP, getGyroRotation()));   // Radians
+
+            targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, rotP, getGyroRotation()));   //Convert the desired speeds into individual wheel/module speeds. Radians
             
             lastDone--;
-        } else { // if turning dont proportional
+        } else { // if turning dont proportional (don't correct the rotation based on the rotation 10 cycles ago)
             // need 
             speedRot=Math.signum(speedRot)*speedRot*speedRot;
 
@@ -161,22 +161,25 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         }
         
     }
-//for on the go field oriented and stuff
+
+    // Robot oriented swerve drive, m/s, m/s, rad/s or something
+    public void swerveDriveR(double speed, double strafe, double speedRot) {
+        targetStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(speed, strafe, speedRot));
+    }
+
+
+    //for on the go field oriented and stuff
     public void zeroGyro() {
         pointDir = pointDir.minus(getGyroRotation());
         gyroOffset = m_gyro.getRotation2d();
     }
     
+    // Reset the expected position of the bot
     public void resetPose() {
         m_odometry = new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d(), m_swervePositions);
         m_pose = new Pose2d();
     }
 
-    // robot oriented, m/s, m/s, rad/s or something
-    public void swerveDriveR(double speed, double strafe, double speedRot) {
-
-        targetStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(speed, strafe, speedRot));
-    }
     // car, m/s, degrees    
     public void carDrive(double speed, double turn) {
         turn = MathUtil.clamp(turn, -90, 90);
@@ -197,7 +200,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         return getGyroRotation().getDegrees();
     }
 
-    private final Rotation2d TWOPI = new Rotation2d(Math.PI*2);
+    private final Rotation2d TWOPI = new Rotation2d(Math.PI*2); // TO BE REMOVED once the gyro is not upside down
     // Radians
     public Rotation2d getGyroRotation() {
         // Subtracted because the gyro was upside down meaning counter clockwise and clockwise were reversed...
