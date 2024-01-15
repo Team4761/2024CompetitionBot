@@ -29,9 +29,10 @@ public class Constants {
 
     //Amp Slot
     public static final double AMP_HOLE_WIDTH = 14;
+    public static final double AMP_HOLE_HEIGHT = 18;
     public static final double AMP_WIDTH = AMP_HOLE_WIDTH + 6;
     public static final double AMP_HOLE_HEIGHT_BOTTOM = 26;
-    public static final double AMP_HOLE_HEIGHT_TOP = 44;
+    public static final double AMP_HOLE_HEIGHT_TOP = AMP_HOLE_HEIGHT_BOTTOM + AMP_HOLE_HEIGHT;
 
     //Speaker
     public static final Translation2d SPEAKER_TOP_LEFT = new Translation2d(0, 197.5);
