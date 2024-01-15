@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.swerve.SwerveModuleNeo;
-import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.vision.VisionSubSystem;
 
 // Contains all physical items on the robot (motors, encoders, LEDs, etc)
 public class RobotMap
@@ -16,7 +16,7 @@ public class RobotMap
     public SwerveModuleNeo swerve_backRightModule;
 
     public SwerveDriveSubsystem swerve = null;
-    public VisionSubsystem vision = null;
+    public VisionSubSystem vision = null;
     public IntakeSubsystem intake = null;
 
 
@@ -33,7 +33,7 @@ public class RobotMap
             System.out.println(e);
         }
         try {
-            vision = new VisionSubsystem();
+            vision = new VisionSubSystem();
         } catch (Exception e) {
             System.out.println(e);
         }

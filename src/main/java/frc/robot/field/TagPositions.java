@@ -1,5 +1,7 @@
 package frc.robot.field;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
@@ -32,5 +34,10 @@ public class TagPositions {
             Units.inchesToMeters(pose.getZ()),
             pose.getRotation()
         );
+    }
+
+    public static AprilTagFieldLayout getFieldTagLayout(){
+        AprilTagFieldLayout tagLayout = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
+        return tagLayout;
     }
 }
