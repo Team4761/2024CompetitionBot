@@ -10,6 +10,12 @@ public class Field {
     public static final Amp AMP = new Amp(AMP_TOP_LEFT);
 
     //-------
+    // Speaker
+    //-------
+    public static final Speaker SPEAKER = new Speaker(SPEAKER_TOP_LEFT, SPEAKER_BOTTOM_RIGHT);
+    public static final Subwoofer SUBWOOFER = new Subwoofer(SUBWOOFER_TOP_LEFT, SUBWOOFER_BOTTOM_RIGHT);
+
+    //-------
     // Notes
     //-------
 

@@ -3,11 +3,9 @@ package frc.robot.field;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 
-import static frc.robot.field.Constants.AMP_HOLE_HEIGHT_BOTTOM;
-import static frc.robot.field.Constants.AMP_HOLE_HEIGHT_TOP;
+import static frc.robot.field.Constants.*;
 
 public class Amp extends FieldArea {
-
     private final FieldArea hole;
     public Amp(Translation2d startPos) {
         super(startPos, startPos.plus(new Translation2d(Constants.AMP_WIDTH, 0)));
@@ -19,12 +17,15 @@ public class Amp extends FieldArea {
         return hole;
     }
 
-    public FieldArea3d getHole3d() {
-        Translation2d bottomLeft = hole.getBottomLeft();
-        Translation2d topRight = hole.topRight();
-        return new FieldArea3d(
-            new Translation3d(bottomLeft.getX(), bottomLeft.getY(), AMP_HOLE_HEIGHT_BOTTOM),
-            new Translation3d(topRight.getX(), topRight.getY(), AMP_HOLE_HEIGHT_TOP)
+    /**
+     * Best guess where to insert the note into the Amp (dead center of the hole)
+     */
+    public Translation3d getHoleTarget() {
+        Translation2d bottomCenter = hole.getBottomCenter();
+        return new Translation3d(
+            bottomCenter.getX(),
+            bottomCenter.getY(),
+            AMP_HOLE_HEIGHT_BOTTOM + (AMP_HOLE_HEIGHT / 2)
         );
     }
 
