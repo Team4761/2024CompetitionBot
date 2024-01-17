@@ -10,6 +10,7 @@ import frc.robot.subsystems.vision.VisionSubsystem;
 // Contains all physical items on the robot (motors, encoders, LEDs, etc)
 public class RobotMap
 {
+
     // Swerve
     public SwerveModuleNeo swerve_frontLeftModule;
     public SwerveModuleNeo swerve_frontRightModule;
@@ -24,25 +25,9 @@ public class RobotMap
 
     public RobotMap() 
     {
-        try {
-            //swerve = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
-        } catch (Exception e) {
-            System.out.println(e + "\nSwerve Subsystem Disabled Or Not Found.");
-        }
-        try {
-            vision = new VisionSubsystem();
-        } catch (Exception e) {
-            System.out.println(e + "\nVision Subsystem Disabled Or Not Found.");
-        }
-        try {
-            //intake = new IntakeSubsystem();
-        } catch (Exception e) {
-            System.out.println(e + "\nIntake Subsystem Disabled Or Not Found.");
-        }
-        try {
-            shooter = new ShooterSubsystem();
-        } catch (Exception e) {
-            System.out.println(e + "\nShooter Subsystem Disabled Or Not Found.");
-        }
+        intake = new IntakeSubsystem();
+        swerve = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
+        vision = new VisionSubsystem();
+        shooter = new ShooterSubsystem();
     }
 }

@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
 
   private static RobotMap map = new RobotMap(); // Represents all physical objects on our robot
   public static RobotMap getMap() { return map; }
-  public static RobocketsController controller = new RobocketsController(Constants.CONTROLLER_PORT, map);  // This is literally just an xbox controller
+  public static RobocketsController controller = new RobocketsController(Constants.CONTROLLER_PORT, map);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -87,21 +87,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {
-    if (!SmartDashboard.containsKey("Swerve Speed"))
-      SmartDashboard.putNumber("Swerve Speed", 0.5);
-    if (!SmartDashboard.containsKey("Shooter Intake Speed"))
-      SmartDashboard.putNumber("Shooter Intake Speed", 0.5);
-    if (!SmartDashboard.containsKey("Shooter Outtake Speed"))
-      SmartDashboard.putNumber("Shooter Outtake Speed", 0.5);
-  }
-
+  public void teleopInit() {}
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
     controller.teleopPeriodic();
-    
     // Run any commands
     CommandScheduler.getInstance().run();
   }

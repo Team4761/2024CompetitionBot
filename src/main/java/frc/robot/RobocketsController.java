@@ -43,16 +43,16 @@ public class RobocketsController extends XboxController {
             }
         }
         // Intake
-        if (map.intake != null) {
-            map.intake.rotate(deadzone(getRightX(), 0.1));
+        // if (map.intake != null) {
+        //     map.intake.rotate(deadzone(getRightX(), 0.1));
 
-            if (getLeftBumperPressed()) {
-                map.intake.intake();
-            }
-            else if (getRightBumperPressed()) {
-                map.intake.outtake();
-            }
-            }
+        //     if (getLeftBumperPressed()) {
+        //         map.intake.intake();
+        //     }
+        //     else if (getRightBumperPressed()) {
+        //         map.intake.outtake();
+        //     }
+        //     }
             // Shooter
             if (map.shooter != null) {
             if (getAButtonPressed()) {
