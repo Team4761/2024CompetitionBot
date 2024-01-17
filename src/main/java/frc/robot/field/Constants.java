@@ -49,7 +49,7 @@ public class Constants {
     public static final Translation2d LEFT_STAGE_POST_TOP_LEFT = new Translation2d(121, 157);
     public static final Translation2d TOP_STAGE_POST_CENTER = new Translation2d(225, 218);
     public static final Translation2d BOTTOM_STAGE_POST_CENTER = new Translation2d(225, 105);
-    public static final double POST_WIDTH = 10;
+    public static final double POST_SIZE = 10;
 
     //Trap
 
@@ -64,6 +64,9 @@ public class Constants {
     //Right Most Trap
     public static Translation2d RIGHT_TRAP_POINT1 = new Translation2d(209, 150);
     public static Translation2d RIGHT_TRAP_POINT2 = new Translation2d(209, 174);
+
+    public static double TRAP_BOTTOM_HEIGHT = 4*12 + 8;
+    public static double TRAP_TARGET_HEIGHT = TRAP_BOTTOM_HEIGHT + 6;
 
     //Note Postions
 
