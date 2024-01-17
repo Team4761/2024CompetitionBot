@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 
 /**
- * All positions are in inches.
+ * All positions are in inches and converted to meters with the toMeters function.
  */
 public class TagPositions {
     public static final Pose3d APRIL_TAG_1 =

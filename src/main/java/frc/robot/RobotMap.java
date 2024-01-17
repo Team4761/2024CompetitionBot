@@ -25,24 +25,24 @@ public class RobotMap
     public RobotMap() 
     {
         try {
-            swerve = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
+            //swerve = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e + "\nSwerve Subsystem Disabled Or Not Found.");
         }
         try {
             vision = new VisionSubsystem();
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e + "\nVision Subsystem Disabled Or Not Found.");
         }
         try {
             //intake = new IntakeSubsystem();
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e + "\nIntake Subsystem Disabled Or Not Found.");
         }
         try {
-            //shooter = new ShooterSubsystem();
+            shooter = new ShooterSubsystem();
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e + "\nShooter Subsystem Disabled Or Not Found.");
         }
     }
 }

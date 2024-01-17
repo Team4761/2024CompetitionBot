@@ -56,10 +56,15 @@ public class RobocketsController extends XboxController {
             // Shooter
             if (map.shooter != null) {
             if (getAButtonPressed()) {
-                CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
+                //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
+                map.shooter.setSpeed(SmartDashboard.getNumber("Shooter Intake Speed", 0.5));
             }
             if (getBButtonPressed()) {
-                CommandScheduler.getInstance().schedule(new Shoot(-SmartDashboard.getNumber("Shooter Speed", 0.5)));
+                //CommandScheduler.getInstance().schedule(new Shoot(-SmartDashboard.getNumber("Shooter Speed", 0.5)));
+                map.shooter.setSpeed(-SmartDashboard.getNumber("Shooter Outtake Speed", 0.5));
+            }
+            if (getAButtonReleased() || getBButtonReleased()) {
+                map.shooter.setSpeed(0);
             }
         }
         // Vision

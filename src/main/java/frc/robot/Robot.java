@@ -90,8 +90,10 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     if (!SmartDashboard.containsKey("Swerve Speed"))
       SmartDashboard.putNumber("Swerve Speed", 0.5);
-    if (!SmartDashboard.containsKey("Shooter Speed"))
-      SmartDashboard.putNumber("Shooter Speed", 0.5);
+    if (!SmartDashboard.containsKey("Shooter Intake Speed"))
+      SmartDashboard.putNumber("Shooter Intake Speed", 0.5);
+    if (!SmartDashboard.containsKey("Shooter Outtake Speed"))
+      SmartDashboard.putNumber("Shooter Outtake Speed", 0.5);
   }
 
 
