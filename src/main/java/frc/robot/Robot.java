@@ -92,7 +92,13 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    controller.teleopPeriodic();
+    // controller.teleopPeriodic();
+    var result = map.vision.getLatestResult();
+
+    if(result.hasTargets()){
+      System.out.println(result.getBestTarget());
+    }
+
     // Run any commands
     CommandScheduler.getInstance().run();
   }

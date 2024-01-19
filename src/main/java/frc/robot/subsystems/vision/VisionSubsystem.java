@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class VisionSubsystem extends SubsystemBase {
@@ -28,7 +29,7 @@ public class VisionSubsystem extends SubsystemBase {
   private boolean mDriverMode = false;
   public VisionSubsystem(){
     //Replace with name of cam
-    mCamera = new PhotonCamera("Main"); 
+    mCamera = new PhotonCamera("Camera"); 
   }
 
   @Override
@@ -36,8 +37,11 @@ public class VisionSubsystem extends SubsystemBase {
     
   }
 
+  public PhotonPipelineResult getLatestResult(){
+    return mCamera.getLatestResult();
+  }
 
-   public int getBestTagID(){
+  public int getBestTagID(){
      return mCamera.getLatestResult().getBestTarget().getFiducialId();
    }
 
