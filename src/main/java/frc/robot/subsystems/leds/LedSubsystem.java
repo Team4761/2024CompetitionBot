@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.subsystems.leds;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -14,8 +14,10 @@ import java.awt.image.BufferedImage;
 
 
 
-public class LEDSubsystem extends SubsystemBase {
-    public static final int LED_SIZE = 32 * 8;
+public class LedSubsystem extends SubsystemBase {
+    public static final int LED_WIDTH=8;
+    public static final int LED_LENGTH=32;
+    public static final int LED_SIZE = LED_WIDTH*LED_LENGTH;
     int[] RGB = new int[LED_SIZE * 3];
     BufferedImage hello;
     BufferedImage there;
@@ -26,7 +28,7 @@ public class LEDSubsystem extends SubsystemBase {
     AddressableLED leds;
     AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_SIZE);
 
-    public LEDSubsystem() {
+    public LedSubsystem() {
         
         try {
             
@@ -126,6 +128,19 @@ public class LEDSubsystem extends SubsystemBase {
             SetAllColor(20, 30, 250);
         }
     }
+
+    public void ChargeUpSeq()
+    {
+
+        for (int row = 0; row < LED_SIZE/8; row++) 
+        {
+            for(int i=0; i< 8; i++)
+            {
+                ledBuffer.setRGB(i,250,50,50);
+            }
+            
+        }
+        leds.setData(ledBuffer);
+            leds.start();
+    }
 }
-
-
