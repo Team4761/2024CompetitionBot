@@ -27,21 +27,21 @@ public class RobocketsController extends XboxController {
 
     public void teleopPeriodic() {
         // Swerve
-        if (map.swerve != null) {
-            double xyCof = 1;//0.75/Math.max(0.001, Math.sqrt(Math.pow(deadzone(controller.getLeftX(), 0.1), 2)+Math.pow(deadzone(controller.getLeftY(), 0.1), 2)));
-            map.swerve.swerveDriveF(
-                    // The robot is labeled slightly improperly in relation to the gyro, so the X and Y axis are flipped.
-                    SmartDashboard.getNumber("Swerve Speed", 0.5) * -xyCof * deadzone(getLeftX(), 0.1)/* * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,      // Foward/backwards
-                    SmartDashboard.getNumber("Swerve Speed", 0.5) * xyCof * deadzone(getLeftY(), 0.1)/*  * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,    // Left/Right
-                    SmartDashboard.getNumber("Swerve Speed", 0.5) * deadzone(getRightX(), 0.08));   // Rotation
+        // if (map.swerve != null) {
+        //     double xyCof = 1;//0.75/Math.max(0.001, Math.sqrt(Math.pow(deadzone(controller.getLeftX(), 0.1), 2)+Math.pow(deadzone(controller.getLeftY(), 0.1), 2)));
+        //     map.swerve.swerveDriveF(
+        //             // The robot is labeled slightly improperly in relation to the gyro, so the X and Y axis are flipped.
+        //             SmartDashboard.getNumber("Swerve Speed", 0.5) * -xyCof * deadzone(getLeftX(), 0.1)/* * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,      // Foward/backwards
+        //             SmartDashboard.getNumber("Swerve Speed", 0.5) * xyCof * deadzone(getLeftY(), 0.1)/*  * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,    // Left/Right
+        //             SmartDashboard.getNumber("Swerve Speed", 0.5) * deadzone(getRightX(), 0.08));   // Rotation
             
-            if(getXButtonPressed()) {
-                map.swerve.zeroGyro();
-            }
-            if(getYButtonPressed()) {
-                map.swerve.resetPose(); 
-            }
-        }
+        //     if(getXButtonPressed()) {
+        //         map.swerve.zeroGyro();
+        //     }
+        //     if(getYButtonPressed()) {
+        //         map.swerve.resetPose(); 
+        //     }
+        // }
         // Intake
         if (map.intake != null) {
             map.intake.rotate(deadzone(getRightX(), 0.1));
