@@ -12,6 +12,7 @@ public class RobocketsShuffleboard {
     }
 
 
+    // Adds a number to the shuffleboard IF it doesn't already exist
     public static void addNumber(String key, double num) {
         if (!SmartDashboard.containsKey(key)) {
             SmartDashboard.putNumber(key, num);
