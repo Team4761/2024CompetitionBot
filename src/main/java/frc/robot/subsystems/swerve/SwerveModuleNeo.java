@@ -140,7 +140,7 @@ public class SwerveModuleNeo extends SubsystemBase{
 
     /**
      * Responsible for driving one SwerveModuleNeo
-     * This function reads from the targetState object for an angle (Unit unsure) and a velocity (Meters per Second)
+     * <p>This function reads from the targetState object for an angle (Unit unsure) and a velocity (Meters per Second)
      * <p>Then those numbers are send to the CANSparkMaxes so it can reach the desired angle and speed
      * 
      * <p>Keep in mind that this function has a lot of unexplained "magic numbers" 
