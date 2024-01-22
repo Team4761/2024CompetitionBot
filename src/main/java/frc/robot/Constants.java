@@ -32,4 +32,12 @@ public class Constants
     public static int SHOOTER_RIGHT_MOTOR_PORT = 16;  // CAN Port.
     public static int SHOOTER_INTAKE_LEFT_MOTOR_PORT = 4;  // CAN Port.
     public static int SHOOTER_INTAKE_RIGHT_MOTOR_PORT = 3;  // CAN Port.
+
+    // Physical Constants
+    // TODO: find these constants
+    public static double DRIVETRAIN_WHEEL_DIAMETER_M = 30; // wheel diameter in meters
+    public static double DRIVETRAIN_WHEEL_CIRCUMFERENCE_M = DRIVETRAIN_WHEEL_DIAMETER_M*Math.PI; // wheel circumference in meters
+    public static double DRIVETRAIN_MAX_SPEED_MPS = 4.5;
+    public static int DRIVETRAIN_GEAR_RATIO = 3;
+    public static double RPM_TO_MPS_CONVERSION = DRIVETRAIN_WHEEL_CIRCUMFERENCE_M / 60.0;
 }

@@ -13,6 +13,7 @@ public class RobotMap
 {
 
     // Swerve
+    // Gian: why are these neos here if we end up just making new ones in the swervedrivesubsystem?
     public SwerveModuleNeo swerve_frontLeftModule;
     public SwerveModuleNeo swerve_frontRightModule;
     public SwerveModuleNeo swerve_backLeftModule;
@@ -25,6 +26,8 @@ public class RobotMap
     public WestCoastSubsystem westcoast = null;
 
 
+    // Gian: Ok neat system, this is not something I did on the team
+    // But why is the swerve drive commented out?
     public RobotMap() 
     {
         // intake = new IntakeSubsystem();
