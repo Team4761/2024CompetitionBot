@@ -25,7 +25,6 @@ public class RobotMap
     public ShooterSubsystem shooter = null;
     public WestCoastSubsystem westcoast = null;
 
-
     // Gian: Ok neat system, this is not something I did on the team
     // But why is the swerve drive commented out?
     public RobotMap() 
