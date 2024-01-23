@@ -38,7 +38,7 @@ public class AutoConstruct {
 
         // First parameter: The name of the auto displayed on SmartDashboard
         // Second parameter: The internal name of the auto
-        m_chooser.addOption("PathPlanner Test 1", kPathPlanner1Auto);
+        m_chooser.addOption("PathPlanner 1 Meter Forward", kPathPlanner1Auto);
         m_chooser.addOption("PathPlanner Test 2", kPathPlanner2Auto);
         m_chooser.addOption("April Tag Dance", kAprilDance);
 
@@ -66,7 +66,7 @@ public class AutoConstruct {
                 scheduledCommand = new SwerveGoCartesianF(map.swerve, new Translation2d(20, 20));
             break;
             case kPathPlanner1Auto:
-                scheduledCommand = new PathPlannerAuto("Example Path Auto");
+                scheduledCommand = new PathPlannerAuto("1 Meter Auto");
             break;
             case kPathPlanner2Auto:
                 scheduledCommand = new PathPlannerAuto("Simple Swerve Auto");

@@ -48,7 +48,13 @@ public class SwerveModuleNeo extends SubsystemBase{
         // multiplier prob just for reversing
         dM = driveMult;
         sM = steerMult;
+
         //applySmartMotion();
+    }
+
+    public SwerveModuleNeo(int driveID, int steerID, int encoderID, double o, double driveMult, double steerMult, boolean simplePID) {
+        this(driveID,steerID,encoderID,o,driveMult,steerMult);
+        if(simplePID) setPIDValues(0.1, 0.0, 0.1, 0.1, 0.0, 0.1);
     }
 
     /**
