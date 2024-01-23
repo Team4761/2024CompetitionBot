@@ -5,6 +5,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 // import frc.robot.subsystems.swerve.SwerveModuleNeo;
 import frc.robot.RobotMap;
+import frc.robot.Auto.PrintText;
 
 // import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -58,8 +60,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         m_backRightModule.getPosition()
     };
 
-    // Gian: due to potential use cases involving pathplanner
-    // DO NOT USE THIS UNTIL THE WHEEL DIAMETER HAS BEEN WRITTEN DOWN IN CONSTANTS.JAVA
+    // Gian: Has potential use cases involving pathplanner
     private SwerveModuleState[] m_swerveStates = new SwerveModuleState[] {
         m_frontLeftModule.getState(), 
         m_frontRightModule.getState(),
@@ -85,28 +86,29 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         m_odometry =  new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d(), m_swervePositions, m_pose); // Start the odometry at 0,0
         targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, getGyroRotation()));
     
-        // Holonomic (Swerve) autobuilder from pathplanner
-        // yes I am aware this is all spaghetti Code
-        // See https://pathplanner.dev/pplib-build-an-auto.html#configure-autobuilder for more
         configureAutoBuilder();
     }
 
+    /**
+     *  <p> Holonomic (Swerve) autobuilder from pathplanner
+     *  <p> See https://pathplanner.dev/pplib-build-an-auto.html#configure-autobuilder for more
+     */
     public void configureAutoBuilder() {
         // This just gets the PID values of one motor. All 4 should be equal though!!
         SparkPIDController spcd = m_backLeftModule.getDriveMotor().getPIDController(); // d for drive
         SparkPIDController spcs = m_backLeftModule.getSteerMotor().getPIDController(); // s for steer
         HolonomicPathFollowerConfig hpfc = new HolonomicPathFollowerConfig(
-            new PIDConstants(spcd.getP(),spcd.getI(),spcd.getD()), 
-            new PIDConstants(spcs.getP(),spcs.getI(),spcs.getD()), 
-            Constants.DRIVETRAIN_MAX_SPEED_MPS,
-            12.25*Math.sqrt(2.0),
-            new ReplanningConfig()
+            new PIDConstants(spcd.getP(),spcd.getI(),spcd.getD()), // Translation PID Constants
+            new PIDConstants(spcs.getP(),spcs.getI(),spcs.getD()), // Rotateion PID Constants
+            Constants.DRIVETRAIN_MAX_SPEED_MPS, // max mps
+            12.25*Math.sqrt(2.0), //Distance from robot center to wheel in meters. They're all equidistant so this is a good value
+            new ReplanningConfig() //
         );
 
         // This is static, so we are not just creating an object that is never used
         // TODO: confirm the parameters on this function
         AutoBuilder.configureHolonomic(
-            this::getPose, 
+            this::getPose,
             this::resetPose, 
             this::getRobotRelativeSpeeds, 
             (chassisspeeds) -> {
@@ -123,6 +125,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             },
             this
         );
+
+        // This registers the commands that are used in the autos as events
+        NamedCommands.registerCommand("PrintText", new PrintText());
     }
     
 
@@ -133,6 +138,13 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             m_frontRightModule.getPosition(),
             m_backLeftModule.getPosition(), 
             m_backRightModule.getPosition()
+        };
+
+        m_swerveStates = new SwerveModuleState[] {
+            m_frontLeftModule.getState(), 
+            m_frontRightModule.getState(),
+            m_backLeftModule.getState(), 
+            m_backRightModule.getState()
         };
         
         // update pose
@@ -271,10 +283,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         m_pose = new Pose2d();
     }
 
-    // Reset robot to a given position
+    // Reset the inputted pose
+    // Only used by the holonomic builder
     public void resetPose(Pose2d pose2d) {
-        m_odometry.resetPosition(m_gyro.getRotation2d(), m_swervePositions,m_pose);
-        m_pose = pose2d;
+        pose2d = new Pose2d();
+        //m_odometry.resetPosition(m_gyro.getRotation2d(), m_swervePositions,m_pose);
+        //m_pose = pose2d;
     }
 
     // Returns the current robot-relative chasis speeds.
