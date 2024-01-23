@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems.vision;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -48,6 +49,7 @@ public class VisionSubsystem extends SubsystemBase {
   public boolean hasTargets(){
     return mCamera.getLatestResult().hasTargets();
   }
+
   public Translation2d getTransDiff(double targetHeight){
     if(hasTargets()){
       double pitch = Units.degreesToRadians(mCamera.getLatestResult().getBestTarget().getPitch());
@@ -70,9 +72,23 @@ public class VisionSubsystem extends SubsystemBase {
     mDriverMode = !mDriverMode;
     mCamera.setDriverMode(mDriverMode);
   }
+
   //Returns false if not in driver mode
   public boolean getDriverMode(){
     return mCamera.getDriverMode();
+  }
+
+  /**
+   * <p> Gian: This function may not ever be used, but here it is anyway
+   * 
+   * <p> This function gets the robots pose on the field determined by any april tags available in the camera
+   * <p> This is a good way to reposition the robot on the field if it ever manages to get lost
+   * <p> This would probably be more valuable to run during auto code to line up with an april tag
+   * @return Returns the robot pose relatie to the field
+   */
+  public Pose2d getPoseFromAprilTags() {
+    //TODO: Write this stupid command
+    return new Pose2d();
   }
 
   public String toString(){
