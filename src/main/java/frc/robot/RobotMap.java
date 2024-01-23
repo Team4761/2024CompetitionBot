@@ -28,9 +28,9 @@ public class RobotMap
     public RobotMap() 
     {
         // intake = new IntakeSubsystem();
-        swerve = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
+        // swerve = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
         // vision = new VisionSubsystem();
-        // shooter = new ShooterSubsystem();
+        shooter = new ShooterSubsystem();
 
 
         // ONLY FOR TESTING
