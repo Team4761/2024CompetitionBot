@@ -34,7 +34,6 @@ public class RobotMap
         // vision = new VisionSubsystem();
         //shooter = new ShooterSubsystem();
 
-
         // ONLY FOR TESTING
         // westcoast = new WestCoastSubsystem();
     }

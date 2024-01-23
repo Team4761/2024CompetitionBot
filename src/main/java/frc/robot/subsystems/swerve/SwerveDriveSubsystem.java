@@ -92,8 +92,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     public void configureAutoBuilder() {
-        SparkPIDController spcd = m_backLeftModule.getDriveMotor().getPIDController();
-        SparkPIDController spcs = m_backLeftModule.getSteerMotor().getPIDController();
+        // This just gets the PID values of one motor. All 4 should be equal though!!
+        SparkPIDController spcd = m_backLeftModule.getDriveMotor().getPIDController(); // d for drive
+        SparkPIDController spcs = m_backLeftModule.getSteerMotor().getPIDController(); // s for steer
         HolonomicPathFollowerConfig hpfc = new HolonomicPathFollowerConfig(
             new PIDConstants(spcd.getP(),spcd.getI(),spcd.getD()), 
             new PIDConstants(spcs.getP(),spcs.getI(),spcs.getD()), 
@@ -103,6 +104,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         );
 
         // This is static, so we are not just creating an object that is never used
+        // TODO: confirm the parameters on this function
         AutoBuilder.configureHolonomic(
             this::getPose, 
             this::resetPose, 
