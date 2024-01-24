@@ -51,7 +51,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private SwerveModuleNeo m_frontLeftModule  = new SwerveModuleNeo(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , -54.5, 1.0,  1.0);
     private SwerveModuleNeo m_frontRightModule = new SwerveModuleNeo(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT , -6, -1.0, -1.0);
     private SwerveModuleNeo m_backLeftModule   = new SwerveModuleNeo(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT ,Constants.BL_ENCODER_PORT , -68, 1.0, -1.0);
-    private SwerveModuleNeo m_backRightModule  = new SwerveModuleNeo(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , -98, -1.0,  -1.0);
+    private SwerveModuleNeo m_backRightModule  = new SwerveModuleNeo(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , 82, 1.0,  -1.0);
 
     private SwerveModulePosition[] m_swervePositions= new SwerveModulePosition[] {
         m_frontLeftModule.getPosition(), 
