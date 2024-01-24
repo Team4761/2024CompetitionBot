@@ -3,7 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems.vision;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.proto.Transform3dProto;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -18,6 +22,11 @@ public class VisionSubsystem extends SubsystemBase {
 
   //**ALL ANGLES IN RADIANS ALL DISTANCES IN METERS**//
   PhotonCamera mCamera;
+
+  // Currently Configured for the Tshirt Cannon
+  private Translation3d cameraTranslate = new Translation3d(.3915,0.0,0.0); // Meters
+  private Rotation3d camerRotation = new Rotation3d(Math.PI/12.0, 0.0, 0.0); // Radians
+  Pose3d cameraTransform = new Pose3d(cameraTranslate, camerRotation);
   // Initialization has been moved to RobotMap
   //private static final VisionSubsystem INSTANCE = new VisionSubsystem();
   //public static VisionSubsystem getInstance(){
