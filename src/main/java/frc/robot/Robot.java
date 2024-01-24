@@ -59,13 +59,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    AutoConstruct.scheduleSelectedCommand(map);
+    //AutoConstruct.scheduleSelectedCommand(map);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    CommandScheduler.getInstance().run();
+    map.vision.periodic();
+    
+    //CommandScheduler.getInstance().run();
 
     //Gian: I'm not so sure why we would ever use this if all the auto code is done in the commandscheduler
 

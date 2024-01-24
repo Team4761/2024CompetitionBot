@@ -1,7 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.subsystems.intake.IntakeSubsystem;
+// import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.swerve.SwerveModuleNeo;
@@ -21,7 +21,7 @@ public class RobotMap
 
     public SwerveDriveSubsystem swerve = null;
     public VisionSubsystem vision = null;
-    public IntakeSubsystem intake = null;
+    //public IntakeSubsystem intake = null;
     public ShooterSubsystem shooter = null;
     public WestCoastSubsystem westcoast = null;
 
@@ -30,8 +30,8 @@ public class RobotMap
     public RobotMap() 
     {
         // intake = new IntakeSubsystem();
-        swerve = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
-        // vision = new VisionSubsystem();
+        // swerve = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
+        vision = new VisionSubsystem();
         //shooter = new ShooterSubsystem();
 
         // ONLY FOR TESTING

@@ -21,4 +21,3 @@ public class TagPositions {
         return getAprilTagFieldLayout().getTagPose(ID);
     }
 }
-

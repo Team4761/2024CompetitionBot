@@ -5,16 +5,24 @@
 package frc.robot.subsystems.vision;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.proto.Transform3dProto;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobocketsShuffleboard;
+import frc.robot.field.TagPositions;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonUtils;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -23,15 +31,11 @@ public class VisionSubsystem extends SubsystemBase {
   //**ALL ANGLES IN RADIANS ALL DISTANCES IN METERS**//
   PhotonCamera mCamera;
 
-  // Currently Configured for the Tshirt Cannon
-  private Translation3d cameraTranslate = new Translation3d(.3915,0.0,0.0); // Meters
+  private Translation3d cameraTranslate = new Translation3d(.3915,0.0,0.35); // Meters
   private Rotation3d camerRotation = new Rotation3d(Math.PI/12.0, 0.0, 0.0); // Radians
-  Pose3d cameraTransform = new Pose3d(cameraTranslate, camerRotation);
-  // Initialization has been moved to RobotMap
-  //private static final VisionSubsystem INSTANCE = new VisionSubsystem();
-  //public static VisionSubsystem getInstance(){
-  //  return INSTANCE;
-  //}
+  private Transform3d cameraTransform = new Transform3d(cameraTranslate, camerRotation);
+  Pose3d cameraPose3d = new Pose3d(cameraTranslate, camerRotation);
+  private PhotonPoseEstimator photonEstimator = new PhotonPoseEstimator(TagPositions.getAprilTagFieldLayout(), PoseStrategy.AVERAGE_BEST_TARGETS, mCamera, cameraTransform);
   double mCameraHeight = .19;
   double mCameraPitch = Units.degreesToRadians(30);
 
@@ -39,11 +43,20 @@ public class VisionSubsystem extends SubsystemBase {
   public VisionSubsystem(){
     //Replace with name of cam
     mCamera = new PhotonCamera("Camera"); 
+
   }
 
   @Override
   public void periodic() {
-    
+    var result = mCamera.getLatestResult();
+    if(result.hasTargets()){
+      Optional<EstimatedRobotPose> estimatedRobotPose = photonEstimator.update(result);
+      if(estimatedRobotPose.isPresent()){
+        EstimatedRobotPose e = estimatedRobotPose.get();
+        RobocketsShuffleboard.addNumber("Pose X", e.estimatedPose.getX());
+        RobocketsShuffleboard.addNumber("Pose Y", e.estimatedPose.getY());
+      }
+    }
   }
 
   public PhotonPipelineResult getLatestResult(){
