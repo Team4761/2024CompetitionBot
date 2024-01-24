@@ -120,6 +120,27 @@ public class RobocketsController extends XboxController {
             }
         }
 
+        
+        //LEDs
+        if (map.leds != null){
+            //if the intake button is pressed it will turn the LEds to orange
+            if(getLeftBumperPressed())
+            {
+                map.leds.NoteIndicator(true);
+            }
+            //if the outake button is pressed it will turn the LEds off
+            if(getRightBumperPressed())
+            {
+                map.leds.NoteIndicator(false);
+            }
+            //if the outake button is pressed it will turn the LEds off
+            if(getAButtonPressed())
+            {
+                map.leds.ChargeUpSeq();
+                map.leds.NoteIndicator(false);
+            }
+        }
+
 
 
         // West Coast
