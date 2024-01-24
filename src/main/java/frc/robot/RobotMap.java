@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.swerve.SwerveModuleNeo;
@@ -24,6 +25,7 @@ public class RobotMap
     public IntakeSubsystem intake = null;
     public ShooterSubsystem shooter = null;
     public WestCoastSubsystem westcoast = null;
+    public LedSubsystem leds = null;
 
     // Gian: Ok neat system, this is not something I did on the team
     // But why is the swerve drive commented out?

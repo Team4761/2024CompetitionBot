@@ -24,7 +24,7 @@ public class LedSubsystem extends SubsystemBase {
 
     int ticks;
     int currentPort = 0;
-    boolean HaveNote=false; 
+    
 
     AddressableLED leds;
     AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_SIZE);
@@ -124,10 +124,14 @@ public class LedSubsystem extends SubsystemBase {
         }
     }
     //Indicator of having a Note and the LEDs beung that indidcator
-    public void NoteIndicator () {
+    public void NoteIndicator (boolean HaveNote) {
         if (HaveNote==true) 
         {
             SetAllColor(250, 90, 0);
+        }
+        else
+        {
+            SetAllColor(0,0,0);
         }
     }
 
