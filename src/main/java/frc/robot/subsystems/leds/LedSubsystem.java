@@ -35,8 +35,8 @@ public class LedSubsystem extends SubsystemBase {
             leds = new AddressableLED((int)SmartDashboard.getNumber("LED Port", 0));
             leds.setLength(LED_SIZE);
             leds.start();
-            hello = createImageIcon("hello.png");
-            there = createImageIcon("there.png");
+            // hello = createImageIcon("hello.png");
+            // there = createImageIcon("there.png");
         } 
         catch (Exception e) {
             System.out.println(e);
@@ -143,7 +143,7 @@ public class LedSubsystem extends SubsystemBase {
         {
             for(int i=0; i< 8; i++)
             {
-                ledBuffer.setRGB(i,250, 220, 0);
+                ledBuffer.setRGB(i+row*8,250, 220, 0);
             }
             leds.setData(ledBuffer);
             leds.start();
