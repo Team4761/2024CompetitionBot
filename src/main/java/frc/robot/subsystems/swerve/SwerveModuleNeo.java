@@ -186,7 +186,7 @@ public class SwerveModuleNeo extends SubsystemBase{
         return steer.getEncoder().getVelocity(); // /gearratio=rpms of the wheel spinning
     }
     public Rotation2d getRotation() {
-        return new Rotation2d((encoder.getAbsolutePosition() + offset + 90) * 0.0174533);
+        return new Rotation2d((encoder.getAbsolutePosition() + offset + 90) * 0.0174533);   // Converts the encoder ticks into radians after applying an offset.
     }
 
     public SwerveModuleState getState() {

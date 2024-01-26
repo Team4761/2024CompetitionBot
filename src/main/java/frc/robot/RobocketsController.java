@@ -30,7 +30,7 @@ public class RobocketsController extends XboxController {
     // This records the past 20 inputs received from the controller, and averages them out
     // This way, rather than a controller going from 0 to 1 in 1 cycle, it takes a couple cycles to reach 1
     // This way, the motors to not instantly accelerate
-    private final int SMOOTH_FRAME_LENGTH = 20;
+    private final int SMOOTH_FRAME_LENGTH = 5;
 
     private int smoothNextFrameToWrite = 0;
     private double[] smoothLeftX = new double[SMOOTH_FRAME_LENGTH];
