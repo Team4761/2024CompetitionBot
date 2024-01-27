@@ -3,6 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems.vision;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,6 +14,7 @@ import java.util.List;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class VisionSubsystem extends SubsystemBase {
@@ -26,9 +30,12 @@ public class VisionSubsystem extends SubsystemBase {
   double mCameraPitch = Units.degreesToRadians(30);
 
   private boolean mDriverMode = false;
+  private AprilTagFieldLayout tagFieldLayout;
+
   public VisionSubsystem(){
     //Replace with name of cam
-    mCamera = new PhotonCamera("Main"); 
+    mCamera = new PhotonCamera("Camera");
+    tagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
   }
 
   @Override
@@ -36,8 +43,15 @@ public class VisionSubsystem extends SubsystemBase {
     
   }
 
+  public Pose3d getTagPose(int id) {
+    return tagFieldLayout.getTagPose(id).orElse(null);
+  }
 
-   public int getBestTagID(){
+  public PhotonPipelineResult getLatestResult(){
+    return mCamera.getLatestResult();
+  }
+
+  public int getBestTagID(){
      return mCamera.getLatestResult().getBestTarget().getFiducialId();
    }
 
@@ -61,6 +75,8 @@ public class VisionSubsystem extends SubsystemBase {
       return new Translation2d();
     }
   }
+
+  
 
   public void toggleDriverMode(){
     mDriverMode = !mDriverMode;

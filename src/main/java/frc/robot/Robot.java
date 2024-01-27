@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Auto.AutoConstruct;
+import frc.robot.subsystems.shooter.Shoot;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
 
 /**
@@ -19,14 +21,12 @@ import frc.robot.subsystems.swerve.SwerveGoCartesianF;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  private static RobotMap map = new RobotMap(); // Represents all physical objects on our robot
+  // Represents all physical objects on our robot
+  // This is also the file where all the subsystems reside
+  private static RobotMap map = new RobotMap();
   public static RobotMap getMap() { return map; }
-  public static XboxController controller = new XboxController(0);
+  public static RobocketsController controller = new RobocketsController(Constants.CONTROLLER_PORT, map);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -34,9 +34,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
+    AutoConstruct.sendAutoOptionsToSmartDashboard();
   }
 
   /**
@@ -61,11 +59,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
-
-    CommandScheduler.getInstance().schedule(new SwerveGoCartesianF(map.swerve, new Translation2d(20, 20)));
+    AutoConstruct.scheduleSelectedCommand(map);
   }
 
   /** This function is called periodically during autonomous. */
@@ -73,7 +67,9 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     CommandScheduler.getInstance().run();
 
-    switch (m_autoSelected) {
+    //Gian: I'm not so sure why we would ever use this if all the auto code is done in the commandscheduler
+
+    /*switch (m_autoSelected) {
       case kCustomAuto:
         // Put custom auto code here
         break;
@@ -81,42 +77,26 @@ public class Robot extends TimedRobot {
       default:
         // Put default auto code here
         break;
-    }
+    }*/
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
-
-
-  // Apply a deadzone for swerve
-  public static double deadzone (double value, double deadzone) {
-    if (Math.abs(value) > deadzone) {
-        if (value > 0.0) {
-            return (value - deadzone) / (1.0 - deadzone);
-        } else {
-            return (value + deadzone) / (1.0 - deadzone);
-        }
-    } else {
-        return 0.0;
-    }
+  public void teleopInit() {
+    map.leds.ChargeUpSeq();
+    RobocketsShuffleboard.teleopInit();
   }
+
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // Controller Code
-    double xyCof = 0.75/Math.max(0.001, Math.sqrt(Math.pow(deadzone(controller.getLeftX(), 0.1), 2)+Math.pow(deadzone(controller.getLeftY(), 0.1), 2)));
-    map.swerve.swerveDriveF(xyCof*deadzone(controller.getLeftX(), 0.1)*(controller.getLeftTriggerAxis()+controller.getRightTriggerAxis()), -xyCof*deadzone(controller.getLeftY(), 0.1)*(controller.getLeftTriggerAxis()+controller.getRightTriggerAxis()), -deadzone(controller.getRightX(), 0.08));
-  
-    if(controller.getXButtonPressed()) {
-      map.swerve.zeroGyro();
-    }
-    if(controller.getYButtonPressed()) {
-      map.swerve.resetPose();
-    }
+    controller.teleopPeriodic();
+    if (map.vision != null) {
+      var result = map.vision.getLatestResult();
 
-    if(controller.getAButtonPressed()){
-      map.vision.toString();
+      if(result.hasTargets()){
+        System.out.println(result.getBestTarget());
+      }
     }
     // Run any commands
     CommandScheduler.getInstance().run();
