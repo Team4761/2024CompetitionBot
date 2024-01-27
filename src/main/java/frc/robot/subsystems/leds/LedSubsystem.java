@@ -136,18 +136,26 @@ public class LedSubsystem extends SubsystemBase {
         }
     }
 
-    public void ChargeUpSeq()
-    {
+    // public void ChargeUpSeq()
+    // {
+    //     for (int row = 0; row < LED_SIZE/8; row++) 
+    //     {
+    //         for(int i=0; i< 8; i++)
+    //         {
+    //             ledBuffer.setRGB(i+row*8,250, 220, 0);
+    //         }
+    //         leds.setData(ledBuffer);
+    //         leds.start();
+    //     }
+    // }
 
-        for (int row = 0; row < LED_SIZE/8; row++) 
+    public void RowOn(int r, int g, int b)
+    {
+        for (int i=0; i<=LED_WIDTH; i++)
         {
-            for(int i=0; i< 8; i++)
-            {
-                ledBuffer.setRGB(i+row*8,250, 220, 0);
-            }
-            leds.setData(ledBuffer);
-            leds.start();
+            ledBuffer.setRGB(i,r,g,b);
         }
-        
     }
 }
+
+
