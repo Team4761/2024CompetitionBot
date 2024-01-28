@@ -24,6 +24,7 @@ public class LedSubsystem extends SubsystemBase {
 
     int ticks;
     int currentPort = 0;
+    
 
     AddressableLED leds;
     AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_SIZE);
@@ -31,13 +32,13 @@ public class LedSubsystem extends SubsystemBase {
     public LedSubsystem() {
         
         try {
-            
             leds = new AddressableLED((int)SmartDashboard.getNumber("LED Port", 0));
             leds.setLength(LED_SIZE);
             leds.start();
-            hello = createImageIcon("hello.png");
-            there = createImageIcon("there.png");
-        } catch (Exception e) {
+            // hello = createImageIcon("hello.png");
+            // there = createImageIcon("there.png");
+        } 
+        catch (Exception e) {
             System.out.println(e);
         }
     }
@@ -90,6 +91,7 @@ public class LedSubsystem extends SubsystemBase {
     }
 
     public void turnOff() {
+        SetAllColor(0,0,0);
         leds.close();
     }
 
@@ -122,10 +124,15 @@ public class LedSubsystem extends SubsystemBase {
             ticks = 250;
         }
     }
-
-    public void Touch(String object) {
-        if (object.equals("thing")) {
-            SetAllColor(20, 30, 250);
+    //Indicator of having a Note and the LEDs beung that indidcator
+    public void NoteIndicator (boolean HaveNote) {
+        if (HaveNote==true) 
+        {
+            SetAllColor(250, 90, 0);
+        }
+        else
+        {
+            SetAllColor(0,0,0);
         }
     }
 
@@ -136,11 +143,11 @@ public class LedSubsystem extends SubsystemBase {
         {
             for(int i=0; i< 8; i++)
             {
-                ledBuffer.setRGB(i,250,50,50);
+                ledBuffer.setRGB(i+row*8,250, 220, 0);
             }
-            
-        }
-        leds.setData(ledBuffer);
+            leds.setData(ledBuffer);
             leds.start();
+        }
+        
     }
 }

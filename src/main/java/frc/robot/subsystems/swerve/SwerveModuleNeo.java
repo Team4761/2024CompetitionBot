@@ -33,7 +33,7 @@ public class SwerveModuleNeo extends SubsystemBase{
      * @param driveID CAN port for motor driving wheel 
      * @param steerID CAN port for motor rotating wheel
      * @param encoderID DIO (?) port for CANSparkMax encoder
-     * @param o Motor offset in Radians
+     * @param o Motor offset in degrees
      * @param driveMult Drive multiplier
      * @param steerMult Steer (rotation) multiplier
      */
