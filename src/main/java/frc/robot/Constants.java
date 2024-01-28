@@ -40,4 +40,6 @@ public class Constants
     public static double DRIVETRAIN_MAX_SPEED_MPS = 2.5; // random number! :D
     public static double DRIVETRAIN_GEAR_RATIO = 3.0; //random number!
     public static double RPM_TO_MPS_CONVERSION = DRIVETRAIN_WHEEL_CIRCUMFERENCE_M / 60.0;
+    public static double SPARKMAX_UNITS_PER_ROTATION = 2048;
+    public static double DRIVETRAIN_ENCODER_UNITS_TO_METERS = DRIVETRAIN_WHEEL_CIRCUMFERENCE_M / SPARKMAX_UNITS_PER_ROTATION / DRIVETRAIN_GEAR_RATIO;    // The scale factor for the drivetrain wheels encoder units to meters
 }

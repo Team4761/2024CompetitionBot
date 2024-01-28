@@ -32,10 +32,11 @@ public class RobotMap
     public RobotMap() 
     {
         // intake = new IntakeSubsystem();
-        //swerve = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
+        swerve = new SwerveDriveSubsystem(new Translation2d(-0.31115, 0.31115), new Translation2d(0.31115, 0.31115), new Translation2d(-0.31115, -0.31115), new Translation2d(0.31115, -0.31115));    // All translations are the swerve module positions relative to the center of the bot
+        // swerve = new SwerveDriveSubsystem(new Translation2d(0.31115, 0.31115), new Translation2d(0.31115, -0.31115), new Translation2d(-0.31115, 0.31115), new Translation2d(-0.31115, -0.31115));
         // vision = new VisionSubsystem();
         //shooter = new ShooterSubsystem();
-        leds=new LedSubsystem();
+        // leds=new LedSubsystem();
 
         // ONLY FOR TESTING
         // westcoast = new WestCoastSubsystem();

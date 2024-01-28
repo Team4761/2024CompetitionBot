@@ -9,6 +9,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -41,6 +42,8 @@ public class SwerveModuleNeo extends SubsystemBase{
         drive = new CANSparkMax(driveID, CANSparkLowLevel.MotorType.kBrushless);
         steer = new CANSparkMax(steerID, CANSparkLowLevel.MotorType.kBrushless);
         encoder = new CANCoder(encoderID);
+
+        drive.getEncoder().setPositionConversionFactor(Constants.DRIVETRAIN_ENCODER_UNITS_TO_METERS*800);  // Make the encoder return the meters travelled by the drive motor instead of arbitrary units
 
         offset = o;
 
@@ -174,9 +177,10 @@ public class SwerveModuleNeo extends SubsystemBase{
     }
 
     public SwerveModulePosition getPosition() {
+        SmartDashboard.putNumber("Module Position", drive.getEncoder().getPosition());
         return new SwerveModulePosition(
-            drive.getEncoder().getPosition(), 
-            getRotation() // 2048 ticks to radians is 2pi/2048
+            drive.getEncoder().getPosition()*dM,   // The meters that the wheel has moved
+            MathStuff.negative(getRotation()) // 2048 ticks to radians is 2pi/2048
         );
     }
     public double getDriveVelocity() { //rpms default supposedy, actual drive speed affected by gear ratio and wheel circumfernce
