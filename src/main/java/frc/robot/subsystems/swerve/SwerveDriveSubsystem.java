@@ -154,7 +154,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             m_swervePositions
         );
 
-        //forward is -y left is +x
+        //forward is +y left is +x
 
         SmartDashboard.putNumber("Odometry x", m_pose.getX());
         SmartDashboard.putNumber("Odometry y", m_pose.getY());

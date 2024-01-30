@@ -63,7 +63,7 @@ public class AutoConstruct {
         Command scheduledCommand = null;
         switch (m_autoSelected) {
             case kDefaultAuto:
-                scheduledCommand = new SwerveGoCartesianF(map.swerve, new Translation2d(20, 20));
+                scheduledCommand = new SwerveGoCartesianF(map.swerve, new Translation2d(0, 6));
             break;
             case kPathPlanner1Auto:
                 scheduledCommand = new PathPlannerAuto("1 Meter Auto");

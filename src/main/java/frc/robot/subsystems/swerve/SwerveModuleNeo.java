@@ -43,7 +43,8 @@ public class SwerveModuleNeo extends SubsystemBase{
         steer = new CANSparkMax(steerID, CANSparkLowLevel.MotorType.kBrushless);
         encoder = new CANCoder(encoderID);
 
-        drive.getEncoder().setPositionConversionFactor(Constants.DRIVETRAIN_ENCODER_UNITS_TO_METERS*800);  // Make the encoder return the meters travelled by the drive motor instead of arbitrary units
+        // The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
+        drive.getEncoder().setPositionConversionFactor(0.0388385473906813);  // Make the encoder return the meters travelled by the drive motor instead of arbitrary units
 
         offset = o;
 
