@@ -2,11 +2,11 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 // import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.shooter.ShooterSubsystem;
+// import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.swerve.SwerveModuleNeo;
 import frc.robot.subsystems.vision.VisionSubsystem;
-import frc.robot.subsystems.westcoast.WestCoastSubsystem;
+// import frc.robot.subsystems.westcoast.WestCoastSubsystem;
 
 // Contains all physical items on the robot (motors, encoders, LEDs, etc)
 public class RobotMap
@@ -22,8 +22,8 @@ public class RobotMap
     public SwerveDriveSubsystem swerve = null;
     public VisionSubsystem vision = null;
     //public IntakeSubsystem intake = null;
-    public ShooterSubsystem shooter = null;
-    public WestCoastSubsystem westcoast = null;
+    // public ShooterSubsystem shooter = null;
+    // public WestCoastSubsystem westcoast = null;
 
     // Gian: Ok neat system, this is not something I did on the team
     // But why is the swerve drive commented out?

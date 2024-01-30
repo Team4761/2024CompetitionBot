@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Auto.AutoConstruct;
-import frc.robot.subsystems.shooter.Shoot;
+// import frc.robot.Auto.AutoConstruct;
+// import frc.robot.subsystems.shooter.Shoot;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
 
 /**
@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
   // This is also the file where all the subsystems reside
   private static RobotMap map = new RobotMap();
   public static RobotMap getMap() { return map; }
-  public static RobocketsController controller = new RobocketsController(Constants.CONTROLLER_PORT, map);
+  // public static RobocketsController controller = new RobocketsController(Constants.CONTROLLER_PORT, map);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -60,12 +60,13 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     //AutoConstruct.scheduleSelectedCommand(map);
+
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    map.vision.periodic();
+    
     
     //CommandScheduler.getInstance().run();
 
@@ -85,20 +86,13 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    RobocketsShuffleboard.teleopInit();
+    // RobocketsShuffleboard.teleopInit();
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    controller.teleopPeriodic();
-    if (map.vision != null) {
-      var result = map.vision.getLatestResult();
-
-      if(result.hasTargets()){
-        System.out.println(result.getBestTarget());
-      }
-    }
+    // controller.teleopPeriodic();
     // Run any commands
     CommandScheduler.getInstance().run();
   }

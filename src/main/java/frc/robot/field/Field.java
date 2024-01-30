@@ -12,19 +12,19 @@ public class Field {
     //-------
     // Speaker
     //-------
-    public static final Speaker SPEAKER = new Speaker(SPEAKER_TOP_LEFT, SPEAKER_BOTTOM_RIGHT);
-    public static final Subwoofer SUBWOOFER = new Subwoofer(SUBWOOFER_TOP_LEFT, SUBWOOFER_BOTTOM_RIGHT);
+    // public static final Speaker SPEAKER = new Speaker(SPEAKER_TOP_LEFT, SPEAKER_BOTTOM_RIGHT);
+    // public static final Subwoofer SUBWOOFER = new Subwoofer(SUBWOOFER_TOP_LEFT, SUBWOOFER_BOTTOM_RIGHT);
 
     //-------
     // Stage
     //-------
-    public static final Stage STAGE =
-        new Stage(
-            LEFT_STAGE_POST_TOP_LEFT, TOP_STAGE_POST_CENTER, BOTTOM_STAGE_POST_CENTER,
-            RIGHT_TRAP_POINT1, RIGHT_TRAP_POINT2,
-            TOP_TRAP_POINT1, TOP_TRAP_POINT2,
-            BOTTOM_TRAP_POINT1, BOTTOM_TRAP_POINT2
-        );
+    // public static final Stage STAGE =
+    //     new Stage(
+    //         LEFT_STAGE_POST_TOP_LEFT, TOP_STAGE_POST_CENTER, BOTTOM_STAGE_POST_CENTER,
+    //         RIGHT_TRAP_POINT1, RIGHT_TRAP_POINT2,
+    //         TOP_TRAP_POINT1, TOP_TRAP_POINT2,
+    //         BOTTOM_TRAP_POINT1, BOTTOM_TRAP_POINT2
+    //     );
 
     //-------
     // Notes

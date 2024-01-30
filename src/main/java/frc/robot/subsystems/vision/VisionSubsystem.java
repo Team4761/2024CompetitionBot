@@ -32,12 +32,10 @@ public class VisionSubsystem extends SubsystemBase {
   PhotonCamera mCamera;
 
   private Translation3d cameraTranslate = new Translation3d(.3915,0.0,0.35); // Meters
-  private Rotation3d camerRotation = new Rotation3d(Math.PI/12.0, 0.0, 0.0); // Radians
+  private Rotation3d camerRotation = new Rotation3d(0.0, Math.PI / 12, 0.0); // Radians
   private Transform3d cameraTransform = new Transform3d(cameraTranslate, camerRotation);
   Pose3d cameraPose3d = new Pose3d(cameraTranslate, camerRotation);
   private PhotonPoseEstimator photonEstimator = new PhotonPoseEstimator(TagPositions.getAprilTagFieldLayout(), PoseStrategy.AVERAGE_BEST_TARGETS, mCamera, cameraTransform);
-  double mCameraHeight = .19;
-  double mCameraPitch = Units.degreesToRadians(30);
 
   private boolean mDriverMode = false;
   public VisionSubsystem(){
@@ -53,10 +51,13 @@ public class VisionSubsystem extends SubsystemBase {
       Optional<EstimatedRobotPose> estimatedRobotPose = photonEstimator.update(result);
       if(estimatedRobotPose.isPresent()){
         EstimatedRobotPose e = estimatedRobotPose.get();
-        RobocketsShuffleboard.addNumber("Pose X", e.estimatedPose.getX());
-        RobocketsShuffleboard.addNumber("Pose Y", e.estimatedPose.getY());
+        // RobocketsShuffleboard.addNumber("Pose X", e.estimatedPose.getX());
+        // RobocketsShuffleboard.addNumber("Pose Y", e.estimatedPose.getY());
       }
     }
+    Pose3d robotPose = getPoseFromTag();
+    RobocketsShuffleboard.addNumber("X", robotPose.getX());
+    RobocketsShuffleboard.addNumber("Y", robotPose.getY());
   }
 
   public PhotonPipelineResult getLatestResult(){
@@ -70,22 +71,27 @@ public class VisionSubsystem extends SubsystemBase {
   public boolean hasTargets(){
     return mCamera.getLatestResult().hasTargets();
   }
-  public Translation2d getTransDiff(double targetHeight){
-    if(hasTargets()){
-      double pitch = Units.degreesToRadians(mCamera.getLatestResult().getBestTarget().getPitch());
-      double distance = PhotonUtils.calculateDistanceToTargetMeters(
-        mCameraHeight, 
-        targetHeight, 
-        mCameraPitch,
-        pitch);
-      double yaw = Units.degreesToRadians(mCamera.getLatestResult().getBestTarget().getYaw());
-      double yDiff = distance * Math.cos(pitch);
-      double xDiff = yDiff / Math.cos(yaw) * Math.sin(yaw);
-      return new Translation2d(xDiff, yDiff - 1);
+
+  public Pose3d getPoseFromTag(){
+    var result = getLatestResult();
+    if(result.hasTargets()){
+      //Gets ID and ambiguity (if tag is trustworthy)
+      int tag = result.getBestTarget().getFiducialId();
+      double ambiguity = result.getBestTarget().getPoseAmbiguity();
+      //Get tag pose
+      Optional<Pose3d> tagPose = TagPositions.getTagPose3d(tag);
+      if(tagPose.isPresent() && ambiguity < .2){
+        //Gets tag pose and transfroms over camera
+        Pose3d pose = tagPose.get();
+        Transform3d tagToCam = result.getBestTarget().getBestCameraToTarget();
+        //Cam pose on field
+        Pose3d camPose = pose.transformBy(tagToCam);
+        //Robot pose on field
+        Pose3d robotPose = camPose.transformBy(camPose.minus(cameraPose3d));
+        return robotPose;
+      }
     }
-    else{
-      return new Translation2d();
-    }
+    return new Pose3d();
   }
 
   public void toggleDriverMode(){
