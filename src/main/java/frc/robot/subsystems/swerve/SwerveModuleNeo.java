@@ -9,6 +9,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -41,6 +42,9 @@ public class SwerveModuleNeo extends SubsystemBase{
         drive = new CANSparkMax(driveID, CANSparkLowLevel.MotorType.kBrushless);
         steer = new CANSparkMax(steerID, CANSparkLowLevel.MotorType.kBrushless);
         encoder = new CANCoder(encoderID);
+
+        drive.getEncoder().setPosition(0.0);
+        steer.getEncoder().setPosition(0.0);
 
         offset = o;
 
@@ -152,6 +156,8 @@ public class SwerveModuleNeo extends SubsystemBase{
      * 
      * <p>Keep in mind that this function has a lot of unexplained "magic numbers" 
      * <p>For more information track down Ian and ask him what the hell he wrote
+     * 
+     * <p> TODO: Unit are all off. Unsure if these even are units or just readings from the controller
      */
     public void go() {
         //System.out.println("speed: "+targetState.speedMetersPerSecond);
@@ -166,6 +172,8 @@ public class SwerveModuleNeo extends SubsystemBase{
         double driveA = targetState.speedMetersPerSecond*dM*0.8;
         double driveB = Math.signum(driveA)*0.03;
         drive.set(driveA+driveB);
+
+
     }
 
     public void setSpeeds(double d, double s) {
@@ -173,20 +181,25 @@ public class SwerveModuleNeo extends SubsystemBase{
         steer.set(s*sM);
     }
 
+    // Meters and Radians
     public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(
-            drive.getEncoder().getPosition(), 
-            getRotation() // 2048 ticks to radians is 2pi/2048
-        );
+        // 2048 ticks to radians is 2pi/2048
+        return new SwerveModulePosition(drive.getEncoder().getPosition()*Constants.DRIVETRAIN_WHEEL_CIRCUMFERENCE_M/Constants.DRIVETRAIN_DRIVE_GEAR_RATIO, getRotation());
     }
     public double getDriveVelocity() { //rpms default supposedy, actual drive speed affected by gear ratio and wheel circumfernce
-        return drive.getEncoder().getVelocity(); //*gearratio*circumference=m/s except needs units adjustment
+        return drive.getEncoder().getVelocity()*Constants.RPM_TO_MPS_CONVERSION/Constants.DRIVETRAIN_DRIVE_GEAR_RATIO;
     }
     public double getSteerVelocity() { //rpms default, affected by gear ratio
-        return steer.getEncoder().getVelocity(); // /gearratio=rpms of the wheel spinning
+        return steer.getEncoder().getVelocity()/Constants.DRIVETRAIN_STEER_GEAR_RATIO; // /gearratio=rpms of the wheel spinning
     }
+    // Returns Radians
+    // TODO: Does this even need a gear ratio applied to it???
     public Rotation2d getRotation() {
-        return new Rotation2d((encoder.getAbsolutePosition() + offset + 90) * 0.0174533);
+        // what the hell is this deprecated function doing that's better than the alternative method
+        double absoluterot = (encoder.getAbsolutePosition() + offset + 90) * 0.0174533;
+        //double encoderrot = (steer.getEncoder().getPosition() % 1.0)*2.0*Math.PI + (offset + 90.0) * 0.0174533;
+
+        return new Rotation2d(absoluterot);
     }
 
     public SwerveModuleState getState() {

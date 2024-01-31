@@ -38,6 +38,7 @@ public class Constants
     public static double DRIVETRAIN_WHEEL_DIAMETER_M = 0.1016; // wheel diameter in meters. This is 4 inches btw
     public static double DRIVETRAIN_WHEEL_CIRCUMFERENCE_M = DRIVETRAIN_WHEEL_DIAMETER_M*Math.PI; // wheel circumference in meters
     public static double DRIVETRAIN_MAX_SPEED_MPS = 2.5; // random number!
-    public static double DRIVETRAIN_GEAR_RATIO = 3.0; //random number!
+    public static double DRIVETRAIN_DRIVE_GEAR_RATIO = 6.75; // Obtained from official documentation
+    public static double DRIVETRAIN_STEER_GEAR_RATIO = 8.35; // Obtained from CAD model
     public static double RPM_TO_MPS_CONVERSION = DRIVETRAIN_WHEEL_CIRCUMFERENCE_M / 60.0;
 }

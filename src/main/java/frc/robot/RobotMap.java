@@ -7,6 +7,7 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.swerve.SwerveModuleNeo;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystem2;
 import frc.robot.subsystems.westcoast.WestCoastSubsystem;
 
 // Contains all physical items on the robot (motors, encoders, LEDs, etc)
@@ -22,6 +23,7 @@ public class RobotMap
 
     public SwerveDriveSubsystem swerve = null;
     public VisionSubsystem vision = null;
+    public VisionSubsystem2 vision2 = null;
     public IntakeSubsystem intake = null;
     public ShooterSubsystem shooter = null;
     public WestCoastSubsystem westcoast = null;
@@ -33,6 +35,7 @@ public class RobotMap
     {
         // intake = new IntakeSubsystem();
         swerve = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
+        vision2 = new VisionSubsystem2();
         // vision = new VisionSubsystem();
         //shooter = new ShooterSubsystem();
 
