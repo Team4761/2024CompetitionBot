@@ -30,7 +30,7 @@ public class RobocketsController extends XboxController {
     // This records the past 20 inputs received from the controller, and averages them out
     // This way, rather than a controller going from 0 to 1 in 1 cycle, it takes a couple cycles to reach 1
     // This way, the motors to not instantly accelerate
-    private final int SMOOTH_FRAME_LENGTH = 20;
+    private final int SMOOTH_FRAME_LENGTH = 5;
 
     private int smoothNextFrameToWrite = 0;
     private double[] smoothLeftX = new double[SMOOTH_FRAME_LENGTH];
@@ -117,6 +117,32 @@ public class RobocketsController extends XboxController {
         if (map.vision != null) {
             if(getAButtonPressed()){
                 map.vision.toString();
+            }
+        }
+
+        
+        //LEDs
+        if (map.leds != null){
+            //if the intake button is pressed it will turn the LEds to orange
+            if(getLeftBumperPressed())
+            {
+                map.leds.NoteIndicator(true);
+            }
+
+            if(getLeftBumperReleased())
+            {
+                map.leds.NoteIndicator(true);
+            }
+            //if the outake button is pressed it will turn the LEDs off
+            if(getRightBumperPressed())
+            {
+                map.leds.NoteIndicator(false);
+            }
+            //if the outake button is pressed it will turn the LEDs off
+            if(getAButtonPressed())
+            {
+                map.leds.ChargeUpSeq();
+                map.leds.NoteIndicator(false);
             }
         }
 

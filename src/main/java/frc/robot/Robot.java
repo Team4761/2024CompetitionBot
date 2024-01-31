@@ -4,14 +4,11 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Translation2d;
+
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-// import frc.robot.Auto.AutoConstruct;
-// import frc.robot.subsystems.shooter.Shoot;
+import frc.robot.Auto.AutoConstruct;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
 
 /**
@@ -59,8 +56,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    //AutoConstruct.scheduleSelectedCommand(map);
-
+    AutoConstruct.scheduleSelectedCommand(map);
   }
 
   /** This function is called periodically during autonomous. */
@@ -86,7 +82,8 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    // RobocketsShuffleboard.teleopInit();
+    // map.leds.ChargeUpSeq();
+    RobocketsShuffleboard.teleopInit();
   }
 
   /** This function is called periodically during operator control. */

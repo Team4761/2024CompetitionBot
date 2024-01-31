@@ -6,6 +6,9 @@ package frc.robot.subsystems.vision;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.proto.Transform3dProto;
@@ -38,10 +41,11 @@ public class VisionSubsystem extends SubsystemBase {
   private PhotonPoseEstimator photonEstimator = new PhotonPoseEstimator(TagPositions.getAprilTagFieldLayout(), PoseStrategy.AVERAGE_BEST_TARGETS, mCamera, robotToCameraTransform);
 
   private boolean mDriverMode = false;
+  private AprilTagFieldLayout tagFieldLayout;
+
   public VisionSubsystem(){
     //Replace with name of cam
-    mCamera = new PhotonCamera("Camera"); 
-
+    mCamera = new PhotonCamera("Camera");
   }
 
   @Override
@@ -59,6 +63,10 @@ public class VisionSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("X", robotPose.getX());
     // SmartDashboard.putNumber("Y", robotPose.getY());
     // SmartDashboard.putNumber("Z", robotPose.getZ());
+  }
+
+  public Pose3d getTagPose(int id) {
+    return tagFieldLayout.getTagPose(id).orElse(null);
   }
 
   public PhotonPipelineResult getLatestResult(){
@@ -103,6 +111,8 @@ public class VisionSubsystem extends SubsystemBase {
     return new Pose3d(50, 10, 10000, new Rotation3d());
   }
   private static long l = 0L;
+
+  
 
   public void toggleDriverMode(){
     mDriverMode = !mDriverMode;

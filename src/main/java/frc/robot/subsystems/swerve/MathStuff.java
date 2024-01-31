@@ -26,4 +26,8 @@ public class MathStuff {
         //(a%360 - b%360 + 180 ) % 360 - 180;
         // initial mod 360 not needed 
     }
+
+    public static Rotation2d negative(Rotation2d a) {
+        return new Rotation2d(-a.getRadians());
+    }
 }

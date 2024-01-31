@@ -51,7 +51,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private SwerveModuleNeo m_frontLeftModule  = new SwerveModuleNeo(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , -54.5, 1.0,  1.0);
     private SwerveModuleNeo m_frontRightModule = new SwerveModuleNeo(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT , -6, -1.0, -1.0);
     private SwerveModuleNeo m_backLeftModule   = new SwerveModuleNeo(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT ,Constants.BL_ENCODER_PORT , -68, 1.0, -1.0);
-    private SwerveModuleNeo m_backRightModule  = new SwerveModuleNeo(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , -98, -1.0,  -1.0);
+    private SwerveModuleNeo m_backRightModule  = new SwerveModuleNeo(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , 82, 1.0,  -1.0);
 
     private SwerveModulePosition[] m_swervePositions= new SwerveModulePosition[] {
         m_frontLeftModule.getPosition(), 
@@ -148,21 +148,27 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         };
         
         // update pose
+
         m_pose = m_odometry.update(
             m_gyro.getRotation2d(),
             m_swervePositions
         );
 
-        //forward is -y left is +x
+        //forward is +y left is +x
 
         SmartDashboard.putNumber("Odometry x", m_pose.getX());
         SmartDashboard.putNumber("Odometry y", m_pose.getY());
 
         
-        SmartDashboard.putNumber("Front Left Rot", m_frontLeftModule.getRotation().getDegrees());
-        SmartDashboard.putNumber("Front Right Rot", m_frontRightModule.getRotation().getDegrees());
-        SmartDashboard.putNumber("Back Left Rot", m_backLeftModule.getRotation().getDegrees());
-        SmartDashboard.putNumber("Back Right Rot", m_backRightModule.getRotation().getDegrees());
+        SmartDashboard.putNumber("Front Left Rot", m_frontLeftModule.getPosition().angle.getDegrees());
+        SmartDashboard.putNumber("Front Right Rot", m_frontRightModule.getPosition().angle.getDegrees());
+        SmartDashboard.putNumber("Back Left Rot", m_backLeftModule.getPosition().angle.getDegrees());
+        SmartDashboard.putNumber("Back Right Rot", m_backRightModule.getPosition().angle.getDegrees());
+
+        SmartDashboard.putNumber("FrontLeft DrivePos", m_frontLeftModule.getPosition().distanceMeters);
+        SmartDashboard.putNumber("FrontRight DrivePos", m_frontRightModule.getPosition().distanceMeters);
+        SmartDashboard.putNumber("BackLeft DrivePos", m_backLeftModule.getPosition().distanceMeters);
+        SmartDashboard.putNumber("BackRight DrivePos", m_backRightModule.getPosition().distanceMeters);
 
         
         SmartDashboard.putNumber("Front Left Target", targetStates[0].angle.getDegrees());
