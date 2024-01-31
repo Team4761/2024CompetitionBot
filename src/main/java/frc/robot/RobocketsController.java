@@ -91,28 +91,28 @@ public class RobocketsController extends XboxController {
         //     }
         //     }
         // Shooter
-        if (map.shooter != null) {
-            if (getAButtonPressed()) {
-                //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setSpeed(SmartDashboard.getNumber("Shooter In Speed", 0.5));
-            }
-            if (getBButtonPressed()) {
-                //CommandScheduler.getInstance().schedule(new Shoot(-SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setSpeed(-SmartDashboard.getNumber("Shooter Out Speed", 0.5));
-            }
-            if (getYButtonPressed()) {
-                map.shooter.setIntakeSpeed(SmartDashboard.getNumber("Shooter Intake Speed", 0.5));
-            }
-            if (getXButtonPressed()) {
-                map.shooter.setIntakeSpeed(-SmartDashboard.getNumber("Shooter Outtake Speed", 0.5));
-            }
-            if (getAButtonReleased() || getBButtonReleased()) {
-                map.shooter.setSpeed(0);
-            }
-            if (getXButtonReleased() || getYButtonReleased()) {
-                map.shooter.setIntakeSpeed(0);
-            }
-        }
+        // if (map.shooter != null) {
+        //     if (getAButtonPressed()) {
+        //         //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
+        //         map.shooter.setSpeed(SmartDashboard.getNumber("Shooter In Speed", 0.5));
+        //     }
+        //     if (getBButtonPressed()) {
+        //         //CommandScheduler.getInstance().schedule(new Shoot(-SmartDashboard.getNumber("Shooter Speed", 0.5)));
+        //         map.shooter.setSpeed(-SmartDashboard.getNumber("Shooter Out Speed", 0.5));
+        //     }
+        //     if (getYButtonPressed()) {
+        //         map.shooter.setIntakeSpeed(SmartDashboard.getNumber("Shooter Intake Speed", 0.5));
+        //     }
+        //     if (getXButtonPressed()) {
+        //         map.shooter.setIntakeSpeed(-SmartDashboard.getNumber("Shooter Outtake Speed", 0.5));
+        //     }
+        //     if (getAButtonReleased() || getBButtonReleased()) {
+        //         map.shooter.setSpeed(0);
+        //     }
+        //     if (getXButtonReleased() || getYButtonReleased()) {
+        //         map.shooter.setIntakeSpeed(0);
+        //     }
+        // }
         // Vision
         if (map.vision != null) {
             if(getAButtonPressed()){
@@ -123,8 +123,8 @@ public class RobocketsController extends XboxController {
 
 
         // West Coast
-        if (map.westcoast != null) {
-            map.westcoast.arcadeDrive(getLeftY(), getRightX());
-        }
+        // if (map.westcoast != null) {
+        //     map.westcoast.arcadeDrive(getLeftY(), getRightX());
+        // }
     }
 }

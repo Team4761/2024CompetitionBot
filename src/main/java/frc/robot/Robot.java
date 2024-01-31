@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    AutoConstruct.sendAutoOptionsToSmartDashboard();
+    // AutoConstruct.sendAutoOptionsToSmartDashboard();
   }
 
   /**
@@ -94,6 +94,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     // controller.teleopPeriodic();
     // Run any commands
+    map.vision.getPoseFromTag();
     CommandScheduler.getInstance().run();
   }
 
