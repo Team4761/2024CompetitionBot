@@ -165,10 +165,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Back Left Rot", m_backLeftModule.getPosition().angle.getDegrees());
         SmartDashboard.putNumber("Back Right Rot", m_backRightModule.getPosition().angle.getDegrees());
 
-        SmartDashboard.putNumber("FrontLeft DrivePos", m_frontLeftModule.getPosition().distanceMeters);
-        SmartDashboard.putNumber("FrontRight DrivePos", m_frontRightModule.getPosition().distanceMeters);
-        SmartDashboard.putNumber("BackLeft DrivePos", m_backLeftModule.getPosition().distanceMeters);
-        SmartDashboard.putNumber("BackRight DrivePos", m_backRightModule.getPosition().distanceMeters);
+        SmartDashboard.putNumber("Front Left Drive", m_frontLeftModule.getPosition().distanceMeters);
+        SmartDashboard.putNumber("Front Right Drive", m_frontRightModule.getPosition().distanceMeters);
+        SmartDashboard.putNumber("Back Left Drive", m_backLeftModule.getPosition().distanceMeters);
+        SmartDashboard.putNumber("Back Right Drive", m_backRightModule.getPosition().distanceMeters);
 
         
         SmartDashboard.putNumber("Front Left Target", targetStates[0].angle.getDegrees());
@@ -207,10 +207,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
 
         //Gian: what is the point of this??
-        // input squaring
-        //double squareFactor = Math.sqrt(speedX*speedX+speedY*speedY);
-        //speedX*=squareFactor;
-        //speedY*=squareFactor;
+        // input squaring, makes small adjustments easier while allowing higher speeds 
+        double squareFactor = Math.sqrt(speedX*speedX+speedY*speedY);
+        speedX*=squareFactor;
+        speedY*=squareFactor;
 
 
         if(lastDone==0) {                   // After moving for 10 cycles, check the rotation of the robot.
@@ -259,6 +259,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     }
 
+    public void setTargetAngle(Rotation2d r) {
+        pointDir = r;
+    }
+    
     // stuff
     // Degrees
     public double getGyroDegrees() {
@@ -308,5 +312,19 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         m_frontRightModule.setSpeeds(0, 0);
         m_backLeftModule.setSpeeds(0, 0);
         m_backRightModule.setSpeeds(0, 0);
+    }
+    public void test() {
+        
+        targetStates[0] = new SwerveModuleState(0.2, new Rotation2d());
+        targetStates[1] = new SwerveModuleState(0.2, new Rotation2d());
+        targetStates[2] = new SwerveModuleState(0.2, new Rotation2d());
+        targetStates[3] = new SwerveModuleState(0.2, new Rotation2d());
+        
+        m_frontLeftModule .setTargetState(targetStates[0], false);
+        m_frontRightModule.setTargetState(targetStates[1], false);
+        m_backLeftModule  .setTargetState(targetStates[2], false);
+        m_backRightModule .setTargetState(targetStates[3], false);
+
+
     }
 }

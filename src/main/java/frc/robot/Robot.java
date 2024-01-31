@@ -5,11 +5,13 @@
 package frc.robot;
 
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Auto.AutoConstruct;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
+import frc.robot.subsystems.swerve.SwerveTurnTo;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -57,12 +59,17 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // CommandScheduler.getInstance().schedule(new SwerveGoCartesianF(map.swerve, new Translation2d(0, 6)));
+    CommandScheduler.getInstance().schedule(new SwerveTurnTo(map.swerve, new Rotation2d(3.1415)));
+
+    
     AutoConstruct.scheduleSelectedCommand(map);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+
+    
     CommandScheduler.getInstance().run();
 
     //Gian: I'm not so sure why we would ever use this if all the auto code is done in the commandscheduler
