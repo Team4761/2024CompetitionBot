@@ -63,6 +63,8 @@ public class VisionSubsystem2 extends SubsystemBase {
     targets = result.getTargets();
     target = result.getBestTarget();
 
+    if(!hasTargets) return;
+    
     cameraSpaceTransform = target.getBestCameraToTarget();
     fieldSpaceTransform = PhotonUtils.estimateFieldToRobotAprilTag(
       target.getBestCameraToTarget(), 

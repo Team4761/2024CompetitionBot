@@ -38,14 +38,16 @@ public class FollowApril extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(!map.vision2.hasTargets) map.swerve.swerveDriveR(0.0,0.0,0.0);;
+
     // r-C + C-T = R-T
     Transform3d robotToTag = map.vision2.getCameraToAprilTag().plus(map.vision2.cameraToRobot.inverse());
 
     // we cannot change the rotation so instead we will try to align ourselves with the translation
-    Translation3d robotToTagTransform = robotToTag.getTranslation();
+    Translation3d robotToTagTranslate = robotToTag.getTranslation();
 
     // get the delta
-    Translation3d robotToTagDelta = targetRobotToTag.getTranslation().minus(robotToTagTransform);
+    Translation3d robotToTagDelta = targetRobotToTag.getTranslation().minus(robotToTagTranslate);
 
     // get the x and y
     double DeltaX = robotToTagDelta.getX();
