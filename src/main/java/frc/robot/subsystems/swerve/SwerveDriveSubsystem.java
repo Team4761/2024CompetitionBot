@@ -97,11 +97,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // This just gets the PID values of one motor. All 4 should be equal though!!
         SparkPIDController spcd = m_backLeftModule.getDriveMotor().getPIDController(); // d for drive
         SparkPIDController spcs = m_backLeftModule.getSteerMotor().getPIDController(); // s for steer
+        // https://github.com/mjansen4857/pathplanner/wiki/Java-Example:-Build-an-Auto
         HolonomicPathFollowerConfig hpfc = new HolonomicPathFollowerConfig(
             new PIDConstants(spcd.getP(),spcd.getI(),spcd.getD()), // Translation PID Constants
             new PIDConstants(spcs.getP(),spcs.getI(),spcs.getD()), // Rotateion PID Constants
             Constants.DRIVETRAIN_MAX_SPEED_MPS, // max mps
-            12.25*Math.sqrt(2.0), //Distance from robot center to wheel in meters. They're all equidistant so this is a good value
+            0.31115*Math.sqrt(2.0), //Distance from robot center to wheel in meters. They're all equidistant so this is a good value
             new ReplanningConfig() //
         );
 
@@ -111,18 +112,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             this::getPose,
             this::resetPose, 
             this::getRobotRelativeSpeeds, 
-            (chassisspeeds) -> {
-                targetStates = m_kinematics.toSwerveModuleStates(chassisspeeds);
-            }, 
+            this::swerveDriveR, 
             hpfc,
-            () -> {
-                // If we are on red alliance, flip the auto (due to the odd mirroring on the field)
-                Optional<Alliance> ally = DriverStation.getAlliance();
-                if(ally.isPresent()) {
-                    return (ally.get() == Alliance.Red);
-                }
-                return false;
-            },
+            this::isOnRedAlliance,
             this
         );
 
@@ -212,19 +204,21 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         //speedX*=squareFactor;
         //speedY*=squareFactor;
 
+        SmartDashboard.putNumber("speedX", speedX);
+        SmartDashboard.putNumber("speedY", speedY);
+        SmartDashboard.putNumber("speedRot", speedRot);
+        SmartDashboard.putNumber("GyroRotation", getGyroRotation().getRadians());
 
         if(lastDone==0) {                   // After moving for 10 cycles, check the rotation of the robot.
             pointDir = getGyroRotation();   // Radians
         }
         // if not turning do lock on
         if (speedRot == 0) {
-            double rotP = getGyroRotation().minus(pointDir).getDegrees()*0.001; // proportional to keep robot turned properly (finds the distance between expected and actual rotation to apply some opposite rotational speed)
+            double rotP = getGyroRotation().minus(pointDir).getDegrees()    // proportional to keep robot turned properly (finds the distance between expected and actual rotation to apply some opposite rotational speed)
+                * (0.001 + 0.03*(Math.abs(speedX) + Math.abs(speedY)));     // If going faster, correct more (because small corrections are lost)
             if (Math.abs(rotP)<0.001 || lastDone>0) { rotP=0; }                 // If you corrected recently OR the rotational correction isn't much, don't do it at all.
             // Add the speeds that it is trying to achieve to Smart Dashboard for debugging
-            SmartDashboard.putNumber("speedX", speedX);
-            SmartDashboard.putNumber("speedY", speedY);
             SmartDashboard.putNumber("rotP", rotP);
-            SmartDashboard.putNumber("GyroRotation", getGyroRotation().getRadians());
 
             targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, rotP, getGyroRotation()));   //Convert the desired speeds into individual wheel/module speeds. Radians
             
@@ -244,6 +238,18 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // Robot oriented swerve drive, m/s, m/s, rad/s or something
     public void swerveDriveR(double speed, double strafe, double speedRot) {
         targetStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(speed, strafe, speedRot));
+    }
+
+    public void swerveDriveR(ChassisSpeeds newTargetStates) {
+        targetStates = m_kinematics.toSwerveModuleStates(newTargetStates);
+    }
+
+    public boolean isOnRedAlliance() {
+        Optional<Alliance> ally = DriverStation.getAlliance();
+        if(ally.isPresent()) {
+            return (ally.get() == Alliance.Red);
+        }
+        return false;
     }
 
     // car, m/s, degrees    

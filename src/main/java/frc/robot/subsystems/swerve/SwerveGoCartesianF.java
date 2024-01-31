@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 
-// field oriented, move relative to current position, forward should be -y, left +x (is actually fowards = +y, left = +x)
+// field oriented, move relative to current position, +x = forwards, +y = left (is actually fowards = +y, left = +x)
 public class SwerveGoCartesianF extends Command {
     private SwerveDriveSubsystem m_swerve;
     private Translation2d target;
@@ -15,7 +15,7 @@ public class SwerveGoCartesianF extends Command {
 
     private boolean isFinished = false;
 
-    // trans contains an x and y component for the desired movement (NOT new position). +x is left, +y is forwards.
+    // trans contains an x and y component for the desired movement (NOT new position). +x is forwards, +y is left.
     public SwerveGoCartesianF(SwerveDriveSubsystem swerve, Translation2d trans) {
         m_swerve = swerve;
         addRequirements(m_swerve);  // Make it so no 2 commands can access the swerve subsystem at the same time (first come first swerve)
@@ -45,8 +45,8 @@ public class SwerveGoCartesianF extends Command {
         Ivalue += Constants.SWERVE_I / 100.0;   // The speed (Ivalue) builds up over time
 
         //correct forwards -y and left +y to actual speeds:
-        double strafeGo = Math.min(1,Ivalue) * Pvalue * (target.getX()-curTrans.getX());  // The left/right speed where left = +x
-        double speedGo = -Math.min(1,Ivalue) * Pvalue * (target.getY()-curTrans.getY());    // The forwards/backwards speed where forwards = +y
+        double strafeGo = -Math.min(1,Ivalue) * Pvalue * (target.getX()-curTrans.getY());  // The left/right speed where left = +y
+        double speedGo = Math.min(1,Ivalue) * Pvalue * (target.getY()-curTrans.getX());    // The forwards/backwards speed where forwards = +x
 
         double hypoSpeed = Math.sqrt(strafeGo*strafeGo+speedGo*speedGo);    // Calculate the desired TOTAL speed (the hypotenus of the right triangle formed by the speed vectors)
         if (hypoSpeed>vLimit) { // If the desired speed is greater than the max speed, limit the strafe AND speed speed
@@ -61,7 +61,7 @@ public class SwerveGoCartesianF extends Command {
         isFinished = target.getDistance(curTrans) <= 0.01;  // If the distance is less than or equal to 1cm, then it is finished
 
         if (!isFinished)
-            m_swerve.swerveDriveF(strafeGo, speedGo, 0);        // Do field oriented swerve with the strafe and speed speeds
+            m_swerve.swerveDriveF(speedGo, strafeGo, 0);        // Do field oriented swerve with the strafe and speed speeds
     }
     
     @Override
