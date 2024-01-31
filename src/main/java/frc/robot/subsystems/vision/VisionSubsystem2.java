@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobocketsShuffleboard;
 
 /**
  * This has been created by religiously following photonvisions docs
@@ -43,8 +44,8 @@ public class VisionSubsystem2 extends SubsystemBase {
   // This is the relation between the camera and the robot
   // REMINDER: transform describes how to move from 1 pose to another, pose is the position and rotation of a desired location
   // TODO: get this value
-  Translation3d cameraToRobotTranslation = new Translation3d(0, 0, 0);
-  Rotation3d cameraToRobotRotation = new Rotation3d();
+  Translation3d cameraToRobotTranslation = new Translation3d(0.3915, 0, 0.35);
+  Rotation3d cameraToRobotRotation = new Rotation3d(0,Math.PI/12.0,0);
   Transform3d cameraToRobot = new Transform3d(cameraToRobotTranslation, cameraToRobotRotation);
 
   Transform3d cameraSpaceTransform;
@@ -67,7 +68,12 @@ public class VisionSubsystem2 extends SubsystemBase {
       target.getBestCameraToTarget(), 
       aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), 
       cameraToRobot
-      );
+    );
+
+    double cameraSpaceTransformX = cameraSpaceTransform.getX();
+    double cameraSpaceTransformY = cameraSpaceTransform.getY();
+    RobocketsShuffleboard.addNumber("Camera Space X", cameraSpaceTransformX);
+    RobocketsShuffleboard.addNumber("Camera Space Y", cameraSpaceTransformY);
   }
 
   /**
@@ -84,7 +90,6 @@ public class VisionSubsystem2 extends SubsystemBase {
     double distanceToTarget = Math.sqrt(x*x + y*y + z*z);
 
     return distanceToTarget;
-
   }
 
   /**

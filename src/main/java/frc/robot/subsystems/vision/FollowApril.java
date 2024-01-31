@@ -5,6 +5,10 @@
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
@@ -13,58 +17,43 @@ public class FollowApril extends Command {
 
   RobotMap map = Robot.getMap();
 
-  private double mdistance = -1.0;
-  private Pose2d offset = null;
-
-  private String poseMode;
-  private final String distanceMode = "Distance";
-  private final String offsetMode = "Offset";
-
-  // I don't think we'll need to use this distance mode, but I'm keeping it just incase
-  /**
-   * Creates a new FollowApril Command
-   * This command is used to follow an april tag with a given desired offset from the target
-   * @param mdistance euclidean distance from best target in meters
-   */
-  /*public FollowApril(double mdistance) {
-    addRequirements(map.vision);
-    addRequirements(map.swerve);
-    this.mdistance = mdistance;
-    // Use addRequirements() here to declare subsystem dependencies.
-  }*/
+  private Pose3d targetRobotToTag = null;
 
   /**
    * Creates a new FollowApril Command
    * This command is used to follow an april tag with a given desired offset from the target
    * @param offset Pose2d offset from target. Translation in meters, rotation in radians
    */
-  public FollowApril(Pose2d offset) {
+  public FollowApril(Pose3d offset) {
     addRequirements(map.vision2);
     addRequirements(map.swerve);
-    this.offset = offset;
+    this.targetRobotToTag = offset;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(mdistance != -1) poseMode = distanceMode;
-    if(offset != null) poseMode = offsetMode;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(poseMode == distanceMode) executeDistanceMode();
-    else executeOffsetMode();
-  }
+    // r-C + C-T = R-T
+    Transform3d robotToTag = map.vision2.getCameraToAprilTag().plus(map.vision2.cameraToRobot.inverse());
 
-  private void executeDistanceMode() {
-    map.vision2.getAprilTagDistance();
+    // we cannot change the rotation so instead we will try to align ourselves with the translation
+    Translation3d robotToTagTransform = robotToTag.getTranslation();
 
-  }
+    // get the delta
+    Translation3d robotToTagDelta = targetRobotToTag.getTranslation().minus(robotToTagTransform);
 
-  private void executeOffsetMode() {
+    // get the x and y
+    double DeltaX = robotToTagDelta.getX();
+    double DeltaY = robotToTagDelta.getY();
 
+    // send these values to the swervedrive
+    double magicmultiplier = 0.2;
+    map.swerve.swerveDriveR(DeltaX*magicmultiplier,DeltaY*magicmultiplier,0.0);
   }
 
   // Called once the command ends or is interrupted.
