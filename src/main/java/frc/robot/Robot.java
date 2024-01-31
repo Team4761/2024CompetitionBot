@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
   // This is also the file where all the subsystems reside
   private static RobotMap map = new RobotMap();
   public static RobotMap getMap() { return map; }
-  public static RobocketsController controller = new RobocketsController(Constants.CONTROLLER_PORT, map);
+  // public static RobocketsController controller = new RobocketsController(Constants.CONTROLLER_PORT, map);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    AutoConstruct.sendAutoOptionsToSmartDashboard();
+    // AutoConstruct.sendAutoOptionsToSmartDashboard();
   }
 
   /**
@@ -56,14 +56,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // CommandScheduler.getInstance().schedule(new SwerveGoCartesianF(map.swerve, new Translation2d(0, 6)));
     AutoConstruct.scheduleSelectedCommand(map);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    CommandScheduler.getInstance().run();
+    
+    
+    //CommandScheduler.getInstance().run();
 
     //Gian: I'm not so sure why we would ever use this if all the auto code is done in the commandscheduler
 
@@ -88,15 +89,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    controller.teleopPeriodic();
-    if (map.vision != null) {
-      var result = map.vision.getLatestResult();
-
-      if(result.hasTargets()){
-        System.out.println(result.getBestTarget());
-      }
-    }
+    // controller.teleopPeriodic();
     // Run any commands
+    map.vision.getPoseFromTag();
     CommandScheduler.getInstance().run();
   }
 

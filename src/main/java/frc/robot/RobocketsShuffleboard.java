@@ -9,6 +9,7 @@ public class RobocketsShuffleboard {
         addNumber("Shooter Out Speed", 0.5);
         addNumber("Shooter Intake Speed", 0.5);
         addNumber("Shooter Outtake Speed", 0.5);
+
     }
 
 
