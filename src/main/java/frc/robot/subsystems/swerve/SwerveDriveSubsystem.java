@@ -77,6 +77,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private Pose2d m_pose;                              // Stores the robots position ON THE FIELD where 0,0 is the STARTING POSITION of the robot when this subsystem is initialized
 
     private Rotation2d pointDir = new Rotation2d();     // The direction the robot thinks it measured to be looking at between 1-10 cycles ago.
+    
+    // field oriented driving states
+    private double speedRot = 0;
+    private double speedX = 0;
+    private double speedY = 0;
 
 
     // positions of the wheels relative to center (meters?)
@@ -169,6 +174,33 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Back Right Target", targetStates[3].angle.getDegrees());
 
         SmartDashboard.putNumber("Gyro Angle", m_gyro.getRotation2d().minus(gyroOffset).getDegrees());
+        SmartDashboard.putNumber("speedX", speedX);
+        SmartDashboard.putNumber("speedY", speedY);
+        SmartDashboard.putNumber("speedRot", speedRot);
+        SmartDashboard.putNumber("GyroRotation", getGyroRotation().getRadians());
+
+        if(lastDone==0) {                   // After moving for 10 cycles, check the rotation of the robot.
+            pointDir = getGyroRotation();   // Radians
+        }
+        // if not turning do lock on
+        if (speedRot == 0) {
+            double rotP = getGyroRotation().minus(pointDir).getDegrees()    // proportional to keep robot turned properly (finds the distance between expected and actual rotation to apply some opposite rotational speed)
+                * (0.001 + 0.03*(Math.abs(speedX) + Math.abs(speedY)));     // If going faster, correct more (because small corrections are lost)
+            if (Math.abs(rotP)<0.001 || lastDone>0) { rotP=0; }                 // If you corrected recently OR the rotational correction isn't much, don't do it at all.
+            // Add the speeds that it is trying to achieve to Smart Dashboard for debugging
+            SmartDashboard.putNumber("rotP", rotP);
+
+            targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, rotP, getGyroRotation()));   //Convert the desired speeds into individual wheel/module speeds. Radians
+            
+            lastDone--;
+        } else { // if turning dont proportional (don't correct the rotation based on the rotation 10 cycles ago)
+            // need 
+            
+            targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, speedRot*0.8, getGyroRotation()));
+            pointDir = getGyroRotation();
+
+            lastDone = 10;
+        }
 
         // Gets the target states from either {swerveDriveF} or {swerveDriveR} and applies them to individual modules (wheels)
         m_frontLeftModule .setTargetState(targetStates[0], true);
@@ -191,47 +223,42 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // drives
     // try applying acceleration cap to inputs in drives instead of on wheels
 
+    // set how fast the swerve drive turns, rad/s allegedly
+    public void setDriveRot(double sR, boolean squareInputs) {
+        if (squareInputs) {
+            sR=Math.signum(sR)*sR*sR;
+        }
+        speedRot = sR;
+
+    }
+    // set how fast the swerve drive goes, +x is forwards, +y is left and m/s hopefully 
+    public void setDriveFXY(double sX, double sY, boolean squareInputs) {
+        if (squareInputs) {
+            double squareFactor = Math.sqrt(sX*sX+sY*sY);
+            sX*=squareFactor;
+            sY*=squareFactor;
+        }
+        
+        speedX = sX;
+        speedY = sY;
+    }
 
     private int lastDone = 10;  // Cycles to sample rotation to make corrections to direction
     // Field Oriented swerve drive, m/s, m/s, rad/s or something, +x is forwards, +y is left
-    public void swerveDriveF(double speedX, double speedY, double speedRot) {
+    public void swerveDriveF(double sX, double sY, double sR, boolean squareInputs) {
         SmartDashboard.putNumber("Gyro Target", pointDir.getDegrees());
 
-
-        //Gian: what is the point of this??
         // input squaring, makes small adjustments easier while allowing higher speeds 
-        double squareFactor = Math.sqrt(speedX*speedX+speedY*speedY);
-        speedX*=squareFactor;
-        speedY*=squareFactor;
-
-        SmartDashboard.putNumber("speedX", speedX);
-        SmartDashboard.putNumber("speedY", speedY);
-        SmartDashboard.putNumber("speedRot", speedRot);
-        SmartDashboard.putNumber("GyroRotation", getGyroRotation().getRadians());
-
-        if(lastDone==0) {                   // After moving for 10 cycles, check the rotation of the robot.
-            pointDir = getGyroRotation();   // Radians
+        if (squareInputs) {
+            double squareFactor = Math.sqrt(sX*sX+sY*sY);
+            sX*=squareFactor;
+            sY*=squareFactor;
+            sR=Math.signum(sR)*sR*sR;
         }
-        // if not turning do lock on
-        if (speedRot == 0) {
-            double rotP = getGyroRotation().minus(pointDir).getDegrees()    // proportional to keep robot turned properly (finds the distance between expected and actual rotation to apply some opposite rotational speed)
-                * (0.001 + 0.03*(Math.abs(speedX) + Math.abs(speedY)));     // If going faster, correct more (because small corrections are lost)
-            if (Math.abs(rotP)<0.001 || lastDone>0) { rotP=0; }                 // If you corrected recently OR the rotational correction isn't much, don't do it at all.
-            // Add the speeds that it is trying to achieve to Smart Dashboard for debugging
-            SmartDashboard.putNumber("rotP", rotP);
-
-            targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, rotP, getGyroRotation()));   //Convert the desired speeds into individual wheel/module speeds. Radians
-            
-            lastDone--;
-        } else { // if turning dont proportional (don't correct the rotation based on the rotation 10 cycles ago)
-            // need 
-            speedRot=Math.signum(speedRot)*speedRot*speedRot;
-
-            targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, speedRot*0.09, getGyroRotation()));
-            pointDir = getGyroRotation();
-
-            lastDone = 10;
-        }
+        
+        speedX = sX;
+        speedY = sY;
+        speedRot = sR;
         
     }
 

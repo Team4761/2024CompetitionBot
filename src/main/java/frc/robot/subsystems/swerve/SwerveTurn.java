@@ -11,30 +11,42 @@ public class SwerveTurn extends Command {
     private SwerveDriveSubsystem m_swerve;
     private Rotation2d target;
 
+    private double Pvalue = 0;
+
     public SwerveTurn(SwerveDriveSubsystem swerve, Rotation2d rot) {
         m_swerve = swerve;
         addRequirements(m_swerve);
-        target = rot;
+        target = m_swerve.getGyroRotation().plus(rot);
     }
 
     
     @Override
     public void initialize() {
-        m_swerve.setTargetAngle(m_swerve.getGyroRotation().plus(target));
+
     }
 
     @Override
     public void execute() {
+        Pvalue = Math.min(Math.max(MathStuff.subtract(target, m_swerve.getGyroRotation()).getRotations()*30, -0.9), 0.9);
+        //System.out.println(Pvalue);
+        
+        m_swerve.setDriveRot(Pvalue, false);
         
     }
     
     @Override
     public boolean isFinished() {
-        return true;
+        System.out.println(Pvalue);
+        if(Pvalue<0.01) {
+            System.out.println("DONEONODNONE");
+            return true;
+        }
+        return false;
     }
     
     @Override
     public void end(boolean interrupted) {
-
+        m_swerve.setTargetAngle(target);
+        m_swerve.setDriveRot(0, false);
     }
 }

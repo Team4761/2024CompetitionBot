@@ -27,18 +27,18 @@ public class SwerveTurnTo extends Command {
 
     @Override
     public void execute() {
-        Pvalue = -Math.min(Math.max(MathStuff.subtract(m_swerve.getGyroRotation(), target).getRotations()*4, -0.7), 0.7);
+        Pvalue = Math.min(Math.max(MathStuff.subtract(target, m_swerve.getGyroRotation()).getRotations()*30, -0.9), 0.9);
         //System.out.println(Pvalue);
         
         // make better subsystem support for this stuff
-        m_swerve.swerveDriveF(0, 0, Pvalue);
+        m_swerve.setDriveRot(Pvalue, false);
         
     }
     
     @Override
     public boolean isFinished() {
         System.out.println(Pvalue);
-        if(Pvalue<0.005) {
+        if(Pvalue<0.01) {
             System.out.println("DONEONODNONE");
             return true;
         }
@@ -47,6 +47,7 @@ public class SwerveTurnTo extends Command {
     
     @Override
     public void end(boolean interrupted) {
-        if(!interrupted) m_swerve.setTargetAngle(target);
+        m_swerve.setTargetAngle(target);
+        m_swerve.setDriveRot(0, false);
     }
 }
