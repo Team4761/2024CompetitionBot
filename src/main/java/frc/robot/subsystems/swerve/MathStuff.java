@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class MathStuff {
     // % except negative numbers return positive ex. -13%63 = 51 instead of -13
@@ -29,5 +30,13 @@ public class MathStuff {
 
     public static Rotation2d negative(Rotation2d a) {
         return new Rotation2d(-a.getRadians());
+    }
+
+    public static ChassisSpeeds switchSpeedAndStrafe(ChassisSpeeds input) {
+        return new ChassisSpeeds(input.vyMetersPerSecond, input.vxMetersPerSecond, input.omegaRadiansPerSecond);
+    }
+
+    public static ChassisSpeeds invert(ChassisSpeeds input) {
+        return new ChassisSpeeds(input.vxMetersPerSecond, -input.vyMetersPerSecond, input.omegaRadiansPerSecond);
     }
 }

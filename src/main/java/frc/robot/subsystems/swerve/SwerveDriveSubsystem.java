@@ -99,8 +99,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SparkPIDController spcs = m_backLeftModule.getSteerMotor().getPIDController(); // s for steer
         // https://github.com/mjansen4857/pathplanner/wiki/Java-Example:-Build-an-Auto
         HolonomicPathFollowerConfig hpfc = new HolonomicPathFollowerConfig(
-            new PIDConstants(spcd.getP(),spcd.getI(),spcd.getD()), // Translation PID Constants
-            new PIDConstants(spcs.getP(),spcs.getI(),spcs.getD()), // Rotateion PID Constants
+            new PIDConstants(5,0,0/*spcd.getP(),spcd.getI(),spcd.getD()*/), // Translation PID Constants
+            new PIDConstants(5,0,0/*spcs.getP(),spcs.getI(),spcs.getD()*/), // Rotateion PID Constants
             Constants.DRIVETRAIN_MAX_SPEED_MPS, // max mps
             0.31115*Math.sqrt(2.0), //Distance from robot center to wheel in meters. They're all equidistant so this is a good value
             new ReplanningConfig() //
@@ -109,7 +109,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // This is static, so we are not just creating an object that is never used
         // TODO: confirm the parameters on this function
         AutoBuilder.configureHolonomic(
-            this::getPose,
+            this::getPose,  // +x must be forwards, +y must be left.
             this::resetPose, 
             this::getRobotRelativeSpeeds, 
             this::swerveDriveR, 
@@ -145,6 +145,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             m_gyro.getRotation2d(),
             m_swervePositions
         );
+        m_pose = switchXandY(m_pose);
 
         //forward is +y left is +x
 
@@ -194,7 +195,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     private int lastDone = 10;  // Cycles to sample rotation to make corrections to direction
     // Field Oriented swerve drive, m/s, m/s, rad/s or something, +x is forwards, +y is left
-    public void swerveDriveF(double speedX, double speedY, double speedRot) {
+    // TODO: speedY and speedX are currently switched. I believe that the robot is literally oriented in the wrong direction.
+    public void swerveDriveF(double speedY, double speedX, double speedRot) {
         SmartDashboard.putNumber("Gyro Target", pointDir.getDegrees());
 
 
@@ -236,12 +238,14 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     // Robot oriented swerve drive, m/s, m/s, rad/s or something
-    public void swerveDriveR(double speed, double strafe, double speedRot) {
+    //TODO: Should be speed, strafe. But the orientation of the robot was messed up so now it's strafe, speed.
+    public void swerveDriveR(double strafe, double speed, double speedRot) {
         targetStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(speed, strafe, speedRot));
     }
 
     public void swerveDriveR(ChassisSpeeds newTargetStates) {
-        targetStates = m_kinematics.toSwerveModuleStates(newTargetStates);
+        // TODO: Once again, we oriented the robot itself wrong, so speed and strafe are swapped. The correct order is speed, strafe; not strafe, speed
+        targetStates = m_kinematics.toSwerveModuleStates(MathStuff.invert(MathStuff.switchSpeedAndStrafe(newTargetStates)));
     }
 
     public boolean isOnRedAlliance() {
@@ -250,6 +254,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             return (ally.get() == Alliance.Red);
         }
         return false;
+    }
+
+    // This literally just switches x and y
+    public Pose2d switchXandY(Pose2d a) {
+        return new Pose2d(a.getY(), a.getX(), a.getRotation());
     }
 
     // car, m/s, degrees    
@@ -307,6 +316,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public ChassisSpeeds getRobotRelativeSpeeds() {
         ChassisSpeeds cs = m_kinematics.toChassisSpeeds(m_swerveStates);
         return cs;
+        // return new ChassisSpeeds(0,0,0);
     }
 
     public void stop() {

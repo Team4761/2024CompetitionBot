@@ -68,8 +68,8 @@ public class RobocketsController extends XboxController {
             double xyCof = 1;//0.75/Math.max(0.001, Math.sqrt(Math.pow(deadzone(controller.getLeftX(), 0.1), 2)+Math.pow(deadzone(controller.getLeftY(), 0.1), 2)));
             map.swerve.swerveDriveF(
                     // The robot is labeled slightly improperly in relation to the gyro, so the X and Y axis are flipped.
-                    SmartDashboard.getNumber("Swerve Speed", 0.5) * -xyCof * deadzone(LeftX, 0.1)/* * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,      // Foward/backwards
-                    SmartDashboard.getNumber("Swerve Speed", 0.5) * xyCof * deadzone(LeftY, 0.1)/*  * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,    // Left/Right
+                    SmartDashboard.getNumber("Swerve Speed", 0.5) * xyCof * deadzone(LeftY, 0.1)/* * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,      // Foward/backwards
+                    SmartDashboard.getNumber("Swerve Speed", 0.5) * -xyCof * deadzone(LeftX, 0.1)/*  * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,    // Left/Right
                     SmartDashboard.getNumber("Swerve Speed", 0.5) * deadzone(RightX, 0.08));   // Rotation
             
             if(getXButtonPressed()) {

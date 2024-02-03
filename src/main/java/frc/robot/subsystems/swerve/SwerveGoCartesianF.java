@@ -45,8 +45,8 @@ public class SwerveGoCartesianF extends Command {
         Ivalue += Constants.SWERVE_I / 100.0;   // The speed (Ivalue) builds up over time
 
         //correct forwards -y and left +y to actual speeds:
-        double strafeGo = -Math.min(1,Ivalue) * Pvalue * (target.getX()-curTrans.getY());  // The left/right speed where left = +y
-        double speedGo = Math.min(1,Ivalue) * Pvalue * (target.getY()-curTrans.getX());    // The forwards/backwards speed where forwards = +x
+        double strafeGo = Math.min(1,Ivalue) * Pvalue * (target.getY()-curTrans.getY());  // The left/right speed where left = +y
+        double speedGo = -Math.min(1,Ivalue) * Pvalue * (target.getX()-curTrans.getX());    // The forwards/backwards speed where forwards = +x
 
         double hypoSpeed = Math.sqrt(strafeGo*strafeGo+speedGo*speedGo);    // Calculate the desired TOTAL speed (the hypotenus of the right triangle formed by the speed vectors)
         if (hypoSpeed>vLimit) { // If the desired speed is greater than the max speed, limit the strafe AND speed speed
