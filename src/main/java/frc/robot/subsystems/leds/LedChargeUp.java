@@ -1,46 +1,30 @@
 package frc.robot.subsystems.leds;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+import static frc.robot.subsystems.leds.LedSubsystem.LED_SIZE;
 
 // ALL OF THIS IS ROUGH CODE. THE 2000 IS 2 seconds and is TEMPORARY!
-public class LedChargeUp extends Command {
-    private double speed; // Value between -1 and 1
-    private long endTime;
-    private int row;
-    private int rowLength;
-    private double rowTime;
-    private int numberOfRows;
+public class LedChargeUp extends SequentialCommandGroup {
+    private static final int BANK_SIZE = 2;
 
-    public LedChargeUp (long time) {
-        row=0;
-        this.endTime = System.currentTimeMillis()+time;
-        rowLength=LedSubsystem.LED_WIDTH;
-        numberOfRows=LedSubsystem.LED_LENGTH; 
-        rowTime=time/numberOfRows;
-
-        // time for whole thing = time / # of rows
-        // time for each row = time /# of leds in a row
+    public LedChargeUp(long time, LedSubsystem subsystem) {
+        int numIncrements = LED_SIZE / BANK_SIZE;
+        long timeEachIncrement = time / numIncrements;
+        addCommands(new LedSetAllColorCommand(subsystem, 0, 0, 0));
+        for (int increment = 0; increment < numIncrements; increment++) {
+            addCommands(new LedBankCommand(subsystem, increment).withTimeout(timeEachIncrement));
+        }
+        addCommands(new LedSetAllColorCommand(subsystem, 0, 0, 0));
     }
 
-    @Override
-    public void initialize() {}
-
-    @Override
-    public void execute() {
-        Robot.getMap().shooter.setSpeed(speed);
-    }
-
-    @Override
-    public boolean isFinished() {
-        if (endTime <= System.currentTimeMillis())
-            return true;
-        return false;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        Robot.getMap().shooter.setSpeed(0);
+    private static class LedBankCommand extends Command {
+        public LedBankCommand(LedSubsystem subsystem, int increment) {
+            for(int i = 0; i< BANK_SIZE; i++) {
+                subsystem.SetRowColor((increment*BANK_SIZE) + i,250, 220, 0);
+            }
+        }
     }
 }
 

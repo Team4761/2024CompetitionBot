@@ -158,7 +158,6 @@ public class RobocketsController extends XboxController {
             //if the outake button is pressed it will turn the LEDs off
             if(getAButtonPressed())
             {
-                map.leds.ChargeUpSeq();
                 map.leds.NoteIndicator(false);
             }
         }
