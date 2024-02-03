@@ -61,7 +61,7 @@ public class SwerveGoCartesianF extends Command {
         isFinished = target.getDistance(curTrans) <= 0.01;  // If the distance is less than or equal to 1cm, then it is finished
 
         if (!isFinished)
-            m_swerve.swerveDriveF(speedGo, strafeGo, 0);        // Do field oriented swerve with the strafe and speed speeds
+            m_swerve.setDriveFXY(speedGo, strafeGo, false);        // Do field oriented swerve with the strafe and speed speeds
     }
     
     @Override
@@ -69,12 +69,12 @@ public class SwerveGoCartesianF extends Command {
         // if(Pvalue<0.01) return true;    // If close to the desired translation (position), then finish the command.
         // else return false;
         if (isFinished)
-            m_swerve.swerveDriveF(0, 0, 0.01);  // This exists to force the current code to autocorrect its rotational position at the end. (because the code is iffy)
+            m_swerve.setDriveFXY(0, 0, false);  // This exists to force the current code to autocorrect its rotational position at the end. (because the code is iffy)
         return isFinished;  // Returns true if the distance between the robot and target is <= 1cm
     }
     
     @Override
     public void end(boolean interrupted) {
-        m_swerve.swerveDriveF(0, 0, 0); // Set all speeds to 0 AFTER close enough to end the command
+        m_swerve.setDriveFXY(0, 0, false); // Set all speeds to 0 AFTER close enough to end the command
     }
 }

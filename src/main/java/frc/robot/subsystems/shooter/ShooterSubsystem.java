@@ -14,6 +14,8 @@ public class ShooterSubsystem extends SubsystemBase{
     CANSparkMax intakeLeft;     // Assuming that the front of the shooter is the forward direction
     CANSparkMax intakeRight;    // Assuming that the front of the shooter is the forward direction
 
+    private double targetSpeed;
+
     public ShooterSubsystem() {
         motorLeft = new TalonFX(Constants.SHOOTER_LEFT_MOTOR_PORT);
         motorRight = new TalonFX(Constants.SHOOTER_RIGHT_MOTOR_PORT);
@@ -21,10 +23,22 @@ public class ShooterSubsystem extends SubsystemBase{
         intakeRight = new CANSparkMax(Constants.SHOOTER_INTAKE_RIGHT_MOTOR_PORT, MotorType.kBrushless);
     }
 
-    // Sets the SHOOTING speed
+    public void periodic() {
+        double avgEncoderSpd = (motorLeft.getVelocity().getValueAsDouble()+motorRight.getVelocity().getValueAsDouble())/2; //rotations per second allegedly
+
+        double accelFactor = 0.005 * (targetSpeed-avgEncoderSpd); // P kinda
+        double feedForwardV = 0.1 * targetSpeed; //magic numbers no math or testing done yet, ideally sets the motors to near the velocity
+        double feedForwardS = 0; //whatever number to maintain the speed
+        
+        double spdOut = accelFactor + feedForwardV + feedForwardS;
+
+        motorLeft.set(spdOut); //probably test then use setVoltage
+        motorRight.set(spdOut);  // As of Jan 20, 2024, the speeds are not reversed
+    }
+
+    // Sets the SHOOTING speed in rotations per second (hopefully), does not change until stated otherwise
     public void setSpeed(double speed) {
-        motorLeft.set(speed);
-        motorRight.set(speed);  // As of Jan 20, 2024, the speeds are not reversed
+        targetSpeed = speed;
     }
 
     // Sets the speed of the intake to the motor's speed. (the belt that pulls the game piece from the actual intake)

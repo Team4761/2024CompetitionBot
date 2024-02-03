@@ -1,9 +1,11 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.shooter.Shoot;
+import frc.robot.subsystems.swerve.SwerveTurnTo;
 
 // The reason for the existence of this is that it takes a TON of code out of Robot.java (that is all)
 public class RobocketsController extends XboxController {
@@ -66,17 +68,32 @@ public class RobocketsController extends XboxController {
         // Swerve
         if (map.swerve != null) {
             double xyCof = 1;//0.75/Math.max(0.001, Math.sqrt(Math.pow(deadzone(controller.getLeftX(), 0.1), 2)+Math.pow(deadzone(controller.getLeftY(), 0.1), 2)));
-            map.swerve.swerveDriveF(
+
+            if (RightX==0) {
+                map.swerve.setDriveFXY(
                     // The robot is labeled slightly improperly in relation to the gyro, so the X and Y axis are flipped.
-                    SmartDashboard.getNumber("Swerve Speed", 0.5) * xyCof * deadzone(LeftY, 0.1)/* * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,      // Foward/backwards
-                    SmartDashboard.getNumber("Swerve Speed", 0.5) * -xyCof * deadzone(LeftX, 0.1)/*  * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,    // Left/Right
-                    SmartDashboard.getNumber("Swerve Speed", 0.5) * deadzone(RightX, 0.08));   // Rotation
-            
+                    SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftX, 0.1),      // Foward/backwards
+                    SmartDashboard.getNumber("Swerve Speed", 0.7) * xyCof * deadzone(LeftY, 0.1),    // Left/Right
+                    true); //square inputs to ease small adjustments
+            } else {
+                System.out.println(1111111);
+                map.swerve.swerveDriveF(
+                    // The robot is labeled slightly improperly in relation to the gyro, so the X and Y axis are flipped.
+                    SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftX, 0.1)/* * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,      // Foward/backwards
+                    SmartDashboard.getNumber("Swerve Speed", 0.7) * xyCof * deadzone(LeftY, 0.1)/*  * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,    // Left/Right
+                    SmartDashboard.getNumber("Swerve Speed", 0.7) * deadzone(RightX, 0.08),   // Rotation
+                    true); //square inputs to ease small adjustments
+            }
             if(getXButtonPressed()) {
                 map.swerve.zeroGyro();
             }
             if(getYButtonPressed()) {
                 map.swerve.resetPose(); 
+            }
+
+            // turn to align with gyro
+            if(getPOV()!=-1) {
+                CommandScheduler.getInstance().schedule(new SwerveTurnTo(map.swerve, new Rotation2d(-getPOV()*0.01745329)));
             }
         }
         // Intake
