@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -69,18 +70,26 @@ public class RobocketsController extends XboxController {
         if (map.swerve != null) {
             double xyCof = 1;//0.75/Math.max(0.001, Math.sqrt(Math.pow(deadzone(controller.getLeftX(), 0.1), 2)+Math.pow(deadzone(controller.getLeftY(), 0.1), 2)));
 
+            // ROBOT RELATIVE
+            // map.swerve.swerveDriveR(new ChassisSpeeds(
+            //     SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
+            //     SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
+            //     SmartDashboard.getNumber("Swerve Speed", 0.7) * deadzone(RightX, 0.08)   // Rotation
+            // ));
+
+            // FIELD RELATIVE
             if (RightX==0) {
                 map.swerve.setDriveFXY(
-                    // The robot is labeled slightly improperly in relation to the gyro, so the X and Y axis are flipped.
-                    SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftX, 0.1),      // Foward/backwards
-                    SmartDashboard.getNumber("Swerve Speed", 0.7) * xyCof * deadzone(LeftY, 0.1),    // Left/Right
+                    // On the controller, upwards is negative and left is also negative. To correct this, the negative version of both are sent.
+                    SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
+                    SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
                     true); //square inputs to ease small adjustments
+                map.swerve.setDriveRot(0, false);   // Should not be rotating if not rotating lol
             } else {
-                System.out.println(1111111);
                 map.swerve.swerveDriveF(
-                    // The robot is labeled slightly improperly in relation to the gyro, so the X and Y axis are flipped.
-                    SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftX, 0.1)/* * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,      // Foward/backwards
-                    SmartDashboard.getNumber("Swerve Speed", 0.7) * xyCof * deadzone(LeftY, 0.1)/*  * (controller.getLeftTriggerAxis()+controller.getRightTriggerAxis())*/,    // Left/Right
+                    // On the controller, upwards is negative and left is also negative. To correct this, the negative version of both are sent.
+                    SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
+                    SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
                     SmartDashboard.getNumber("Swerve Speed", 0.7) * deadzone(RightX, 0.08),   // Rotation
                     true); //square inputs to ease small adjustments
             }

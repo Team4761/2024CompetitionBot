@@ -59,7 +59,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // CommandScheduler.getInstance().schedule(new SwerveGoCartesianF(map.swerve, new Translation2d(0, 6)));
-    CommandScheduler.getInstance().schedule(new SwerveTurnTo(map.swerve, new Rotation2d(3.1415)));
+    // CommandScheduler.getInstance().schedule(new SwerveTurnTo(map.swerve, new Rotation2d(3.1415)));
 
     
     AutoConstruct.scheduleSelectedCommand(map);
@@ -68,21 +68,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-
-    
     CommandScheduler.getInstance().run();
-
-    //Gian: I'm not so sure why we would ever use this if all the auto code is done in the commandscheduler
-
-    /*switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }*/
   }
 
   /** This function is called once when teleop is enabled. */

@@ -1,6 +1,9 @@
 package frc.robot.Auto;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -8,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.swerve.SwerveDriveStop;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
 import frc.robot.RobotMap;
 
@@ -23,6 +27,7 @@ public class AutoConstruct {
     private static final String kPathPlanner1Auto = "pathPlanner1";
     private static final String kPathPlanner2Auto = "pathPlanner2";
     private static final String kAprilDance = "aprilDance";
+    private static final String kPathPlanner2Up = "upTwoMeter";
 
 
     private static String m_autoSelected;
@@ -43,6 +48,7 @@ public class AutoConstruct {
         m_chooser.addOption("PathPlanner 1 Meter Forward", kPathPlanner1Auto);
         m_chooser.addOption("PathPlanner Test 2", kPathPlanner2Auto);
         m_chooser.addOption("April Tag Dance", kAprilDance);
+        m_chooser.addOption("PathPlanner 2 Meter Up", kPathPlanner2Up);
 
         // Add the chooser to smartdashboard
         SmartDashboard.putData("Auto choices", m_chooser);
@@ -62,6 +68,14 @@ public class AutoConstruct {
         // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
         System.out.println("Auto selected: " + m_autoSelected);
 
+        // PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
+        //     System.out.println("Current: " + pose);
+        // });
+
+        // PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
+        //     System.out.println("Target: " + pose);
+        // });
+        
         Command scheduledCommand = null;
         switch (m_autoSelected) {
             case kDefaultAuto:
@@ -71,7 +85,10 @@ public class AutoConstruct {
                 scheduledCommand = new SwerveGoCartesianF(map.swerve, new Translation2d(0, 1));
             break;
             case kPathPlanner1Auto:
-                scheduledCommand = new PathPlannerAuto("1 Meter Auto");
+                scheduledCommand = AutoBuilder.followPath(PathPlannerPath.fromPathFile("1 Meter Path"))/*.andThen(new SwerveDriveStop())*/;
+            break;
+            case kPathPlanner2Up:
+                scheduledCommand = new PathPlannerAuto("2 Meter Up")/*.andThen(new SwerveDriveStop())*/;
             break;
             case kPathPlanner2Auto:
                 scheduledCommand = new PathPlannerAuto("Simple Swerve Auto");
