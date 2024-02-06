@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.swerve.SwerveDriveStop;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
@@ -28,6 +29,8 @@ public class AutoConstruct {
     private static final String kPathPlanner2Auto = "pathPlanner2";
     private static final String kAprilDance = "aprilDance";
     private static final String kPathPlanner2Up = "upTwoMeter";
+    private static final String kPathPlanner1MockAuto = "pathPlanner1MeterForward";
+    private static final String kPathPlanner2MeterSpin = "2meterspin";
 
 
     private static String m_autoSelected;
@@ -45,10 +48,12 @@ public class AutoConstruct {
         // First parameter: The name of the auto displayed on SmartDashboard
         // Second parameter: The internal name of the auto
         m_chooser.addOption("One Meter Left", kOneMeterLeft);
-        m_chooser.addOption("PathPlanner 1 Meter Forward", kPathPlanner1Auto);
+        m_chooser.addOption("PathPlanner 1 Meter Forward Auto", kPathPlanner1Auto);
+        m_chooser.addOption("PathPlanner 1 Meter Forward Path", kPathPlanner1MockAuto);
         m_chooser.addOption("PathPlanner Test 2", kPathPlanner2Auto);
         m_chooser.addOption("April Tag Dance", kAprilDance);
         m_chooser.addOption("PathPlanner 2 Meter Up", kPathPlanner2Up);
+        m_chooser.addOption("PathPlanner 2 Meter Spin", kPathPlanner2MeterSpin);
 
         // Add the chooser to smartdashboard
         SmartDashboard.putData("Auto choices", m_chooser);
@@ -68,13 +73,19 @@ public class AutoConstruct {
         // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
         System.out.println("Auto selected: " + m_autoSelected);
 
-        // PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
-        //     System.out.println("Current: " + pose);
-        // });
+        PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
+            // System.out.println("Current: " + pose);
+            SmartDashboard.putNumber("PathPlanner X", pose.getX());
+            SmartDashboard.putNumber("PathPlanner Y", pose.getY());
+            SmartDashboard.putNumber("PathPlanner Rot", pose.getRotation().getDegrees());
+        });
 
-        // PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
-        //     System.out.println("Target: " + pose);
-        // });
+        PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
+            // System.out.println("Target: " + pose);
+            SmartDashboard.putNumber("PathPlanner Target X", pose.getX());
+            SmartDashboard.putNumber("PathPlanner Target Y", pose.getY());
+            SmartDashboard.putNumber("PathPlanner Target Rot", pose.getRotation().getDegrees());
+        });
         
         Command scheduledCommand = null;
         switch (m_autoSelected) {
@@ -85,6 +96,9 @@ public class AutoConstruct {
                 scheduledCommand = new SwerveGoCartesianF(map.swerve, new Translation2d(0, 1));
             break;
             case kPathPlanner1Auto:
+                scheduledCommand = new PathPlannerAuto("1 Meter Auto").andThen(new PrintCommand("Path Finished!"));
+            break;
+            case kPathPlanner1MockAuto:
                 scheduledCommand = AutoBuilder.followPath(PathPlannerPath.fromPathFile("1 Meter Path"))/*.andThen(new SwerveDriveStop())*/;
             break;
             case kPathPlanner2Up:
@@ -95,6 +109,9 @@ public class AutoConstruct {
             break;
             case kAprilDance:
                 // we do not have code for this yet
+            break;
+            case kPathPlanner2MeterSpin:
+                scheduledCommand = new PathPlannerAuto("2 Meter Spin");
             break;
             default:
                 // unsure what the default command would be: maybe just ensure nothing is moving?

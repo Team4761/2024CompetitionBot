@@ -98,10 +98,17 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // This just gets the PID values of one motor. All 4 should be equal though!!
         SparkPIDController spcd = m_backLeftModule.getDriveMotor().getPIDController(); // d for drive
         SparkPIDController spcs = m_backLeftModule.getSteerMotor().getPIDController(); // s for steer
+        System.out.println("P: " + spcd.getP() + " I: " + spcd.getI() + " D: " + spcd.getD());
         // https://github.com/mjansen4857/pathplanner/wiki/Java-Example:-Build-an-Auto
         HolonomicPathFollowerConfig hpfc = new HolonomicPathFollowerConfig(
-            new PIDConstants(/*5,0,0*/spcd.getP(),spcd.getI(),spcd.getD()), // Translation PID Constants
-            new PIDConstants(/*5,0,0*/spcs.getP(),spcs.getI(),spcs.getD()), // Rotateion PID Constants
+            new PIDConstants(
+                1.2,0,0
+                // spcd.getP(),spcd.getI(),spcd.getD()
+                ), // Translation PID Constants
+            new PIDConstants(
+                0.01,0,0
+                // spcs.getP(),spcs.getI(),spcs.getD()
+                ), // Rotateion PID Constants
             Constants.DRIVETRAIN_MAX_SPEED_MPS, // max mps
             0.31115*Math.sqrt(2.0), //Distance from robot center to wheel in meters. They're all equidistant so this is a good value
             new ReplanningConfig() //
@@ -191,7 +198,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("rotP", rotP);
 
             if (!isRobotRelative)
-                targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, rotP, getGyroRotation()));   //Convert the desired speeds into individual wheel/module speeds. Radians
+                targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, -rotP, getGyroRotation()));   //Convert the desired speeds into individual wheel/module speeds. Radians
             else
                 targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromRobotRelativeSpeeds(speedX, speedY, rotP, getGyroRotation()));   //Convert the desired speeds into individual wheel/module speeds. Radians
             
@@ -200,7 +207,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             // need 
             
             if (!isRobotRelative)
-                targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, speedRot*0.8, getGyroRotation()));
+                targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, -speedRot*0.8, getGyroRotation()));
             else
                 targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromRobotRelativeSpeeds(speedX, speedY, speedRot*0.8, getGyroRotation()));
             
@@ -286,12 +293,13 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     public void swerveDriveR(ChassisSpeeds newTargetStates) {
         isRobotRelative = true;
-        speedX = newTargetStates.vxMetersPerSecond;
-        speedY = newTargetStates.vyMetersPerSecond;
+        double relativeSpeed = 1;
+        speedX = newTargetStates.vxMetersPerSecond * relativeSpeed;
+        speedY = newTargetStates.vyMetersPerSecond * relativeSpeed;
         speedRot = newTargetStates.omegaRadiansPerSecond;
-        // SmartDashboard.putNumber("Relative SpeedX", newTargetStates.vxMetersPerSecond);
-        // SmartDashboard.putNumber("Relative SpeedY", newTargetStates.vyMetersPerSecond);
-        // SmartDashboard.putNumber("Relative SpeedRot", newTargetStates.omegaRadiansPerSecond);
+        SmartDashboard.putNumber("Relative SpeedX", newTargetStates.vxMetersPerSecond);
+        SmartDashboard.putNumber("Relative SpeedY", -newTargetStates.vyMetersPerSecond);
+        SmartDashboard.putNumber("Relative SpeedRot", newTargetStates.omegaRadiansPerSecond);
     }
 
     public boolean isOnRedAlliance() {
@@ -361,7 +369,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // This is mainly just for testing. This is what the wiki says to do.
     public Pose2d getPoseForPathPlanner() {
         // System.out.println(m_odometry.getPoseMeters());
-        return m_odometry.getPoseMeters();
+        return m_pose;
+        // return new Pose2d(-m_pose.getX(), m_pose.getY(), m_pose.getRotation());
         // return m_pose;
     }
 
