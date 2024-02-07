@@ -1,16 +1,15 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.shooter.Shoot;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.swerve.SwerveTurnTo;
 
 // The reason for the existence of this is that it takes a TON of code out of Robot.java (that is all)
-public class RobocketsController extends XboxController {
-    
+public class RobocketsController extends CommandXboxController {
+
     private RobotMap map;
 
     public RobocketsController(int port, RobotMap map) {
@@ -18,12 +17,88 @@ public class RobocketsController extends XboxController {
         this.map = map;
         // This is not a number I saw loaded anywhere
         SmartDashboard.putNumber("Swerve Speed",0.5);
+
+        if (map.shooter != null) {
+            a().onTrue(Commands.runOnce(this::onPressA, map.shooter));
+            b().onTrue(Commands.runOnce(this::onPressB, map.shooter));
+            a().onFalse(Commands.runOnce(this::onReleaseA, map.shooter));
+            b().onFalse(Commands.runOnce(this::onReleaseB, map.shooter));
+        }
+        if (map.swerve != null) {
+            x().onTrue(Commands.runOnce(this::onPressX, map.swerve));
+            y().onTrue(Commands.runOnce(this::onPressY, map.swerve));
+            x().onFalse(Commands.runOnce(this::onReleaseX, map.swerve));
+            y().onFalse(Commands.runOnce(this::onReleaseX, map.swerve));
+            leftTrigger().onTrue(Commands.runOnce(this::onLeftTrigger, map.swerve));
+            rightTrigger().onTrue(Commands.runOnce(this::onRightTrigger, map.swerve));
+        }
+        if (map.intake != null) {
+            leftBumper().onTrue(Commands.runOnce(this::onLeftBumper, map.intake));
+            rightBumper().onTrue(Commands.runOnce(this::onRightBumper, map.intake));
+        }
+    }
+
+    private void onPressA() {
+        //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
+        map.shooter.setSpeed(SmartDashboard.getNumber("Shooter In Speed", 0.5));
+    }
+
+    private void onPressB() {
+        //CommandScheduler.getInstance().schedule(new Shoot(-SmartDashboard.getNumber("Shooter Speed", 0.5)));
+        map.shooter.setSpeed(-SmartDashboard.getNumber("Shooter Out Speed", 0.5));
+    }
+
+    private void onReleaseA() {
+        map.shooter.setSpeed(0);
+    }
+
+    private void onReleaseB() {
+        map.shooter.setSpeed(0);
+    }
+
+    private void onPressX() {
+        map.shooter.setIntakeSpeed(-SmartDashboard.getNumber("Shooter Outtake Speed", 0.5));
+    }
+
+    private void onPressY() {
+        map.shooter.setIntakeSpeed(SmartDashboard.getNumber("Shooter Intake Speed", 0.5));
+    }
+
+    private void onReleaseX() {
+        map.shooter.setIntakeSpeed(0);
+    }
+
+    private void onReleaseY() {
+        map.shooter.setIntakeSpeed(0);
+    }
+
+    private void onLeftBumper() {
+        if (map.intake != null) {
+            map.intake.intake();
+        }
+        map.leds.ChargeUpSeq();
+        map.leds.NoteIndicator(true);
+    }
+
+    private void onRightBumper() {
+        if (map.intake != null) {
+            map.intake.outtake();
+        }
+        map.leds.NoteIndicator(false);
+    }
+
+    private void onLeftTrigger() {
+        map.swerve.zeroGyro();
+    }
+
+    private void onRightTrigger() {
+        map.swerve.resetPose();
     }
 
     // Apply a deadzone for swerve
     public static double deadzone (double value, double deadzone) {
         if (Math.abs(value) > deadzone) {
-            if (value > 0.0) { return (value - deadzone) / (1.0 - deadzone); } 
+            if (value > 0.0) { return (value - deadzone) / (1.0 - deadzone); }
             else             { return (value + deadzone) / (1.0 - deadzone); }
         }
         return 0.0;
@@ -93,12 +168,6 @@ public class RobocketsController extends XboxController {
                     SmartDashboard.getNumber("Swerve Speed", 0.7) * deadzone(RightX, 0.08),   // Rotation
                     true); //square inputs to ease small adjustments
             }
-            if(getXButtonPressed()) {
-                map.swerve.zeroGyro();
-            }
-            if(getYButtonPressed()) {
-                map.swerve.resetPose(); 
-            }
 
             // turn to align with gyro
             if(getPOV()!=-1) {
@@ -108,75 +177,15 @@ public class RobocketsController extends XboxController {
         // Intake
         if (map.intake != null) {
             map.intake.rotate(deadzone(getRightX(), 0.1));
-
-            if (getLeftBumperPressed()) {
-                map.intake.intake();
-            }
-            else if (getRightBumperPressed()) {
-                map.intake.outtake();
-            }
-            }
-        // Shooter
-        if (map.shooter != null) {
-            if (getAButtonPressed()) {
-                //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setSpeed(SmartDashboard.getNumber("Shooter In Speed", 0.5));
-            }
-            if (getBButtonPressed()) {
-                //CommandScheduler.getInstance().schedule(new Shoot(-SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setSpeed(-SmartDashboard.getNumber("Shooter Out Speed", 0.5));
-            }
-            if (getYButtonPressed()) {
-                map.shooter.setIntakeSpeed(SmartDashboard.getNumber("Shooter Intake Speed", 0.5));
-            }
-            if (getXButtonPressed()) {
-                map.shooter.setIntakeSpeed(-SmartDashboard.getNumber("Shooter Outtake Speed", 0.5));
-            }
-            if (getAButtonReleased() || getBButtonReleased()) {
-                map.shooter.setSpeed(0);
-            }
-            if (getXButtonReleased() || getYButtonReleased()) {
-                map.shooter.setIntakeSpeed(0);
-            }
         }
-        // Vision
-        if (map.vision != null) {
-            if(getAButtonPressed()){
-                map.vision.toString();
-            }
-        }
-
-        
-        //LEDs
-        if (map.leds != null){
-            //if the intake button is pressed it will turn the LEds to orange
-            if(getLeftBumperPressed())
-            {
-                map.leds.NoteIndicator(true);
-            }
-
-            if(getLeftBumperReleased())
-            {
-                map.leds.NoteIndicator(true);
-            }
-            //if the outake button is pressed it will turn the LEDs off
-            if(getRightBumperPressed())
-            {
-                map.leds.NoteIndicator(false);
-            }
-            //if the outake button is pressed it will turn the LEDs off
-            if(getAButtonPressed())
-            {
-                map.leds.ChargeUpSeq();
-                map.leds.NoteIndicator(false);
-            }
-        }
-
-
 
         // West Coast
         if (map.westcoast != null) {
             map.westcoast.arcadeDrive(getLeftY(), getRightX());
         }
+    }
+
+    public int getPOV() {
+        return getHID().getPOV();
     }
 }
