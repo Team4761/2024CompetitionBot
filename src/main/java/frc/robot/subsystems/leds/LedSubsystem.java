@@ -149,11 +149,11 @@ public class LedSubsystem extends SubsystemBase {
     //     }
     // }
 
-    public void RowOn(int r, int g, int b)
+    public void RowOn(int row, int r, int g, int b)
     {
         for (int i=0; i<=LED_WIDTH; i++)
         {
-            ledBuffer.setRGB(i,r,g,b);
+            ledBuffer.setRGB(i+row*LED_WIDTH,r,g,b);
         }
     }
 }

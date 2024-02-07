@@ -8,18 +8,14 @@ public class LedChargeUp extends Command {
     
     private long endTime;
     private int row;
-    
+    private int i=0;
     private double rowTime;
     private int numberOfRows;
     
 
-    public LedChargeUp (long time) 
+    public LedChargeUp () 
     {
-        long timeMilis=time*1000;
-        this.endTime = System.currentTimeMillis()+timeMilis;
-        row=0;
-        numberOfRows=LedSubsystem.LED_LENGTH; 
-        rowTime=timeMilis/numberOfRows;
+       
     }
 
     @Override
@@ -32,9 +28,10 @@ public class LedChargeUp extends Command {
     public void execute() {
         if (row<=numberOfRows) 
         {
-            if (System.currentTimeMillis()%((rowTime))==0)
+            i++;
+            if(i%0.125==0)
             {
-                Robot.getMap().leds.RowOn(250, 120, 0);
+                Robot.getMap().leds.RowOn(row,250, 120, 0);
                 row++;
             }
         }

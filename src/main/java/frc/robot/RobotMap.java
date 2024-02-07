@@ -38,6 +38,7 @@ public class RobotMap
         // vision = new VisionSubsystem();
         //shooter = new ShooterSubsystem();
         leds=new LedSubsystem();
+        chargeUp=new LedChargeUp();
         
 
         // ONLY FOR TESTING

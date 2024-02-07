@@ -142,6 +142,7 @@ public class RobocketsController extends XboxController {
             if(getAButtonPressed())
             {
                 map.leds.NoteIndicator(false);
+                map.chargeUp.execute();
             }
         }
 
