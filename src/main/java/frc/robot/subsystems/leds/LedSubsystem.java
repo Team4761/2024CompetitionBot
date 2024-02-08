@@ -60,7 +60,7 @@ public class LedSubsystem extends SubsystemBase {
         }
 
         leds.setData(ledBuffer);
-        leds.start();
+        
     }
 
     private static BufferedImage createImageIcon(String name) {
@@ -85,7 +85,6 @@ public class LedSubsystem extends SubsystemBase {
         for (int i = 0; i < LED_SIZE * 3; i += 3) {
             ledBuffer.setRGB(i, RGB[i], RGB[i + 1], RGB[i + 2]);
             leds.setData(ledBuffer);
-            leds.start();
         }
 
     }
@@ -100,16 +99,14 @@ public class LedSubsystem extends SubsystemBase {
             ledBuffer.setRGB(i, r, g, b);
         }
         leds.setData(ledBuffer);
-        leds.start();
     }
 
-    public void SetRowColor(int r, int g, int b, int row) {
+    public void SetRowColor(int row,int r, int g, int b) {
         int start = row * LED_WIDTH;
         for (int i = 0; i < LED_WIDTH; ++i) {
             ledBuffer.setRGB(start + i, r, g, b);
         }
         leds.setData(ledBuffer);
-        leds.start();
     }
 
     public void StartColor() {

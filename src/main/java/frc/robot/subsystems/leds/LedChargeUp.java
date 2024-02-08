@@ -9,9 +9,9 @@ import static frc.robot.subsystems.leds.LedSubsystem.LED_SIZE;
 public class LedChargeUp extends SequentialCommandGroup {
     private static final int BANK_SIZE = 2;
 
-    public LedChargeUp(long time, LedSubsystem subsystem) {
+    public LedChargeUp(double time, LedSubsystem subsystem) {
         int numIncrements = LED_SIZE / BANK_SIZE;
-        long timeEachIncrement = time / numIncrements;
+        double timeEachIncrement = time / numIncrements;
         addCommands(new LedSetAllColorCommand(subsystem, 0, 0, 0));
         for (int increment = 0; increment < numIncrements; increment++) {
             addCommands(new LedBankCommand(subsystem, increment).withTimeout(timeEachIncrement));

@@ -28,7 +28,7 @@ public class RobocketsController extends CommandXboxController {
             x().onTrue(Commands.runOnce(this::onPressX, map.swerve));
             y().onTrue(Commands.runOnce(this::onPressY, map.swerve));
             x().onFalse(Commands.runOnce(this::onReleaseX, map.swerve));
-            y().onFalse(Commands.runOnce(this::onReleaseX, map.swerve));
+            y().onFalse(Commands.runOnce(this::onReleaseY, map.swerve));
             leftTrigger().onTrue(Commands.runOnce(this::onLeftTrigger, map.swerve));
             rightTrigger().onTrue(Commands.runOnce(this::onRightTrigger, map.swerve));
         }
@@ -41,6 +41,7 @@ public class RobocketsController extends CommandXboxController {
     private void onPressA() {
         //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
         map.shooter.setSpeed(SmartDashboard.getNumber("Shooter In Speed", 0.5));
+        map.chargeUp.execute();
     }
 
     private void onPressB() {
@@ -57,19 +58,19 @@ public class RobocketsController extends CommandXboxController {
     }
 
     private void onPressX() {
-        map.shooter.setIntakeSpeed(-SmartDashboard.getNumber("Shooter Outtake Speed", 0.5));
+        //map.shooter.setIntakeSpeed(-SmartDashboard.getNumber("Shooter Outtake Speed", 0.5));
     }
 
     private void onPressY() {
-        map.shooter.setIntakeSpeed(SmartDashboard.getNumber("Shooter Intake Speed", 0.5));
+        //map.shooter.setIntakeSpeed(SmartDashboard.getNumber("Shooter Intake Speed", 0.5));
     }
 
     private void onReleaseX() {
-        map.shooter.setIntakeSpeed(0);
+        //map.shooter.setIntakeSpeed(0);
     }
 
     private void onReleaseY() {
-        map.shooter.setIntakeSpeed(0);
+        //map.shooter.setIntakeSpeed(0);
     }
 
     private void onLeftBumper() {
