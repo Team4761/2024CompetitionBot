@@ -20,4 +20,9 @@ public class LedSetAllColorCommand extends Command {
     public void execute() {
         ledSubsystem.SetAllColor(r, g, b);
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 }

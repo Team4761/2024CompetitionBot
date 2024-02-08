@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.leds.LedChargeUp;
 import frc.robot.subsystems.swerve.SwerveTurnTo;
 
 // The reason for the existence of this is that it takes a TON of code out of Robot.java (that is all)
@@ -15,9 +16,12 @@ public class RobocketsController extends CommandXboxController {
     public RobocketsController(int port, RobotMap map) {
         super(port);
         this.map = map;
+
+        System.out.println("Setting up controller");
         // This is not a number I saw loaded anywhere
         SmartDashboard.putNumber("Swerve Speed",0.5);
 
+            a().onTrue(Commands.runOnce(this::doChargeUp, map.leds));
         if (map.shooter != null) {
             a().onTrue(Commands.runOnce(this::onPressA, map.shooter));
             b().onTrue(Commands.runOnce(this::onPressB, map.shooter));
@@ -94,6 +98,10 @@ public class RobocketsController extends CommandXboxController {
 
     private void onRightTrigger() {
         map.swerve.resetPose();
+    }
+
+    private void doChargeUp() {
+        CommandScheduler.getInstance().schedule(new LedChargeUp(2000, map.leds));
     }
 
     // Apply a deadzone for swerve
