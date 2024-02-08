@@ -76,7 +76,7 @@ public class RobocketsController extends CommandXboxController {
         if (map.intake != null) {
             map.intake.intake();
         }
-        map.leds.ChargeUpSeq();
+        map.chargeUp.execute();
         map.leds.NoteIndicator(true);
     }
 
