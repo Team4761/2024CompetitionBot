@@ -39,14 +39,14 @@ public class LedSubsystem extends SubsystemBase {
             // there = createImageIcon("there.png");
         } 
         catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
     public void DisplayImage(BufferedImage image) {
         for (int xPos = 0; xPos < 32; xPos++) {
             for (int yPos = 0; yPos < 8; yPos++) {
-                int pixelColor = image.getRGB((int) xPos, (int) yPos);
+                int pixelColor = image.getRGB(xPos, yPos);
                 RGB[(yPos * 32 + xPos) * 3] = (pixelColor & 0x00ff0000) >> 16;
                 RGB[(yPos * 32 + xPos) * 3 + 1] = (pixelColor & 0x0000ff00) >> 8;
                 RGB[(yPos * 32 + xPos) * 3 + 2] = (pixelColor & 0x000000ff);
@@ -98,9 +98,18 @@ public class LedSubsystem extends SubsystemBase {
     public void SetAllColor(int r, int g, int b) {
         for (int i = 0; i < LED_SIZE; i++) {
             ledBuffer.setRGB(i, r, g, b);
-            leds.setData(ledBuffer);
-            leds.start();
         }
+        leds.setData(ledBuffer);
+        leds.start();
+    }
+
+    public void SetRowColor(int r, int g, int b, int row) {
+        int start = row * LED_WIDTH;
+        for (int i = 0; i < LED_WIDTH; ++i) {
+            ledBuffer.setRGB(start + i, r, g, b);
+        }
+        leds.setData(ledBuffer);
+        leds.start();
     }
 
     public void StartColor() {
@@ -126,7 +135,7 @@ public class LedSubsystem extends SubsystemBase {
     }
     //Indicator of having a Note and the LEDs beung that indidcator
     public void NoteIndicator (boolean HaveNote) {
-        if (HaveNote==true) 
+        if (HaveNote)
         {
             SetAllColor(250, 90, 0);
         }
@@ -135,19 +144,6 @@ public class LedSubsystem extends SubsystemBase {
             SetAllColor(0,0,0);
         }
     }
-
-    public void ChargeUpSeq()
-    {
-
-        for (int row = 0; row < LED_SIZE/8; row++) 
-        {
-            for(int i=0; i< 8; i++)
-            {
-                ledBuffer.setRGB(i+row*8,250, 220, 0);
-            }
-            leds.setData(ledBuffer);
-            leds.start();
-        }
-        
-    }
 }
+
+
