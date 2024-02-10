@@ -8,7 +8,7 @@ import frc.robot.subsystems.swerve.SwerveTurnTo;
 
 // The reason for the existence of this is that it takes a TON of code out of Robot.java (that is all)
 public class DriveController extends XboxController {
-    
+
     private RobotMap map;
     private RobocketsShuffleboard shuffleboard;
 
@@ -32,7 +32,7 @@ public class DriveController extends XboxController {
      */
     public static double deadzone (double value, double deadzone) {
         if (Math.abs(value) > deadzone) {
-            if (value > 0.0) { return (value - deadzone) / (1.0 - deadzone); } 
+            if (value > 0.0) { return (value - deadzone) / (1.0 - deadzone); }
             else             { return (value + deadzone) / (1.0 - deadzone); }
         }
         return 0.0;
@@ -98,12 +98,6 @@ public class DriveController extends XboxController {
                     shuffleboard.getSettingNum("Rotation Speed") * deadzone(RightX, 0.08),   // Rotation
                     true); //square inputs to ease small adjustments
             }
-            if(getXButtonPressed()) {
-                map.swerve.zeroGyro();
-            }
-            if(getYButtonPressed()) {
-                map.swerve.resetPose(); 
-            }
 
             // turn to align with gyro
             if(getPOV()!=-1) {
@@ -111,14 +105,12 @@ public class DriveController extends XboxController {
             }
         }
 
-
         // Vision
         if (map.vision != null) {
             if(getAButtonPressed()){
                 map.vision.toString();
             }
         }
-
 
         // West Coast
         if (map.westcoast != null) {
