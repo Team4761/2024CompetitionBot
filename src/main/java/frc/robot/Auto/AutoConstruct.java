@@ -20,7 +20,7 @@ import frc.robot.RobotMap;
  * <p> This entire class exists solely not to clutter up Robot.java with auto code that gets written in random spots
  * <p> If you have a new auto choisce to add, do it here
  */
-public class AutoConstruct {
+public class AutoConstruct extends SendableChooser<String> {
 
     // Internal Auto names
     private static final String kDefaultAuto = "Default";
@@ -32,31 +32,29 @@ public class AutoConstruct {
     private static final String kPathPlanner1MockAuto = "pathPlanner1MeterForward";
     private static final String kPathPlanner2MeterSpin = "2meterspin";
 
-
+    private static AutoConstruct autoSelector;
     private static String m_autoSelected;
-    private static final SendableChooser<String> m_chooser = new SendableChooser<>();
 
     /**
-     * <p> Sends an m_chooser object to Smart Dashboard
+     * <p> Sends an  object to Smart Dashboard
      * <p> This is something that is normally done inside Robot.java
      * <p> A default Robot.java will have this code below written directly into autoInit()
      */
-    public static void sendAutoOptionsToSmartDashboard() {
+    public AutoConstruct() {
         // Construct our Auto Options
-        m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+        setDefaultOption("Default Auto", kDefaultAuto);
 
         // First parameter: The name of the auto displayed on SmartDashboard
         // Second parameter: The internal name of the auto
-        m_chooser.addOption("One Meter Left", kOneMeterLeft);
-        m_chooser.addOption("PathPlanner 1 Meter Forward Auto", kPathPlanner1Auto);
-        m_chooser.addOption("PathPlanner 1 Meter Forward Path", kPathPlanner1MockAuto);
-        m_chooser.addOption("PathPlanner Test 2", kPathPlanner2Auto);
-        m_chooser.addOption("April Tag Dance", kAprilDance);
-        m_chooser.addOption("PathPlanner 2 Meter Up", kPathPlanner2Up);
-        m_chooser.addOption("PathPlanner 2 Meter Spin", kPathPlanner2MeterSpin);
+        addOption("One Meter Left", kOneMeterLeft);
+        addOption("PathPlanner 1 Meter Forward Auto", kPathPlanner1Auto);
+        addOption("PathPlanner 1 Meter Forward Path", kPathPlanner1MockAuto);
+        addOption("PathPlanner Test 2", kPathPlanner2Auto);
+        addOption("April Tag Dance", kAprilDance);
+        addOption("PathPlanner 2 Meter Up", kPathPlanner2Up);
+        addOption("PathPlanner 2 Meter Spin", kPathPlanner2MeterSpin);
 
-        // Add the chooser to smartdashboard
-        SmartDashboard.putData("Auto choices", m_chooser);
+        autoSelector = this;
     }
 
     /**
@@ -69,7 +67,7 @@ public class AutoConstruct {
      * @param map Some commands require that you pass in a subsystem. Fortunately all these subsystems can be found in RobotMap, so we will just pass that in
      */
     public static void scheduleSelectedCommand(RobotMap map) {
-        m_autoSelected = m_chooser.getSelected();
+        m_autoSelected = autoSelector.getSelected();
         // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
         System.out.println("Auto selected: " + m_autoSelected);
 

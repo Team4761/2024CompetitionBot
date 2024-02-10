@@ -296,9 +296,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         double relativeSpeed = 1;
         speedX = newTargetStates.vxMetersPerSecond * relativeSpeed;
         speedY = newTargetStates.vyMetersPerSecond * relativeSpeed;
-        speedRot = newTargetStates.omegaRadiansPerSecond;
+        speedRot = -newTargetStates.omegaRadiansPerSecond;
         SmartDashboard.putNumber("Relative SpeedX", newTargetStates.vxMetersPerSecond);
-        SmartDashboard.putNumber("Relative SpeedY", -newTargetStates.vyMetersPerSecond);
+        SmartDashboard.putNumber("Relative SpeedY", newTargetStates.vyMetersPerSecond);
         SmartDashboard.putNumber("Relative SpeedRot", newTargetStates.omegaRadiansPerSecond);
     }
 

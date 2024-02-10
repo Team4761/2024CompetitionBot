@@ -17,6 +17,7 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Settings/Auto/Auto": "String Chooser",
       "/SmartDashboard/Auto choices": "String Chooser"
     }
   },

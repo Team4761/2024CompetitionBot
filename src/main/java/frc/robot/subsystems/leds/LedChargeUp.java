@@ -28,7 +28,7 @@ public class LedChargeUp extends Command {
 
     @Override
     public void execute() {
-        Robot.getMap().shooter.setSpeed(speed);
+        // Robot.getMap().shooter.setShooterSpeed(speed);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class LedChargeUp extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        Robot.getMap().shooter.setSpeed(0);
+        // Robot.getMap().shooter.setShooterSpeed(0);
     }
 }
 

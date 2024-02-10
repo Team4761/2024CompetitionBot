@@ -32,6 +32,11 @@ public class Constants
     public static int SHOOTER_RIGHT_MOTOR_PORT = 16;  // CAN Port.
     public static int SHOOTER_INTAKE_LEFT_MOTOR_PORT = 5;  // CAN Port.
     public static int SHOOTER_INTAKE_RIGHT_MOTOR_PORT = 3;  // CAN Port.
+    public static int SHOOTER_ANGLE_LEFT_MOTOR_PORT = -1;   // CAN Port.
+    public static int SHOOTER_ANGLE_RIGHT_MOTOR_PORT = -1;  // CAN Port.
+
+    public static double NEO_UNITS_TO_RADIANS = 0.0174533;  // Based on the motor's current position, this converts the native units to the rotation in radians.
+    public static double SHOOTER_RPM_TO_MPS = 0.001;        // PLACEHOLDER. This converts the speed which the shooter is angling itself from rotations per minute to meters per second
 
     // Physical Constants
     // TODO: find these constants
@@ -42,6 +47,9 @@ public class Constants
     public static double RPM_TO_MPS_CONVERSION = DRIVETRAIN_WHEEL_CIRCUMFERENCE_M / 60.0;
     public static double SPARKMAX_UNITS_PER_ROTATION = 42;
     public static double DRIVETRAIN_ENCODER_UNITS_TO_METERS = DRIVETRAIN_WHEEL_CIRCUMFERENCE_M / SPARKMAX_UNITS_PER_ROTATION / DRIVETRAIN_GEAR_RATIO;    // The scale factor for the drivetrain wheels encoder units to meters
+
+    // Kraken Swerve Drive
+    public static double KRAKEN_RPM_TO_MPS_CONVERSION = DRIVETRAIN_WHEEL_CIRCUMFERENCE_M / 60.0;
 
     // Swerve PID Control
     public static double SWERVE_P = 5.0;    // The higher this value is, the longer it takes for the robot to start slowing down

@@ -5,13 +5,9 @@
 package frc.robot;
 
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Auto.AutoConstruct;
-import frc.robot.subsystems.swerve.SwerveGoCartesianF;
-import frc.robot.subsystems.swerve.SwerveTurnTo;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -25,6 +21,10 @@ public class Robot extends TimedRobot {
   // This is also the file where all the subsystems reside
   private static RobotMap map = new RobotMap();
   public static RobotMap getMap() { return map; }
+
+  public static RobocketsShuffleboard shuffleboard = new RobocketsShuffleboard();
+  public static RobocketsShuffleboard getShuffleboard() { return shuffleboard; }
+
   public static RobocketsController controller = new RobocketsController(Constants.CONTROLLER_PORT, map);
 
   /**
@@ -32,9 +32,7 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   @Override
-  public void robotInit() {
-    AutoConstruct.sendAutoOptionsToSmartDashboard();
-  }
+  public void robotInit() {}
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
