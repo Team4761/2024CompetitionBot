@@ -25,7 +25,8 @@ public class Robot extends TimedRobot {
   public static RobocketsShuffleboard shuffleboard = new RobocketsShuffleboard();
   public static RobocketsShuffleboard getShuffleboard() { return shuffleboard; }
 
-  public static RobocketsController controller = new RobocketsController(Constants.CONTROLLER_PORT, map);
+  public static DriveController driveController = new DriveController(Constants.DRIVE_CONTROLLER_PORT, map, shuffleboard);
+  public static ShooterController shooterController = new ShooterController(Constants.SHOOTER_CONTROLLER_PORT, map, shuffleboard);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -56,10 +57,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // CommandScheduler.getInstance().schedule(new SwerveGoCartesianF(map.swerve, new Translation2d(0, 6)));
-    // CommandScheduler.getInstance().schedule(new SwerveTurnTo(map.swerve, new Rotation2d(3.1415)));
-
-    
     AutoConstruct.scheduleSelectedCommand(map);
   }
 
@@ -72,14 +69,17 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    // map.leds.ChargeUpSeq();
     RobocketsShuffleboard.teleopInit();
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    controller.teleopPeriodic();
+
+    // driveController.teleopPeriodic();
+    shooterController.teleopPeriodic();
+
+
     if (map.vision != null) {
       var result = map.vision.getLatestResult();
 

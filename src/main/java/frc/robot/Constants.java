@@ -3,7 +3,8 @@ package frc.robot;
 
 public class Constants
 {
-    public static int CONTROLLER_PORT = 0;   // On Dashboard under controller section
+    public static int DRIVE_CONTROLLER_PORT = 0;   // On Dashboard under controller section
+    public static int SHOOTER_CONTROLLER_PORT = 1;  // On Dashboard under controller section
 
     // Swerve
     public static int FL_DRIVE_PORT = 1;    // CAN Port.

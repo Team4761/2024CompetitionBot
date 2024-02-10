@@ -1,26 +1,35 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.shooter.Shoot;
 import frc.robot.subsystems.swerve.SwerveTurnTo;
 
 // The reason for the existence of this is that it takes a TON of code out of Robot.java (that is all)
-public class RobocketsController extends XboxController {
+public class DriveController extends XboxController {
     
     private RobotMap map;
+    private RobocketsShuffleboard shuffleboard;
 
-    public RobocketsController(int port, RobotMap map) {
+    /**
+     * Initializes the Shooter Controller and makes an internal copy of the RobotMap to save performance.
+     * @param port The port of the controller on the Dashboard
+     * @param map The currently used RobotMap
+     * @param shuffleboard A copy of the shuffleboard for settings purposes
+     */
+    public DriveController(int port, RobotMap map, RobocketsShuffleboard shuffleboard) {
         super(port);
         this.map = map;
-        // This is not a number I saw loaded anywhere
-        SmartDashboard.putNumber("Swerve Speed",0.5);
+        this.shuffleboard = shuffleboard;
     }
 
-    // Apply a deadzone for swerve
+    /**
+     * Apply a deadzone to a given value to account for annoying controllers.
+     * @param value The exact value that the controller reads (between -1.0 and 1.0)
+     * @param deadzone The deadzone to be applied where anything below the deadzone is set to 0
+     * @return The value that the controller reads AFTER the deadzone is applied.
+     */
     public static double deadzone (double value, double deadzone) {
         if (Math.abs(value) > deadzone) {
             if (value > 0.0) { return (value - deadzone) / (1.0 - deadzone); } 
@@ -62,10 +71,6 @@ public class RobocketsController extends XboxController {
         double LeftY = smooth(smoothLeftY);
         double RightX = smooth(smoothRightX);
 
-        // double LeftX = getLeftX();
-        // double LeftY = getLeftY();
-        // double RightX = getRightX();
-
         // Swerve
         if (map.swerve != null) {
             double xyCof = 1;//0.75/Math.max(0.001, Math.sqrt(Math.pow(deadzone(controller.getLeftX(), 0.1), 2)+Math.pow(deadzone(controller.getLeftY(), 0.1), 2)));
@@ -81,16 +86,16 @@ public class RobocketsController extends XboxController {
             if (RightX==0) {
                 map.swerve.setDriveFXY(
                     // On the controller, upwards is negative and left is also negative. To correct this, the negative version of both are sent.
-                    SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
-                    SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
+                    shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
+                    shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
                     true); //square inputs to ease small adjustments
                 map.swerve.setDriveRot(0, false);   // Should not be rotating if not rotating lol
             } else {
                 map.swerve.swerveDriveF(
                     // On the controller, upwards is negative and left is also negative. To correct this, the negative version of both are sent.
-                    SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
-                    SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
-                    SmartDashboard.getNumber("Swerve Speed", 0.7) * deadzone(RightX, 0.08),   // Rotation
+                    shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
+                    shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
+                    shuffleboard.getSettingNum("Rotation Speed") * deadzone(RightX, 0.08),   // Rotation
                     true); //square inputs to ease small adjustments
             }
             if(getXButtonPressed()) {
@@ -105,73 +110,14 @@ public class RobocketsController extends XboxController {
                 CommandScheduler.getInstance().schedule(new SwerveTurnTo(map.swerve, new Rotation2d(-getPOV()*0.01745329)));
             }
         }
-        // Intake
-        if (map.intake != null) {
-            map.intake.rotate(deadzone(getRightX(), 0.1));
 
-            if (getLeftBumperPressed()) {
-                map.intake.intake();
-            }
-            else if (getRightBumperPressed()) {
-                map.intake.outtake();
-            }
-            }
-        // Shooter
-        if (map.shooter != null) {
-            if (getAButtonPressed()) {
-                //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setShooterSpeed(SmartDashboard.getNumber("Shooter In Speed", 0.5));
-            }
-            if (getBButtonPressed()) {
-                //CommandScheduler.getInstance().schedule(new Shoot(-SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setShooterSpeed(-SmartDashboard.getNumber("Shooter Out Speed", 0.5));
-            }
-            if (getYButtonPressed()) {
-                map.shooter.setIntakeSpeed(SmartDashboard.getNumber("Shooter Intake Speed", 0.5));
-            }
-            if (getXButtonPressed()) {
-                map.shooter.setIntakeSpeed(-SmartDashboard.getNumber("Shooter Outtake Speed", 0.5));
-            }
-            if (getAButtonReleased() || getBButtonReleased()) {
-                map.shooter.setShooterSpeed(0);
-            }
-            if (getXButtonReleased() || getYButtonReleased()) {
-                map.shooter.setIntakeSpeed(0);
-            }
-        }
+
         // Vision
         if (map.vision != null) {
             if(getAButtonPressed()){
                 map.vision.toString();
             }
         }
-
-        
-        //LEDs
-        if (map.leds != null){
-            //if the intake button is pressed it will turn the LEds to orange
-            if(getLeftBumperPressed())
-            {
-                map.leds.NoteIndicator(true);
-            }
-
-            if(getLeftBumperReleased())
-            {
-                map.leds.NoteIndicator(true);
-            }
-            //if the outake button is pressed it will turn the LEDs off
-            if(getRightBumperPressed())
-            {
-                map.leds.NoteIndicator(false);
-            }
-            //if the outake button is pressed it will turn the LEDs off
-            if(getAButtonPressed())
-            {
-                map.leds.ChargeUpSeq();
-                map.leds.NoteIndicator(false);
-            }
-        }
-
 
 
         // West Coast
