@@ -17,6 +17,13 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Debug/Commands/Go 1 Meter Forward": "Command",
+      "/Shuffleboard/Debug/Commands/Go 1 Meter Left": "Command",
+      "/Shuffleboard/Debug/Commands/Shoot": "Command",
+      "/Shuffleboard/Debug/Commands/Shoot At 45 Degrees": "Command",
+      "/Shuffleboard/Debug/Commands/Turn 90 Degrees": "Command",
+      "/Shuffleboard/Debug/Commands/Turn Shooter To 45 Degrees": "Command",
+      "/Shuffleboard/Debug/Commands/Turn To 90 Degrees": "Command",
       "/Shuffleboard/Settings/Auto/Auto": "String Chooser",
       "/SmartDashboard/Auto choices": "String Chooser"
     }
