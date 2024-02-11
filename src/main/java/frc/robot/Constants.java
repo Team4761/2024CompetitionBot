@@ -1,6 +1,10 @@
 package frc.robot;
 
 
+/**
+ * <p> This contains all the physical constants and port numbers on the robot.
+ * <p> However, many PID values and Feedforward values are stored within their respective subsystem to make it easier to tune and understand the values.
+ */
 public class Constants
 {
     public static int DRIVE_CONTROLLER_PORT = 0;   // On Dashboard under controller section
@@ -23,10 +27,10 @@ public class Constants
     public static int BR_ENCODER_PORT = 2;  // DIO Port?
 
     // Intake (currently conflicts with Swerve ports)
-    public static int INTAKE_RIGHT_ROTATE_PORT = 5; // CAN Port.
-    public static int INTAKE_LEFT_ROTATE_PORT = 4;  // CAN Port.
     public static int INTAKE_RIGHT_PORT = 1;        // CAN Port.
     public static int INTAKE_LEFT_PORT = 3;         // CAN Port.
+    public static int INTAKE_ANGLE_LEFT_MOTOR_PORT = -1;   // CAN Port.
+    public static int INTAKE_ANGLE_RIGHT_MOTOR_PORT = -1;   // CAN Port.
 
     // Shooter
     public static int SHOOTER_LEFT_MOTOR_PORT = 15;  // CAN Port.
@@ -35,6 +39,8 @@ public class Constants
     public static int SHOOTER_INTAKE_RIGHT_MOTOR_PORT = 3;  // CAN Port.
     public static int SHOOTER_ANGLE_LEFT_MOTOR_PORT = -1;   // CAN Port.
     public static int SHOOTER_ANGLE_RIGHT_MOTOR_PORT = -1;  // CAN Port.
+    public static int SHOOTER_SENSOR_UPPER_PORT = 0;    // DIO Port.
+    public static int SHOOTER_SENSOR_LOWER_PORT = 1;    // DIO Port.
 
     public static double NEO_UNITS_TO_RADIANS = 0.0174533;  // Based on the motor's current position, this converts the native units to the rotation in radians.
     public static double SHOOTER_RPM_TO_MPS = 0.001;        // PLACEHOLDER. This converts the speed which the shooter is angling itself from rotations per minute to meters per second

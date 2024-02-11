@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -21,10 +22,14 @@ public class ShooterSubsystem extends SubsystemBase{
     private PIDController anglePID;         // Will be used to get the shooter a desired angle.
     private ArmFeedforward angleFeedForward;// Will be used to maintain the shooter's angle.
 
+    // The break beam sensors are from https://www.adafruit.com/product/2168
+    private DigitalInput intakeUpperSensor;    // This is the break beam sensor right before the top of the shooter
+    private DigitalInput intakeLowerSensor;    // This is the break beam sensor in between the shooter and the actual intake
+
     private double targetSpeed;         // Shooting speed in rotations of the wheel / second
     private double targetAngle;         // Shooting angle in radians. The origin should be when the shooter is perpendicular with the ground (flat and fully outstretched).
 
-    private final double SHOOTER_ANGLE_OFFSET = 0.0;  // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees.
+    private final double SHOOTER_ANGLE_OFFSET = 0.0;  // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
 
 
 
@@ -39,9 +44,13 @@ public class ShooterSubsystem extends SubsystemBase{
         anglePID = new PIDController(1.0, 0.0, 0.0);    // Placeholder values, has yet to be tuned.
         angleFeedForward = new ArmFeedforward(0.0, 0.0, 0.0);   // Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
 
+        intakeUpperSensor = new DigitalInput(Constants.SHOOTER_SENSOR_UPPER_PORT);
+        intakeLowerSensor = new DigitalInput(Constants.SHOOTER_SENSOR_LOWER_PORT);
+
         targetSpeed = 0.0;
         targetAngle = 0.0;
     }
+
 
     public void periodic() {
         getShooterToSetSpeed();     // Gets the shooter to speed up to {targetSpeed} rotations per second.
@@ -98,6 +107,14 @@ public class ShooterSubsystem extends SubsystemBase{
     }
 
     /**
+     * <p> Sets the target angle for the shooter to what it currently is plus {angleRadians} where up is positive and down is negative
+     * @param angleRadians The offset the shooter angle should get to in radians.
+     */
+    public void rotate(double angleRadians) {
+        targetAngle += angleRadians;
+    }
+
+    /**
      * <p> Sets the speed of the intake to the motor's speed. (the belt that pulls the game piece from the actual intake)
      * @param speed The speed of the intake as a number between -1.0 and 1.0 inclusive which represents 100% speed outtake and intake respectively.
      */
@@ -120,5 +137,21 @@ public class ShooterSubsystem extends SubsystemBase{
      */
     public double getShooterAngleVelocity() {
         return (angleMotorLeft.getEncoder().getVelocity() * Constants.SHOOTER_RPM_TO_MPS);
+    }
+
+    /**
+     * <p> Using the break beam sensor, this returns whether or not there is a piece in the upper shooter.
+     * @return True if there is a piece in the upper shooter. False if there is none.
+     */
+    public boolean isPieceInUpperIntake() {
+        return intakeUpperSensor.get();
+    }
+
+    /**
+     * <p> Using the break beam sensor, this returns whether or not there is a piece in the lower shooter.
+     * @return True if there is a piece in the lower shooter. False if there is none.
+     */
+    public boolean isPieceInLowerIntake() {
+        return intakeLowerSensor.get();
     }
 }

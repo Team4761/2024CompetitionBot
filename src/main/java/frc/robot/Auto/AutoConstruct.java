@@ -62,7 +62,6 @@ public class AutoConstruct extends SendableChooser<String> {
      * <p> The auto command is a class that extends the Command Class
      * <p> This means that the auto command has a built in initialize(), execute(), end(), stop(), and interrupted() to work with
      * <p> Once the auto command decides it is finished for whatever reason, the command scheduler releases the command and runs the next one in the stack
-     * <p>
      * <p> It should be noted that everytime a new auto is added, we must write the code ourselves
      * @param map Some commands require that you pass in a subsystem. Fortunately all these subsystems can be found in RobotMap, so we will just pass that in
      */

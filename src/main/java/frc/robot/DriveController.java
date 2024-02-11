@@ -6,7 +6,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.swerve.SwerveTurnTo;
 
-// The reason for the existence of this is that it takes a TON of code out of Robot.java (that is all)
+/**
+ * <p> This is the specific controller that controls Swerve due to the fact that swerve requires 2 separate joysticks and buttons to rezero the robot's gyro/position.
+ * <p> This also contains Vision buttons (that currently do nothing) and a WestCoast control (that does not work, but was useful for testing with a different robot)
+ */
 public class DriveController extends XboxController {
 
     private RobotMap map;
@@ -49,6 +52,12 @@ public class DriveController extends XboxController {
     private double[] smoothLeftY = new double[SMOOTH_FRAME_LENGTH];
     private double[] smoothRightX = new double[SMOOTH_FRAME_LENGTH];
 
+    /**
+     * <p> Applies input smoothing.
+     * <p> This averages the values of the input array of doubles to smooth out the transitions between inputs.
+     * @param history A list of the last {SMOOTH_FRAME_LENGTH} number of axis inputs. The longer the list, the smoother it is but also the more input delay there is.
+     * @return The average (mean) value of the input list of doubles. This will be the average value of a joystick axis.
+     */
     private double smooth(double[] history) {
         double average = 0;
         for(int i = 0; i < history.length; i++) {
@@ -58,8 +67,12 @@ public class DriveController extends XboxController {
         return average;
     }
 
+    /**
+     * <p> This should run during the Robot.java's teleopPeriodic method.
+     * <p> This applies input smoothing to the joystick axises to make them smoother.
+     * <p> This also checks for all button pushes and runs their respected Swerve commands/functions.
+     */
     public void teleopPeriodic() {
-
         // smooth out the xbox inputs
         smoothLeftX[smoothNextFrameToWrite] = getLeftX();
         smoothLeftY[smoothNextFrameToWrite] = getLeftY();

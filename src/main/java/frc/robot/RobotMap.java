@@ -10,7 +10,12 @@ import frc.robot.subsystems.swerve.SwerveModuleNeo;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.westcoast.WestCoastSubsystem;
 
-// Contains all physical items on the robot (motors, encoders, LEDs, etc)
+/**
+ * <p> Contains all the subsystems for the robot to avoid static initialization order problems.
+ * <p> Various subsystems will be constantly commented out for testing as not all subsystems exist on the robot at one time.
+ * <p> There are some subsystems which are ONLY for testing and will not exist in the final robot.
+ * <p> Throughout the code, each subsystem must be handled if it is null.
+ */
 public class RobotMap
 {
 

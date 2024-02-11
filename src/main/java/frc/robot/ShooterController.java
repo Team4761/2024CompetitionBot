@@ -1,11 +1,7 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.shooter.Shoot;
 
 /**
  * This is the code for the controller that controls the shooter and the intake.
@@ -41,6 +37,8 @@ public class ShooterController extends XboxController {
         return 0.0;
     }
 
+
+
     // Apply input smoothing
     // This records the past 5 inputs received from the controller, and averages them out
     // This way, rather than a controller going from 0 to 1 in 1 cycle, it takes a couple cycles to reach 1
@@ -48,9 +46,15 @@ public class ShooterController extends XboxController {
     private final int SMOOTH_FRAME_LENGTH = 5;
 
     private int smoothNextFrameToWrite = 0;
-    private double[] smoothLeftY = new double[SMOOTH_FRAME_LENGTH];
-    private double[] smoothRightY = new double[SMOOTH_FRAME_LENGTH];
+    private double[] smoothLeftY = new double[SMOOTH_FRAME_LENGTH];     // Contains the past {SMOOTH_FRAME_LENGTH} number of inputs.
+    private double[] smoothRightY = new double[SMOOTH_FRAME_LENGTH];    // Contains the past {SMOOTH_FRAME_LENGTH} number of inputs.
 
+    /**
+     * <p> Applies input smoothing.
+     * <p> This averages the values of the input array of doubles to smooth out the transitions between inputs.
+     * @param history A list of the last {SMOOTH_FRAME_LENGTH} number of axis inputs. The longer the list, the smoother it is but also the more input delay there is.
+     * @return The average (mean) value of the input list of doubles. This will be the average value of a joystick axis.
+     */
     private double smooth(double[] history) {
         double average = 0;
         for(int i = 0; i < history.length; i++) {
@@ -60,10 +64,14 @@ public class ShooterController extends XboxController {
         return average;
     }
 
+    /**
+     * <p> This should run during the Robot.java's teleopPeriodic method.
+     * <p> This applies input smoothing to the joystick axises to make them smoother.
+     * <p> This also checks for all button pushes and runs their respected Shooter and Intake commands.
+     */
     public void teleopPeriodic() {
-
-        smoothLeftY[smoothNextFrameToWrite] = getLeftY();
-        smoothRightY[smoothNextFrameToWrite] = getRightY();
+        smoothLeftY[smoothNextFrameToWrite] = deadzone(getLeftY(), 0.08);
+        smoothRightY[smoothNextFrameToWrite] = deadzone(getRightY(), 0.08);
         smoothNextFrameToWrite++;
         smoothNextFrameToWrite %= SMOOTH_FRAME_LENGTH;
 
@@ -72,31 +80,35 @@ public class ShooterController extends XboxController {
 
         // Intake
         if (map.intake != null) {
-            map.intake.rotate(deadzone(getRightX(), 0.1));
+            
+            map.intake.rotate(RightY);
 
             if (getLeftBumperPressed()) {
-                map.intake.intake();
+                map.intake.intake(shuffleboard.getSettingNum("Intake Speed"));
             }
             else if (getRightBumperPressed()) {
-                map.intake.outtake();
+                map.intake.outtake(shuffleboard.getSettingNum("Outtake Speed"));
             }
         }
 
         // Shooter
         if (map.shooter != null) {
+
+            map.shooter.rotate(LeftY);
+
             if (getAButtonPressed()) {
                 //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setShooterSpeed(SmartDashboard.getNumber("Shooter In Speed", 0.5));
+                map.shooter.setShooterSpeed(shuffleboard.getSettingNum("Shooter In Speed"));
             }
             if (getBButtonPressed()) {
                 //CommandScheduler.getInstance().schedule(new Shoot(-SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setShooterSpeed(-SmartDashboard.getNumber("Shooter Out Speed", 0.5));
+                map.shooter.setShooterSpeed(-shuffleboard.getSettingNum("Shooter Out Speed"));
             }
             if (getYButtonPressed()) {
-                map.shooter.setIntakeSpeed(SmartDashboard.getNumber("Shooter Intake Speed", 0.5));
+                map.shooter.setIntakeSpeed(shuffleboard.getSettingNum("Shooter Intake Speed"));
             }
             if (getXButtonPressed()) {
-                map.shooter.setIntakeSpeed(-SmartDashboard.getNumber("Shooter Outtake Speed", 0.5));
+                map.shooter.setIntakeSpeed(-shuffleboard.getSettingNum("Shooter Outtake Speed"));
             }
             if (getAButtonReleased() || getBButtonReleased()) {
                 map.shooter.setShooterSpeed(0);

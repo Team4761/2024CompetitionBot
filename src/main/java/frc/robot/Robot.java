@@ -33,7 +33,10 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   @Override
-  public void robotInit() {}
+  public void robotInit() {
+    boolean win = true; // This is the most important line. DO NOT REMOVE.
+    System.out.println("Status on winning: " + win);
+  }
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics

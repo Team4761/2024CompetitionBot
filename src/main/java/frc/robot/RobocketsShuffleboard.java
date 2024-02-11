@@ -11,6 +11,10 @@ import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Auto.AutoConstruct;
 
+/**
+ * <p> This is a handler class for everything that has to do with the shufflboard.
+ * <p> For example, all of our settings for speeds can be accessed using the getSettingNum method.
+ */
 public class RobocketsShuffleboard {
 
     private static final String DEBUG = "Debug";
@@ -71,6 +75,7 @@ public class RobocketsShuffleboard {
 
         // Intake settings
         addIntakeSetting("Intake Speed", 0.5);
+        addIntakeSetting("Outtake Speed", 0.5);
 
         // Climber settings
         addClimberSetting("Climber Speed", 0.5);

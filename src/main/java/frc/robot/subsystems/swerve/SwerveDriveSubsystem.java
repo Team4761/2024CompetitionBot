@@ -31,13 +31,12 @@ import frc.robot.Constants;
 import frc.robot.Auto.PrintText;
 
 
+/**
+ * <p> This is the subsystem for Swerve which contains all of its motors, encoders, PID values, and more.
+ * <p> All measurements are in meters and radians (but rotation generally uses Rotation2d which includes both radians and degrees)
+ * <p> To make this consistent with PathPlanner and all other commands/odometry, the +x direction should be forwards and the +y direction should be left.
+ */
 public class SwerveDriveSubsystem extends SubsystemBase {
-    // inches rn
-    // Initialization of the subsystem has been moved to the robot map.
-    //private static final SwerveDriveSubsystem INSTANCE = new SwerveDriveSubsystem(new Translation2d(-12.25, 12.25), new Translation2d(12.25, 12.25), new Translation2d(-12.25, -12.25), new Translation2d(12.25, -12.25));
-    //public static SwerveDriveSubsystem getInstance() {
-    //    return INSTANCE;
-    //}
 
     SwerveModuleState[] targetStates = new SwerveModuleState[4];
 
@@ -80,7 +79,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private double speedY = 0;
 
 
-    // positions of the wheels relative to center (meters?)
+    // positions of the wheels relative to center in meters.
     public SwerveDriveSubsystem (Translation2d fL, Translation2d fR, Translation2d bL, Translation2d bR) {
         m_kinematics = new SwerveDriveKinematics(fL, fR, bL, bR);   // Load the relative positions of all our swerve modules (wheels) in relation to the origin.
         m_pose = new Pose2d();  // Starts the position at 0,0
@@ -154,9 +153,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             m_swervePositions
         );
         m_pose = new Pose2d(m_pose.getX(), -m_pose.getY(), m_pose.getRotation());   // The y value needs to be negative to make left +y
-        //m_pose = switchXandY(m_pose);
 
-        //forward is +x left is +y
+        //forward is +x. left is +y
 
         SmartDashboard.putNumber("Odometry x", m_pose.getX());
         SmartDashboard.putNumber("Odometry y", m_pose.getY());
