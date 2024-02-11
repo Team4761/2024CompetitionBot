@@ -2,12 +2,14 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.climber.LoosenClimber;
+import frc.robot.subsystems.climber.TightenClimber;
 import frc.robot.subsystems.swerve.SwerveTurnTo;
 
 /**
  * <p> This is the specific controller that controls Swerve due to the fact that swerve requires 2 separate joysticks and buttons to rezero the robot's gyro/position.
+ * <p> This also contains controls for the climber since movement and the climber go hand in hand.
  * <p> This also contains Vision buttons (that currently do nothing) and a WestCoast control (that does not work, but was useful for testing with a different robot)
  */
 public class DriveController extends XboxController {
@@ -115,6 +117,15 @@ public class DriveController extends XboxController {
             // turn to align with gyro
             if(getPOV()!=-1) {
                 CommandScheduler.getInstance().schedule(new SwerveTurnTo(map.swerve, new Rotation2d(-getPOV()*0.01745329)));
+            }
+        }
+
+        if (map.climber != null) {
+            if (getRightBumperPressed()) {
+                CommandScheduler.getInstance().schedule(new LoosenClimber());
+            }
+            if (getRightBumperReleased()) {
+                CommandScheduler.getInstance().schedule(new TightenClimber());
             }
         }
 
