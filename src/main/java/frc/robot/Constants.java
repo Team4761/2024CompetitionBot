@@ -45,6 +45,9 @@ public class Constants
     public static double NEO_UNITS_TO_RADIANS = 0.0174533;  // Based on the motor's current position, this converts the native units to the rotation in radians.
     public static double SHOOTER_RPM_TO_MPS = 0.001;        // PLACEHOLDER. This converts the speed which the shooter is angling itself from rotations per minute to meters per second
 
+    // Climber
+    public static int CLIMBER_MOTOR_PORT = -1;  // CAN Port.
+
     // Physical Constants
     // TODO: find these constants
     public static double DRIVETRAIN_WHEEL_DIAMETER_M = 0.1016; // wheel diameter in meters. This is 4 inches btw
