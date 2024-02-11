@@ -72,6 +72,14 @@
     }
   },
   {
+    "name": "/Shuffleboard/Settings/Intake/Full Intake Setting",
+    "type": "double",
+    "value": 0.5,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
     "name": "/Shuffleboard/Settings/Climber/Climber Speed",
     "type": "double",
     "value": 0.5,

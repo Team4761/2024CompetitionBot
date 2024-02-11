@@ -64,6 +64,14 @@
     }
   },
   {
+    "name": "/Shuffleboard/Settings/Intake/Outtake Speed",
+    "type": "double",
+    "value": 0.5,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
     "name": "/Shuffleboard/Settings/Climber/Climber Speed",
     "type": "double",
     "value": 0.5,
