@@ -114,6 +114,13 @@ public class DriveController extends XboxController {
                     true); //square inputs to ease small adjustments
             }
 
+            if (getXButtonPressed()) {
+                map.swerve.zeroGyro();
+            }
+            if (getYButtonPressed()) {
+                map.swerve.resetPose();
+            }
+
             // turn to align with gyro
             if(getPOV()!=-1) {
                 CommandScheduler.getInstance().schedule(new SwerveTurnTo(map.swerve, new Rotation2d(-getPOV()*0.01745329)));
