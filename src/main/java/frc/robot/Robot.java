@@ -60,15 +60,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // AutoConstruct.scheduleSelectedCommand(map);
+    AutoConstruct.scheduleSelectedCommand(map);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if (map.vision.hasTargets()) {
-      map.vision.dance();
-    }
+    // if (map.vision.hasTargets()) {
+    //   map.vision.dance();
+    // }
 
     CommandScheduler.getInstance().run();
   }
@@ -76,8 +76,8 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    map.swerve.zeroGyro();
-    map.swerve.resetPose();
+    // map.swerve.zeroGyro();
+    // map.swerve.resetPose();
     RobocketsShuffleboard.teleopInit();
   }
 

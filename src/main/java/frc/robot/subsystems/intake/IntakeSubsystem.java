@@ -1,5 +1,7 @@
 package frc.robot.subsystems.intake;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -11,11 +13,10 @@ import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase{ 
     // Neos that actually intake (left or right facing forward)
-    private CANSparkMax intakeL;
+    private TalonSRX intakeL;
     private CANSparkMax intakeR;
 
     private CANSparkMax angleMotorLeft; // Motor for angling the shooter up and down, assuming that the front of the shooter is the forward direction
-    private CANSparkMax angleMotorRight;// Motor for angling the shooter up and down, assuming that the front of the shooter is the forward direction
 
     private PIDController anglePID;         // Will be used to get the shooter a desired angle.
     private ArmFeedforward angleFeedForward;// Will be used to maintain the shooter's angle.
@@ -26,10 +27,9 @@ public class IntakeSubsystem extends SubsystemBase{
 
 
     public IntakeSubsystem() {
-        intakeL = new CANSparkMax(Constants.INTAKE_LEFT_PORT, MotorType.kBrushless);
+        intakeL = new TalonSRX(Constants.INTAKE_LEFT_PORT);
         intakeR = new CANSparkMax(Constants.INTAKE_RIGHT_PORT, MotorType.kBrushless);
         angleMotorLeft = new CANSparkMax(Constants.INTAKE_ANGLE_LEFT_MOTOR_PORT, MotorType.kBrushless);
-        angleMotorRight = new CANSparkMax(Constants.INTAKE_ANGLE_RIGHT_MOTOR_PORT, MotorType.kBrushless);
 
         anglePID = new PIDController(1.0, 0, 0);  // These values have yet to be tuned.
         angleFeedForward = new ArmFeedforward(0, 0.91, 1.95); // Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
@@ -52,7 +52,6 @@ public class IntakeSubsystem extends SubsystemBase{
 
         // Neither of the below have been tested (i.e. idk which one should be reversed rn)
         angleMotorLeft.set(speed);
-        angleMotorRight.set(-speed);
     }
 
     /**
@@ -60,7 +59,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * @param speed The speed to run the motors as a number between 0.0 to 1.0
      */
     public void intake(double speed) {
-        intakeL.set(speed);
+        intakeL.set(TalonSRXControlMode.PercentOutput, speed);
         intakeR.set(-speed);
     }
 
@@ -69,7 +68,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * @param speed The speed to run the motors at as a number between 0.0 to 1.0
      */
     public void outtake(double speed) {
-        intakeL.set(-speed);
+        intakeL.set(TalonSRXControlMode.PercentOutput, -speed);
         intakeR.set(speed);
     }
 
