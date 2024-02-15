@@ -16,7 +16,6 @@ public class ShooterSubsystem extends SubsystemBase{
     private TalonFX shooterRight;       // Motor for the right of the actual shooter, assuming that the front of the shooter is the forward direction
     private CANSparkMax intakeLeft;     // Motor for the left intake of the shooter, assuming that the front of the shooter is the forward direction
     private CANSparkMax intakeRight;    // Motor for the right intake of the shooter, assuming that the front of the shooter is the forward direction
-    private CANSparkMax angleMotorLeft; // Motor for angling the shooter up and down, assuming that the front of the shooter is the forward direction
     private CANSparkMax angleMotorRight;// Motor for angling the shooter up and down, assuming that the front of the shooter is the forward direction
 
     private PIDController anglePID;         // Will be used to get the shooter a desired angle.
@@ -38,7 +37,6 @@ public class ShooterSubsystem extends SubsystemBase{
         shooterRight = new TalonFX(Constants.SHOOTER_RIGHT_MOTOR_PORT);
         intakeLeft = new CANSparkMax(Constants.SHOOTER_INTAKE_LEFT_MOTOR_PORT, MotorType.kBrushless);
         intakeRight = new CANSparkMax(Constants.SHOOTER_INTAKE_RIGHT_MOTOR_PORT, MotorType.kBrushless);
-        angleMotorLeft = new CANSparkMax(Constants.SHOOTER_ANGLE_LEFT_MOTOR_PORT, MotorType.kBrushless);
         angleMotorRight = new CANSparkMax(Constants.SHOOTER_ANGLE_RIGHT_MOTOR_PORT, MotorType.kBrushless);
 
         anglePID = new PIDController(1.0, 0.0, 0.0);    // Placeholder values, has yet to be tuned.
@@ -86,8 +84,7 @@ public class ShooterSubsystem extends SubsystemBase{
         double speed = anglePID.calculate(currentAngle, targetAngle) + angleFeedForward.calculate(targetAngle, 0.0);
 
         // Neither of the below have been tested (i.e. idk which one should be reversed rn)
-        angleMotorLeft.set(speed);
-        angleMotorRight.set(-speed);
+        angleMotorRight.set(speed);
     }
 
     /**
@@ -128,7 +125,7 @@ public class ShooterSubsystem extends SubsystemBase{
      * @return the angle of the shooter in radians where up is positive and 0 radians is perpendicular with the ground.
      */
     public double getShooterAngle() {
-        return (angleMotorLeft.getEncoder().getPosition() - SHOOTER_ANGLE_OFFSET) * Constants.NEO_UNITS_TO_RADIANS;
+        return (angleMotorRight.getEncoder().getPosition() - SHOOTER_ANGLE_OFFSET) * Constants.NEO_UNITS_TO_RADIANS;
     }
 
     /**
@@ -136,7 +133,7 @@ public class ShooterSubsystem extends SubsystemBase{
      * @return The speed at which the shooter's angle changes in meters per second.
      */
     public double getShooterAngleVelocity() {
-        return (angleMotorLeft.getEncoder().getVelocity() * Constants.SHOOTER_RPM_TO_MPS);
+        return (angleMotorRight.getEncoder().getVelocity() * Constants.SHOOTER_RPM_TO_MPS);
     }
 
     /**
