@@ -176,11 +176,7 @@ public class SwerveModuleTalon extends SubsystemBase{
     public SwerveModulePosition getPosition() {
         SmartDashboard.putNumber("Module Position", drive.getPosition().getValueAsDouble());
         return new SwerveModulePosition(
-<<<<<<< Updated upstream
-            drive.getPosition().getValueAsDouble()*dM*driveConversionFactor,   // The meters that the wheel has moved
-=======
-            drive.getPosition().getValueAsDouble(),   // The meters that the wheel has moved
->>>>>>> Stashed changes
+            drive.getPosition().getValueAsDouble()*driveConversionFactor,   // The meters that the wheel has moved
             MathStuff.negative(getRotation()) // 2048 ticks to radians is 2pi/2048
         );
     }
@@ -191,7 +187,8 @@ public class SwerveModuleTalon extends SubsystemBase{
         return steer.getEncoder().getVelocity(); // /gearratio=rpms of the wheel spinning
     }
     public Rotation2d getRotation() {
-        return new Rotation2d((encoder.getAbsolutePosition().getValueAsDouble() + offset + 90) * 0.0174533);   // Converts the encoder ticks into radians after applying an offset.
+        // multiplied by 360 because it says its in rotations, unsure if correct
+        return new Rotation2d((encoder.getAbsolutePosition().getValueAsDouble()*360 + offset + 90) * 0.0174533);   // Converts the encoder ticks into radians after applying an offset.
     }
 
     public SwerveModuleState getState() {

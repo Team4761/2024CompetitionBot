@@ -41,17 +41,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     SwerveModuleState[] targetStates = new SwerveModuleState[4];
 
     // motors offset in degrees && i think negative is ccw
-<<<<<<< Updated upstream
-    private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , 36.5, 1.0,  1.0);    // Formerly -54.5, 1.0,  1.0
-    private SwerveModuleTalon m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT , -86, 1.0, -1.0);      // Formerly -6, -1.0, -1.0
-    private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT ,Constants.BL_ENCODER_PORT , 22, 1.0, -1.0);       // Formerly -68, 1.0, -1.0
-    private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , 172, 1.0,  -1.0);      // Formerly 82, 1.0,  -1.0
-=======
     private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , 36.5,false,  1.0);    // Formerly -54.5, 1.0,  1.0
     private SwerveModuleTalon m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT ,   -86, false, -1.0);      // Formerly -6, -1.0, -1.0
     private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT , Constants.BL_ENCODER_PORT ,  22, false, -1.0);       // Formerly -68, 1.0, -1.0
     private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , 172, false,  -1.0);      // Formerly 82, 1.0,  -1.0
->>>>>>> Stashed changes
 
     public static boolean isRobotRelative = false;
 
