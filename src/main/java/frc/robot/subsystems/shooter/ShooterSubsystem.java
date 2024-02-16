@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class ShooterSubsystem extends SubsystemBase{
+public class ShooterSubsystem extends SubsystemBase {
     private TalonFX shooterLeft;        // Motor for the left of the actual shooter, assuming that the front of the shooter is the forward direction
     private TalonFX shooterRight;       // Motor for the right of the actual shooter, assuming that the front of the shooter is the forward direction
     private CANSparkMax intakeLeft;     // Motor for the left intake of the shooter, assuming that the front of the shooter is the forward direction

@@ -41,10 +41,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     SwerveModuleState[] targetStates = new SwerveModuleState[4];
 
     // motors offset in degrees && i think negative is ccw
-    private SwerveModuleNeo m_frontLeftModule  = new SwerveModuleNeo(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , 36.5, 1.0,  1.0);    // Formerly -54.5, 1.0,  1.0
-    private SwerveModuleNeo m_frontRightModule = new SwerveModuleNeo(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT , -86, 1.0, -1.0);      // Formerly -6, -1.0, -1.0
-    private SwerveModuleNeo m_backLeftModule   = new SwerveModuleNeo(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT ,Constants.BL_ENCODER_PORT , 22, 1.0, -1.0);       // Formerly -68, 1.0, -1.0
-    private SwerveModuleNeo m_backRightModule  = new SwerveModuleNeo(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , 172, 1.0,  -1.0);      // Formerly 82, 1.0,  -1.0
+    private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , 36.5, 1.0,  1.0);    // Formerly -54.5, 1.0,  1.0
+    private SwerveModuleTalon m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT , -86, 1.0, -1.0);      // Formerly -6, -1.0, -1.0
+    private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT ,Constants.BL_ENCODER_PORT , 22, 1.0, -1.0);       // Formerly -68, 1.0, -1.0
+    private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , 172, 1.0,  -1.0);      // Formerly 82, 1.0,  -1.0
 
     public static boolean isRobotRelative = false;
 
@@ -95,9 +95,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      */
     public void configureAutoBuilder() {
         // This just gets the PID values of one motor. All 4 should be equal though!!
-        SparkPIDController spcd = m_backLeftModule.getDriveMotor().getPIDController(); // d for drive
-        SparkPIDController spcs = m_backLeftModule.getSteerMotor().getPIDController(); // s for steer
-        System.out.println("P: " + spcd.getP() + " I: " + spcd.getI() + " D: " + spcd.getD());
+        // SparkPIDController spcd = m_backLeftModule.getDriveMotor().getPIDController(); // d for drive
+        // SparkPIDController spcs = m_backLeftModule.getSteerMotor().getPIDController(); // s for steer
+        // System.out.println("P: " + spcd.getP() + " I: " + spcd.getI() + " D: " + spcd.getD());
         // https://github.com/mjansen4857/pathplanner/wiki/Java-Example:-Build-an-Auto
         HolonomicPathFollowerConfig hpfc = new HolonomicPathFollowerConfig(
             new PIDConstants(

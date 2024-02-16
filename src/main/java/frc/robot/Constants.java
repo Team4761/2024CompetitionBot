@@ -11,15 +11,15 @@ public class Constants
     public static int SHOOTER_CONTROLLER_PORT = 1;  // On Dashboard under controller section
 
     // Swerve
-    public static int FL_DRIVE_PORT = 1;    // CAN Port.
-    public static int FR_DRIVE_PORT = 8;    // CAN Port.
-    public static int BL_DRIVE_PORT = 2;    // CAN Port.
-    public static int BR_DRIVE_PORT = 6;    // CAN Port.
+    public static int FL_DRIVE_PORT = 23;    // CAN Port.
+    public static int FR_DRIVE_PORT = 22;    // CAN Port.
+    public static int BL_DRIVE_PORT = 20;    // CAN Port.
+    public static int BR_DRIVE_PORT = 21;    // CAN Port.
 
-    public static int FL_ROTATE_PORT = 4;   // CAN Port.
-    public static int FR_ROTATE_PORT = 5;   // CAN Port.
-    public static int BL_ROTATE_PORT = 3;   // CAN Port.
-    public static int BR_ROTATE_PORT = 7;   // CAN Port.
+    public static int FL_ROTATE_PORT = 5;   // CAN Port.
+    public static int FR_ROTATE_PORT = 7;   // CAN Port.
+    public static int BL_ROTATE_PORT = 8;   // CAN Port.
+    public static int BR_ROTATE_PORT = 6;   // CAN Port.
 
     public static int FL_ENCODER_PORT = 1;  // DIO Port?
     public static int FR_ENCODER_PORT = 4;  // DIO Port?
@@ -27,18 +27,16 @@ public class Constants
     public static int BR_ENCODER_PORT = 2;  // DIO Port?
 
     // Intake (currently conflicts with Swerve ports)
-    public static int INTAKE_RIGHT_PORT = 1;        // CAN Port.
-    public static int INTAKE_LEFT_PORT = 3;         // CAN Port.
-    public static int INTAKE_ANGLE_LEFT_MOTOR_PORT = -1;   // CAN Port.
-    public static int INTAKE_ANGLE_RIGHT_MOTOR_PORT = -1;   // CAN Port.
+    public static int INTAKE_RIGHT_PORT = 3;        // CAN Port.
+    public static int INTAKE_LEFT_PORT = 11;         // CAN Port.
+    public static int INTAKE_ANGLE_LEFT_MOTOR_PORT = 30;   // CAN Port.
 
     // Shooter
     public static int SHOOTER_LEFT_MOTOR_PORT = 15;  // CAN Port.
     public static int SHOOTER_RIGHT_MOTOR_PORT = 16;  // CAN Port.
-    public static int SHOOTER_INTAKE_LEFT_MOTOR_PORT = 5;  // CAN Port.
-    public static int SHOOTER_INTAKE_RIGHT_MOTOR_PORT = 3;  // CAN Port.
-    public static int SHOOTER_ANGLE_LEFT_MOTOR_PORT = -1;   // CAN Port.
-    public static int SHOOTER_ANGLE_RIGHT_MOTOR_PORT = -1;  // CAN Port.
+    public static int SHOOTER_INTAKE_LEFT_MOTOR_PORT = 2;  // CAN Port.
+    public static int SHOOTER_INTAKE_RIGHT_MOTOR_PORT = 4;  // CAN Port.
+    public static int SHOOTER_ANGLE_RIGHT_MOTOR_PORT = 1;  // CAN Port.
     public static int SHOOTER_SENSOR_UPPER_PORT = 0;    // DIO Port.
     public static int SHOOTER_SENSOR_LOWER_PORT = 1;    // DIO Port.
 

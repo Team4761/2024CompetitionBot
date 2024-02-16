@@ -24,7 +24,7 @@ public class SwerveModuleTalon extends SubsystemBase{
 
     private double dM;
     private double sM;
-    private double driveConversionFactor;
+    private final double driveConversionFactor = 0.0388385473906813; // This converts the encoders arbitrary units to meters travelled by the motor. The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
 
     // m/s, rotation2d
     private SwerveModuleState targetState = new SwerveModuleState();
@@ -46,7 +46,6 @@ public class SwerveModuleTalon extends SubsystemBase{
         encoder = new CANCoder(encoderID);
 
         // The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
-        driveConversionFactor = 1.0;
 
         offset = o;
 
@@ -175,7 +174,7 @@ public class SwerveModuleTalon extends SubsystemBase{
     public SwerveModulePosition getPosition() {
         SmartDashboard.putNumber("Module Position", drive.getPosition().getValueAsDouble());
         return new SwerveModulePosition(
-            drive.getPosition().getValueAsDouble()*dM,   // The meters that the wheel has moved
+            drive.getPosition().getValueAsDouble()*dM*driveConversionFactor,   // The meters that the wheel has moved
             MathStuff.negative(getRotation()) // 2048 ticks to radians is 2pi/2048
         );
     }

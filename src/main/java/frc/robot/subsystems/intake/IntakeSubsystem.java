@@ -13,7 +13,7 @@ import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase{ 
     // Neos that actually intake (left or right facing forward)
-    private TalonSRX intakeL;
+    private CANSparkMax intakeL;
     private CANSparkMax intakeR;
 
     private CANSparkMax angleMotorLeft; // Motor for angling the shooter up and down, assuming that the front of the shooter is the forward direction
@@ -27,7 +27,7 @@ public class IntakeSubsystem extends SubsystemBase{
 
 
     public IntakeSubsystem() {
-        intakeL = new TalonSRX(Constants.INTAKE_LEFT_PORT);
+        intakeL = new CANSparkMax(Constants.INTAKE_LEFT_PORT, MotorType.kBrushless);
         intakeR = new CANSparkMax(Constants.INTAKE_RIGHT_PORT, MotorType.kBrushless);
         angleMotorLeft = new CANSparkMax(Constants.INTAKE_ANGLE_LEFT_MOTOR_PORT, MotorType.kBrushless);
 
@@ -59,7 +59,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * @param speed The speed to run the motors as a number between 0.0 to 1.0
      */
     public void intake(double speed) {
-        intakeL.set(TalonSRXControlMode.PercentOutput, speed);
+        intakeL.set(speed);
         intakeR.set(-speed);
     }
 
@@ -68,7 +68,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * @param speed The speed to run the motors at as a number between 0.0 to 1.0
      */
     public void outtake(double speed) {
-        intakeL.set(TalonSRXControlMode.PercentOutput, -speed);
+        intakeL.set(-speed);
         intakeR.set(speed);
     }
 
