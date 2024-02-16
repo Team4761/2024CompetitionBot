@@ -3,12 +3,14 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.intake.IntakeSubsystemInterface;
 import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.leds.LedSubsystemInterface;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.swerve.SwerveModuleNeo;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystemInterface;
 import frc.robot.subsystems.westcoast.WestCoastSubsystem;
 
 /**
@@ -28,8 +30,8 @@ public class RobotMap
     public SwerveModuleNeo swerve_backRightModule;
 
     public SwerveDriveSubsystem swerve = null;
-    public VisionSubsystem vision = null;
-    public IntakeSubsystem intake = null;
+    public VisionSubsystemInterface vision = null;
+    public IntakeSubsystemInterface intake = null;
     public ShooterSubsystem shooter = null;
     public WestCoastSubsystem westcoast = null;
     public LedSubsystemInterface leds = null;
@@ -45,12 +47,11 @@ public class RobotMap
      */
     public RobotMap() 
     {
-        // intake = new IntakeSubsystem();
+        intake = IntakeSubsystem.getSingleton();
         swerve = new SwerveDriveSubsystem(new Translation2d(0.31115, 0.31115), new Translation2d(0.31115, -0.31115), new Translation2d(-0.31115, 0.31115), new Translation2d(-0.31115, -0.31115));    // All translations are the swerve module positions relative to the center of the bot
-        // vision = new VisionSubsystem();
+        vision = VisionSubsystem.getSingleton();
         // shooter = new ShooterSubsystem();
         leds = LedSubsystem.getSingleton();
-        // leds = new LedSubsystem();
         // climber = new ClimberSubsystem();
 
         // ONLY FOR TESTING

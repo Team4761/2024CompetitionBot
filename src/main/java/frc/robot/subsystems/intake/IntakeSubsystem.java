@@ -10,8 +10,11 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystemInterface;
+import frc.robot.subsystems.vision.VisionSubsystemMock;
 
-public class IntakeSubsystem extends SubsystemBase{ 
+public class IntakeSubsystem extends SubsystemBase implements IntakeSubsystemInterface { 
     // Neos that actually intake (left or right facing forward)
     private CANSparkMax intakeL;
     private CANSparkMax intakeR;
@@ -25,6 +28,18 @@ public class IntakeSubsystem extends SubsystemBase{
 
     private static double INTAKE_ANGLE_OFFSET = 0.0;    // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
 
+    private static IntakeSubsystemInterface singleton = null;
+
+    public static IntakeSubsystemInterface getSingleton() {
+        if (singleton == null) {
+            try {
+                singleton = new IntakeSubsystem();
+            } catch (Throwable t) {
+                singleton = new IntakeSubsystemMock();
+            }
+        }
+        return singleton;
+    }
 
     public IntakeSubsystem() {
         intakeL = new CANSparkMax(Constants.INTAKE_LEFT_PORT, MotorType.kBrushless);
@@ -45,6 +60,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * <p> Gets the intake to {targetAngle} radians using PID and Feed Forward.
      * <p> This must be called during the periodic function to work.
      */
+    @Override
     public void getIntakeToSetAngle() {
         double currentAngle = getIntakeAngle().getRadians();
         double currentVelocity = getIntakeAngleVelocity();
@@ -58,6 +74,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * <p>This runs the intake motors so that it actually intakes.
      * @param speed The speed to run the motors as a number between 0.0 to 1.0
      */
+    @Override
     public void intake(double speed) {
         intakeL.set(speed);
         intakeR.set(-speed);
@@ -67,6 +84,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * <p> This runs the outtake motors so that it spits out whatever it has in it.
      * @param speed The speed to run the motors at as a number between 0.0 to 1.0
      */
+    @Override
     public void outtake(double speed) {
         intakeL.set(-speed);
         intakeR.set(speed);
@@ -76,6 +94,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * <p> This sets the target rotation to what it currently is plus the offset in radians where up is positive and down is negative.
      * @param offsetRadians
      */
+    @Override
     public void rotate(double offsetRadians) {
         targetAngle = new Rotation2d(targetAngle.getRadians() + offsetRadians);
     }
@@ -84,6 +103,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * <p> This sets the target rotation of the intake to {rotation} and will get to that rotation during its periodic function where up is positive and down is negative.
      * @param rotation The new rotation to get to.
      */
+    @Override
     public void goToRotation(Rotation2d rotation) {
         targetAngle = rotation;
     }
@@ -92,6 +112,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * <p> Determines the angle of the shooter based off of the left motor's current position after applying an offset.
      * @return the angle of the shooter in radians where up is positive and 0 radians is perpendicular with the ground.
      */
+    @Override
     public Rotation2d getIntakeAngle() {
         return new Rotation2d((angleMotorLeft.getEncoder().getPosition() - INTAKE_ANGLE_OFFSET) * Constants.NEO_UNITS_TO_RADIANS);
     }
@@ -100,6 +121,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * <p> Gets the current moving velocity of the angle mechanism of the shooter.
      * @return The speed at which the shooter's angle changes in meters per second.
      */
+    @Override
     public double getIntakeAngleVelocity() {
         return (angleMotorLeft.getEncoder().getVelocity() * Constants.SHOOTER_RPM_TO_MPS);
     }

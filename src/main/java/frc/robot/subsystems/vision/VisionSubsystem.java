@@ -22,7 +22,7 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 
-public class VisionSubsystem extends SubsystemBase {
+public class VisionSubsystem extends SubsystemBase implements VisionSubsystemInterface {
 
   //**ALL ANGLES IN RADIANS ALL DISTANCES IN METERS**//
   PhotonCamera mCamera;
@@ -34,6 +34,20 @@ public class VisionSubsystem extends SubsystemBase {
   private double poseY = 0.0;
 
   private RobotMap map = Robot.getMap();
+
+
+  private static VisionSubsystemInterface singleton = null;
+
+  public static VisionSubsystemInterface getSingleton() {
+    if (singleton == null) {
+      try {
+        singleton = new VisionSubsystem();
+      } catch (Throwable t) {
+        singleton = new VisionSubsystemMock();
+      }
+    }
+    return singleton;
+  }
 
   public VisionSubsystem(){
     //Replace with name of cam
@@ -58,22 +72,27 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
+  @Override
   public Pose3d getTagPose(int id) {
     return tagFieldLayout.getTagPose(id).orElse(null);
   }
 
+  @Override
   public PhotonPipelineResult getLatestResult(){
     return mCamera.getLatestResult();
   }
 
+  @Override
   public int getBestTagID(){
      return mCamera.getLatestResult().getBestTarget().getFiducialId();
    }
 
+  @Override
   public boolean hasTargets(){
     return mCamera.getLatestResult().hasTargets();
   }
 
+  @Override
   public void dance(){
     double x = 0.0;
     double y = 0.0;
@@ -81,8 +100,8 @@ public class VisionSubsystem extends SubsystemBase {
     double[] smoothY = new double[]{0,0,0,0,0};
     int currentSmooth = 0;
 
-      smoothX[currentSmooth] = map.vision.poseX;
-      smoothY[currentSmooth] = map.vision.poseY;
+      smoothX[currentSmooth] = poseX;
+      smoothY[currentSmooth] = poseY;
 
       currentSmooth++;
       currentSmooth%=5;
