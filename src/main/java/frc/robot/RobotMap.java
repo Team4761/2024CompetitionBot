@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.leds.LedSubsystem;
+import frc.robot.subsystems.leds.LedSubsystemInterface;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.swerve.SwerveModuleNeo;
@@ -31,7 +32,7 @@ public class RobotMap
     public IntakeSubsystem intake = null;
     public ShooterSubsystem shooter = null;
     public WestCoastSubsystem westcoast = null;
-    public LedSubsystem leds = null;
+    public LedSubsystemInterface leds = null;
     public ClimberSubsystem climber = null;
 
     // Gian: Ok neat system, this is not something I did on the team
@@ -48,6 +49,7 @@ public class RobotMap
         swerve = new SwerveDriveSubsystem(new Translation2d(0.31115, 0.31115), new Translation2d(0.31115, -0.31115), new Translation2d(-0.31115, 0.31115), new Translation2d(-0.31115, -0.31115));    // All translations are the swerve module positions relative to the center of the bot
         // vision = new VisionSubsystem();
         // shooter = new ShooterSubsystem();
+        leds = LedSubsystem.getSingleton();
         // leds = new LedSubsystem();
         // climber = new ClimberSubsystem();
 
