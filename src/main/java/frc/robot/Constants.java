@@ -21,10 +21,10 @@ public class Constants
     public static int BL_ROTATE_PORT = 8;   // CAN Port.
     public static int BR_ROTATE_PORT = 6;   // CAN Port.
 
-    public static int FL_ENCODER_PORT = 1;  // DIO Port?
-    public static int FR_ENCODER_PORT = 4;  // DIO Port?
-    public static int BL_ENCODER_PORT = 3;  // DIO Port?
-    public static int BR_ENCODER_PORT = 2;  // DIO Port?
+    public static int FL_ENCODER_PORT = 27;  // DIO Port?
+    public static int FR_ENCODER_PORT = 26;  // DIO Port?
+    public static int BL_ENCODER_PORT = 24;  // DIO Port?
+    public static int BR_ENCODER_PORT = 25;  // DIO Port?
 
     // Intake (currently conflicts with Swerve ports)
     public static int INTAKE_RIGHT_PORT = 3;        // CAN Port.

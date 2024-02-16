@@ -1,6 +1,6 @@
 package frc.robot.subsystems.swerve;
 
-import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
@@ -19,7 +19,7 @@ import frc.robot.Constants;
 public class SwerveModuleTalon extends SubsystemBase{
     private TalonFX drive;
     private CANSparkMax steer;
-    private CANCoder encoder;
+    private CANcoder encoder;
     private double offset;
 
     private double dM;
@@ -43,7 +43,7 @@ public class SwerveModuleTalon extends SubsystemBase{
     public SwerveModuleTalon(int driveID, int steerID, int encoderID, double o, double driveMult, double steerMult) {
         drive = new TalonFX(driveID);
         steer = new CANSparkMax(steerID, CANSparkLowLevel.MotorType.kBrushless);
-        encoder = new CANCoder(encoderID);
+        encoder = new CANcoder(encoderID);
 
         // The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
 
@@ -185,7 +185,7 @@ public class SwerveModuleTalon extends SubsystemBase{
         return steer.getEncoder().getVelocity(); // /gearratio=rpms of the wheel spinning
     }
     public Rotation2d getRotation() {
-        return new Rotation2d((encoder.getAbsolutePosition() + offset + 90) * 0.0174533);   // Converts the encoder ticks into radians after applying an offset.
+        return new Rotation2d((encoder.getAbsolutePosition().getValueAsDouble() + offset + 90) * 0.0174533);   // Converts the encoder ticks into radians after applying an offset.
     }
 
     public SwerveModuleState getState() {
