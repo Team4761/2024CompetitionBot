@@ -18,7 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,10 +41,17 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     SwerveModuleState[] targetStates = new SwerveModuleState[4];
 
     // motors offset in degrees && i think negative is ccw
+<<<<<<< Updated upstream
     private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , 36.5, 1.0,  1.0);    // Formerly -54.5, 1.0,  1.0
     private SwerveModuleTalon m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT , -86, 1.0, -1.0);      // Formerly -6, -1.0, -1.0
     private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT ,Constants.BL_ENCODER_PORT , 22, 1.0, -1.0);       // Formerly -68, 1.0, -1.0
     private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , 172, 1.0,  -1.0);      // Formerly 82, 1.0,  -1.0
+=======
+    private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , 36.5,false,  1.0);    // Formerly -54.5, 1.0,  1.0
+    private SwerveModuleTalon m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT ,   -86, false, -1.0);      // Formerly -6, -1.0, -1.0
+    private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT , Constants.BL_ENCODER_PORT ,  22, false, -1.0);       // Formerly -68, 1.0, -1.0
+    private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , 172, false,  -1.0);      // Formerly 82, 1.0,  -1.0
+>>>>>>> Stashed changes
 
     public static boolean isRobotRelative = false;
 
@@ -63,7 +70,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         m_backRightModule.getState()
     };
 
-    private ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
+    private ADIS16470_IMU m_gyro = new ADIS16470_IMU();
     private Rotation2d gyroOffset = new Rotation2d();   // This is the offset of the gyro where 0 degrees is when the robot is facing away from the alliance wall (forwards).
 
     private SwerveDriveKinematics m_kinematics;         // Essentially the built-in math required to use Swerve
@@ -83,7 +90,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public SwerveDriveSubsystem (Translation2d fL, Translation2d fR, Translation2d bL, Translation2d bR) {
         m_kinematics = new SwerveDriveKinematics(fL, fR, bL, bR);   // Load the relative positions of all our swerve modules (wheels) in relation to the origin.
         m_pose = new Pose2d();  // Starts the position at 0,0
-        m_odometry =  new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d(), m_swervePositions, m_pose); // Start the odometry at 0,0
+        m_odometry =  new SwerveDriveOdometry(m_kinematics, getGyroRotation(), m_swervePositions, m_pose); // Start the odometry at 0,0
         targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, getGyroRotation()));
     
         configureAutoBuilder();
@@ -149,7 +156,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // update pose
 
         m_pose = m_odometry.update(
-            m_gyro.getRotation2d(),
+            getGyroRotation(),
             m_swervePositions
         );
         m_pose = new Pose2d(m_pose.getX(), -m_pose.getY(), m_pose.getRotation());   // The y value needs to be negative to make left +y
@@ -169,18 +176,17 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Front Right Drive", m_frontRightModule.getPosition().distanceMeters);
         SmartDashboard.putNumber("Back Left Drive", m_backLeftModule.getPosition().distanceMeters);
         SmartDashboard.putNumber("Back Right Drive", m_backRightModule.getPosition().distanceMeters);
-
         
         SmartDashboard.putNumber("Front Left Target", targetStates[0].angle.getDegrees());
         SmartDashboard.putNumber("Front Right Target", targetStates[1].angle.getDegrees());
         SmartDashboard.putNumber("Back Left Target", targetStates[2].angle.getDegrees());
         SmartDashboard.putNumber("Back Right Target", targetStates[3].angle.getDegrees());
 
-        SmartDashboard.putNumber("Gyro Angle", m_gyro.getRotation2d().minus(gyroOffset).getDegrees());
+        SmartDashboard.putNumber("Gyro Angle", getGyroRotation().getDegrees());
         SmartDashboard.putNumber("speedX", speedX);
         SmartDashboard.putNumber("speedY", speedY);
         SmartDashboard.putNumber("speedRot", speedRot);
-        SmartDashboard.putNumber("GyroRotation", getGyroRotation().getRadians());
+        //SmartDashboard.putNumber("GyroRotation", getGyroRotation().getRadians()); see this but degrees
 
         SmartDashboard.putBoolean("Robot Relative", isRobotRelative);
 
@@ -336,7 +342,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // Radians
     public Rotation2d getGyroRotation() {
         // Subtracted because the gyro was upside down meaning counter clockwise and clockwise were reversed...
-        return MathStuff.subtract(TWOPI,m_gyro.getRotation2d().minus(gyroOffset));
+        //return MathStuff.subtract(TWOPI,m_gyro.getAngle().minus(gyroOffset));
+        
+        // no longer subtracted because new gyro but idk | the number is pi/180
+        return new Rotation2d(m_gyro.getAngle()*0.01745329251).minus(gyroOffset);
     }
     
     public Pose2d getPose() {
@@ -346,12 +355,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     //for on the go field oriented and stuff
     public void zeroGyro() {
         pointDir = pointDir.minus(getGyroRotation());
-        gyroOffset = m_gyro.getRotation2d();
+        gyroOffset = gyroOffset.plus(getGyroRotation());
     }
     
     // Reset the expected position of the bot
     public void resetPose() {
-        m_odometry = new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d(), m_swervePositions);
+        m_odometry = new SwerveDriveOdometry(m_kinematics, getGyroRotation(), m_swervePositions);
         m_pose = new Pose2d();
     }
 
@@ -359,7 +368,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // Only used by the holonomic builder
     public void resetPose(Pose2d pose2d) {
         pose2d = new Pose2d();
-        // m_odometry.resetPosition(m_gyro.getRotation2d(), m_swervePositions,m_pose);
+        // m_odometry.resetPosition(getGyroRotation(), m_swervePositions,m_pose);
         // m_pose = pose2d;
     }
 
@@ -374,7 +383,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     // This is mainly just for testing. This is what the wiki says to do.
     public void resetPoseForPathPlanner(Pose2d pose) {
-        m_odometry.resetPosition(m_gyro.getRotation2d(), m_swervePositions , m_pose);
+        m_odometry.resetPosition(getGyroRotation(), m_swervePositions , m_pose);
         m_pose = pose;
     }
 
@@ -403,6 +412,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         m_backLeftModule  .setTargetState(targetStates[2], false);
         m_backRightModule .setTargetState(targetStates[3], false);
 
-
+        //m_frontLeftModule.getSteerMotor().set(0.5);
+        //m_frontRightModule.getSteerMotor().set(0.5);
+        //m_backLeftModule.getSteerMotor().set(0.5);
+        //m_backRightModule.getSteerMotor().set(0.5);
     }
 }

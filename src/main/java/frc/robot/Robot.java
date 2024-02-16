@@ -66,9 +66,10 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    // if (map.vision.hasTargets()) {
-    //   map.vision.dance();
-    // }
+    //if (map.vision.hasTargets()) {
+    //  map.vision.dance();
+    //}
+    map.swerve.test();
 
     CommandScheduler.getInstance().run();
   }
