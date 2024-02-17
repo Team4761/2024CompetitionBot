@@ -24,7 +24,7 @@ public class SwerveModuleTalon extends SubsystemBase{
     private double offset;
 
     private double sM;
-    private final double driveConversionFactor = 1.0; //0.0388385473906813; // This converts the encoders arbitrary units to meters travelled by the motor. The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
+    private final double driveConversionFactor = 0.0525772192354474; //0.0388385473906813; // This converts the encoders arbitrary units to meters travelled by the motor. The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
 
     // m/s, rotation2d
     private SwerveModuleState targetState = new SwerveModuleState();
