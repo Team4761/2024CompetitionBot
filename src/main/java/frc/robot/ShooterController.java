@@ -3,6 +3,8 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.shooter.IntakeAndShoot;
 
 /**
  * This is the code for the controller that controls the shooter and the intake.
@@ -44,7 +46,7 @@ public class ShooterController extends XboxController {
     // This records the past 5 inputs received from the controller, and averages them out
     // This way, rather than a controller going from 0 to 1 in 1 cycle, it takes a couple cycles to reach 1
     // This way, the motors to not instantly accelerate
-    private final int SMOOTH_FRAME_LENGTH = 5;
+    private final int SMOOTH_FRAME_LENGTH = 3;
 
     private int smoothNextFrameToWrite = 0;
     private double[] smoothLeftY = new double[SMOOTH_FRAME_LENGTH];     // Contains the past {SMOOTH_FRAME_LENGTH} number of inputs.
@@ -107,6 +109,10 @@ public class ShooterController extends XboxController {
         if (map.shooter != null) {
 
             map.shooter.setShooterAngleSpeed(RightY); // sets raw speed because no more time
+
+            if(getRightTriggerAxis()>0.5) {
+                CommandScheduler.getInstance().schedule(new IntakeAndShoot(20));
+            }
 
             map.shooter.rotate(LeftY); // sets target pos
 

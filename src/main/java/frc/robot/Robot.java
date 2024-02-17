@@ -61,16 +61,12 @@ public class Robot extends TimedRobot {
    * chooser code above as well.
    */
 
-  SequentialCommandGroup shootSeq = new SequentialCommandGroup(
-    new ShooterIntake(0.7),
-    new Shoot(15)
-  );
   @Override
   public void autonomousInit() {
     //AutoConstruct.scheduleSelectedCommand(map);
 
     
-    CommandScheduler.getInstance().schedule(shootSeq);
+    CommandScheduler.getInstance().schedule(new IntakeAndShoot(20));
   }
 
   /** This function is called periodically during autonomous. */

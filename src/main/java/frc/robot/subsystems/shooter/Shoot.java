@@ -18,6 +18,10 @@ public class Shoot extends Command {
         this.speed = speed;
         this.endTime = System.currentTimeMillis()+3000;
     }
+    public Shoot (double speed, double seconds) {
+        this.speed = speed;
+        this.endTime = System.currentTimeMillis()+(long)(seconds*1000);
+    }
 
     /**
      * <p> Constantly sets the shooter speed to {speed} rotations per second
