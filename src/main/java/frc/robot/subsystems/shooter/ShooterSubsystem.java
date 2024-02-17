@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -33,13 +34,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     public ShooterSubsystem() {
-        shooterLeft = new TalonFX(Constants.SHOOTER_LEFT_MOTOR_PORT);
+        shooterLeft = new TalonFX(Constants.SHOOTER_LEFT_MOTOR_PORT); //top and bottom no?
         shooterRight = new TalonFX(Constants.SHOOTER_RIGHT_MOTOR_PORT);
         intakeLeft = new CANSparkMax(Constants.SHOOTER_INTAKE_LEFT_MOTOR_PORT, MotorType.kBrushless);
         intakeRight = new CANSparkMax(Constants.SHOOTER_INTAKE_RIGHT_MOTOR_PORT, MotorType.kBrushless);
         angleMotorRight = new CANSparkMax(Constants.SHOOTER_ANGLE_RIGHT_MOTOR_PORT, MotorType.kBrushless);
 
-        anglePID = new PIDController(0.0, 0.0, 0.0);    // Placeholder values, has yet to be tuned.
+        anglePID = new PIDController(0.3, 0.0, 0.0);    // Placeholder values, has yet to be tuned.
         angleFeedForward = new ArmFeedforward(0.0, 0.91, 1.95);   // Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
 
         intakeUpperSensor = new DigitalInput(Constants.SHOOTER_SENSOR_UPPER_PORT);
@@ -53,6 +54,9 @@ public class ShooterSubsystem extends SubsystemBase {
     public void periodic() {
         getShooterToSetSpeed();     // Gets the shooter to speed up to {targetSpeed} rotations per second.
         getShooterToSetAngle();     // Gets the shooter to angle at {targetAngle} radians.
+        
+        SmartDashboard.putNumber("Shooter Speed L", shooterLeft.getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("Shooter Speed R", shooterRight.getVelocity().getValueAsDouble());
     }
 
 
@@ -64,14 +68,14 @@ public class ShooterSubsystem extends SubsystemBase {
     public void getShooterToSetSpeed() {
         double avgEncoderSpd = (shooterLeft.getVelocity().getValueAsDouble()+shooterRight.getVelocity().getValueAsDouble())/2; //rotations per second allegedly
 
-        double accelFactor = 0.005 * (targetSpeed-avgEncoderSpd); // P kinda
-        double feedForwardV = 0.1 * targetSpeed; //magic numbers no math or testing done yet, ideally sets the motors to near the velocity
-        double feedForwardS = 0; //whatever number to maintain the speed
+        double accelFactor = 0.05 * (targetSpeed-avgEncoderSpd); // P kinda
+        double feedForwardV = 1 * targetSpeed; //magic numbers no math or testing done yet, ideally holds velocity
+        double feedForwardS = 0.01; //whatever number to overcome static friction
         
         double spdOut = accelFactor + feedForwardV + feedForwardS;
 
-        shooterLeft.set(spdOut); //probably test then use setVoltage
-        shooterRight.set(spdOut);  // As of Jan 20, 2024, the speeds are not reversed
+        shooterLeft.setVoltage(spdOut); //probably test then use setVoltage
+        shooterRight.setVoltage(spdOut);  // As of Jan 20, 2024, the speeds are not reversed
     }
 
     /**

@@ -5,6 +5,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkPIDController.AccelStrategy;
 import com.revrobotics.CANSparkLowLevel;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -15,14 +16,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 
-public class SwerveModuleNeo extends SubsystemBase{
+public class SwerveModuleNeo extends SubsystemBase {
     private CANSparkMax drive;
     private CANSparkMax steer;
     private CANCoder encoder;
     private double offset;
 
-    private double dM;
-    private double sM;
+    //private double dM;
+    //private double sM;
 
     // m/s, rotation2d
     private SwerveModuleState targetState = new SwerveModuleState();
@@ -38,10 +39,12 @@ public class SwerveModuleNeo extends SubsystemBase{
      * @param driveMult Drive multiplier
      * @param steerMult Steer (rotation) multiplier
      */
-    public SwerveModuleNeo(int driveID, int steerID, int encoderID, double o, double driveMult, double steerMult) {
+    public SwerveModuleNeo(int driveID, int steerID, int encoderID, double o, boolean reverseSteer) {
         drive = new CANSparkMax(driveID, CANSparkLowLevel.MotorType.kBrushless);
         steer = new CANSparkMax(steerID, CANSparkLowLevel.MotorType.kBrushless);
         encoder = new CANCoder(encoderID);
+
+        encoder.configSensorDirection(reverseSteer);
 
         // The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
         drive.getEncoder().setPositionConversionFactor(0.0388385473906813);  // Make the encoder return the meters travelled by the drive motor instead of arbitrary units
@@ -50,14 +53,14 @@ public class SwerveModuleNeo extends SubsystemBase{
 
 
         // multiplier prob just for reversing
-        dM = driveMult;
-        sM = steerMult;
+        //dM = driveMult;
+        //sM = steerMult;
 
         //applySmartMotion();
     }
 
-    public SwerveModuleNeo(int driveID, int steerID, int encoderID, double o, double driveMult, double steerMult, boolean simplePID) {
-        this(driveID,steerID,encoderID,o,driveMult,steerMult);
+    public SwerveModuleNeo(int driveID, int steerID, int encoderID, double o, boolean reverseSteer, boolean simplePID) {
+        this(driveID,steerID,encoderID,o,reverseSteer);
         if(simplePID) setPIDValues(0.1, 0.0, 0.1, 0.1, 0.0, 0.1);
     }
 
@@ -78,8 +81,8 @@ public class SwerveModuleNeo extends SubsystemBase{
      * @param iDrive Proportional value for drive motor
      * @param dDrive Proportional value for drive motor
      */
-    public SwerveModuleNeo(int driveID, int steerID, int encoderID, double o, double driveMult, double steerMult, double pSteer, double iSteer, double dSteer, double pDrive, double iDrive, double dDrive) {
-        this(driveID,steerID,encoderID,o,driveMult,steerMult);
+    public SwerveModuleNeo(int driveID, int steerID, int encoderID, double o, boolean reverseDrive, boolean reverseSteer, double pSteer, double iSteer, double dSteer, double pDrive, double iDrive, double dDrive) {
+        this(driveID,steerID,encoderID,o,reverseDrive, reverseSteer);
         setPIDValues(pSteer, iSteer, dSteer, pDrive, iDrive, dDrive);
     }
 
@@ -162,25 +165,25 @@ public class SwerveModuleNeo extends SubsystemBase{
         // get to the set positions 
             
         //System.out.println(targetState.angle.getDegrees()+", "+getRotation().getDegrees()+", "+sM);
-        double steerA = MathStuff.subtract(targetState.angle, getRotation()).getRotations()*sM*2.5;
+        double steerA = MathStuff.subtract(targetState.angle, getRotation()).getRotations()*2.5;
         double steerB = Math.signum(steerA)*0.008;
         steer.set(steerA+steerB);
 
         //if(true)
-        double driveA = targetState.speedMetersPerSecond*dM*0.8;
+        double driveA = targetState.speedMetersPerSecond*0.8;
         double driveB = Math.signum(driveA)*0.03;
         drive.set(driveA+driveB);
     }
 
     public void setSpeeds(double d, double s) {
-        drive.set(d*dM);
-        steer.set(s*sM);
+        drive.set(d);
+        steer.set(s);
     }
 
     public SwerveModulePosition getPosition() {
         SmartDashboard.putNumber("Module Position", drive.getEncoder().getPosition());
         return new SwerveModulePosition(
-            drive.getEncoder().getPosition()*dM,   // The meters that the wheel has moved
+            drive.getEncoder().getPosition(),   // The meters that the wheel has moved
             MathStuff.negative(getRotation()) // 2048 ticks to radians is 2pi/2048
         );
     }
