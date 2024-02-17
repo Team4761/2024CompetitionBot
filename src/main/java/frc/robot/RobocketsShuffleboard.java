@@ -123,7 +123,7 @@ public class RobocketsShuffleboard {
         addCommand("Full Intake", new FullIntake(getSettingNum("Full Intake Speed"), Robot.getMap()));
 
         // LED commands
-        // addCommand("LED Charge Up", new LedChargeUp(3000, Robot.getMap().leds)); DOESN'T WORK RN
+        addCommand("LED Charge Up", new LedChargeUp(3000, Robot.getMap()));
 
         // Climber commands
         addCommand("Loosen Climber", new LoosenClimber());
