@@ -7,7 +7,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Auto.AutoConstruct;
+import frc.robot.subsystems.shooter.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -25,7 +27,7 @@ public class Robot extends TimedRobot {
   public static RobocketsShuffleboard shuffleboard = new RobocketsShuffleboard();
   public static RobocketsShuffleboard getShuffleboard() { return shuffleboard; }
 
-  public static DriveController driveController = new DriveController(Constants.DRIVE_CONTROLLER_PORT, map, shuffleboard);
+  //public static DriveController driveController = new DriveController(Constants.DRIVE_CONTROLLER_PORT, map, shuffleboard);
   public static ShooterController shooterController = new ShooterController(Constants.SHOOTER_CONTROLLER_PORT, map, shuffleboard);
 
   /**
@@ -58,9 +60,17 @@ public class Robot extends TimedRobot {
    * below with additional strings. If using the SendableChooser make sure to add them to the
    * chooser code above as well.
    */
+
+  SequentialCommandGroup shootSeq = new SequentialCommandGroup(
+    new ShooterIntake(0.7),
+    new Shoot(15)
+  );
   @Override
   public void autonomousInit() {
-    AutoConstruct.scheduleSelectedCommand(map);
+    //AutoConstruct.scheduleSelectedCommand(map);
+
+    
+    CommandScheduler.getInstance().schedule(shootSeq);
   }
 
   /** This function is called periodically during autonomous. */
@@ -69,7 +79,7 @@ public class Robot extends TimedRobot {
     //if (map.vision.hasTargets()) {
     //  map.vision.dance();
     //}
-    map.swerve.test();
+    //map.swerve.test();
 
     CommandScheduler.getInstance().run();
   }
@@ -79,7 +89,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     // map.swerve.zeroGyro();
     // map.swerve.resetPose();
-    RobocketsShuffleboard.teleopInit();
+    //RobocketsShuffleboard.teleopInit();
   }
 
   /** This function is called periodically during operator control. */

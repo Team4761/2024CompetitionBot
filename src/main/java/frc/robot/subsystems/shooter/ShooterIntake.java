@@ -6,7 +6,7 @@ import frc.robot.Robot;
 /**
  * This is a command that runs the shooter at a speed of {speed} rotations per second for 2 seconds.
  */
-public class Shoot extends Command {
+public class ShooterIntake extends Command {
     private double speed;   // Value between -1 and 1 in rotations per second
     private long endTime;   // Stores the time when the command should finish executing
 
@@ -14,9 +14,9 @@ public class Shoot extends Command {
      * <p> This initializes the speed which the robot should shoot at in rotations per second and the time which the command should finish executing.
      * @param speed A value between -1 and 1 which defines how fast the shooter should spin in rotations per second.
      */
-    public Shoot (double speed) {
+    public ShooterIntake (double speed) {
         this.speed = speed;
-        this.endTime = System.currentTimeMillis()+3000;
+        this.endTime = System.currentTimeMillis()+2000;
     }
 
     /**
@@ -24,7 +24,7 @@ public class Shoot extends Command {
      */
     @Override
     public void execute() {
-        Robot.getMap().shooter.setShooterSpeed(speed);
+        Robot.getMap().shooter.setIntakeSpeed(speed);
     }
 
     /**
@@ -43,6 +43,6 @@ public class Shoot extends Command {
      */
     @Override
     public void end(boolean interrupted) {
-        Robot.getMap().shooter.setShooterSpeed(0);
+        Robot.getMap().shooter.setIntakeSpeed(0);
     }
 }

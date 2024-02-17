@@ -48,15 +48,18 @@ public class ShooterSubsystem extends SubsystemBase {
 
         targetSpeed = 0.0;
         targetAngle = 0.0;
+
     }
 
 
     public void periodic() {
         getShooterToSetSpeed();     // Gets the shooter to speed up to {targetSpeed} rotations per second.
-        getShooterToSetAngle();     // Gets the shooter to angle at {targetAngle} radians.
+        //getShooterToSetAngle();     // Gets the shooter to angle at {targetAngle} radians.
         
-        SmartDashboard.putNumber("Shooter Speed L", shooterLeft.getVelocity().getValueAsDouble());
-        SmartDashboard.putNumber("Shooter Speed R", shooterRight.getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("Shooter Speed L", shooterLeft.getVelocity().getValueAsDouble()*0.5);
+        SmartDashboard.putNumber("Shooter Speed R", shooterRight.getVelocity().getValueAsDouble()*0.5);
+        
+        SmartDashboard.putNumber("Shooter Angle", getShooterAngle());
     }
 
 
@@ -66,17 +69,32 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> This must be called during the periodic function to work.
      */
     public void getShooterToSetSpeed() {
-        double avgEncoderSpd = (shooterLeft.getVelocity().getValueAsDouble()+shooterRight.getVelocity().getValueAsDouble())/2; //rotations per second allegedly
+        double kP = 0.2;
+        double kV = 0.1;
 
-        double accelFactor = 0.05 * (targetSpeed-avgEncoderSpd); // P kinda
-        double feedForwardV = 1 * targetSpeed; //magic numbers no math or testing done yet, ideally holds velocity
-        double feedForwardS = 0.01; //whatever number to overcome static friction
+        double feedForwardS = 0.001; //whatever number to overcome static friction
+
+        double accelFactor = kP * (targetSpeed-shooterLeft.getVelocity().getValueAsDouble()*0.5); // P kinda
+        double feedForwardV = kV * shooterLeft.getVelocity().getValueAsDouble()*0.5; //magic numbers no math or testing done yet, ideally holds velocity
         
         double spdOut = accelFactor + feedForwardV + feedForwardS;
 
         shooterLeft.setVoltage(spdOut); //probably test then use setVoltage
+        
+        //other half
+        accelFactor = kP * (targetSpeed-shooterRight.getVelocity().getValueAsDouble()*0.5); // P kinda
+        feedForwardV = kV * shooterRight.getVelocity().getValueAsDouble()*0.5; //magic numbers no math or testing done yet, ideally holds velocity
+        
+        spdOut = accelFactor + feedForwardV + feedForwardS;
+
         shooterRight.setVoltage(spdOut);  // As of Jan 20, 2024, the speeds are not reversed
     }
+
+
+    public void setShooterAngleSpeed(double speed) {
+        angleMotorRight.set(speed);
+    }
+
 
     /**
      * <p> Gets the shooter to {targetAngle} radians using PID and Feed Forward.
