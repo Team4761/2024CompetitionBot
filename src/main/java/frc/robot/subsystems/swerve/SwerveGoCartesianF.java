@@ -11,7 +11,7 @@ import frc.robot.Constants;
  * <p> In this, the forwards direction is +x and the left direction is +y
  */
 public class SwerveGoCartesianF extends Command {
-    private SwerveDriveSubsystem m_swerve;
+    private SwerveDriveSubsystemInterface m_swerve;
     private Translation2d target;
     private double Pvalue = 0;
     private double Ivalue = 0;
@@ -25,7 +25,7 @@ public class SwerveGoCartesianF extends Command {
      * @param swerve A reference to the SwerveDriveSubsystem in the RobotMap to improve performance.
      * @param trans The offset from the current position. Example, Translation2d(1, 0) would move the robot forwards 1 meter regardless of where it currently is.
      */
-    public SwerveGoCartesianF(SwerveDriveSubsystem swerve, Translation2d trans) {
+    public SwerveGoCartesianF(SwerveDriveSubsystemInterface swerve, Translation2d trans) {
         m_swerve = swerve;
         addRequirements(m_swerve);  // Make it so no 2 commands can access the swerve subsystem at the same time (first come first swerve)
         target = m_swerve.getPose().getTranslation().plus(trans);   // Set the target POSITION (not translation)
@@ -38,7 +38,7 @@ public class SwerveGoCartesianF extends Command {
      * @param trans The offset from the current position. Example, Translation2d(1, 0) would move the robot forwards 1 meter regardless of where it currently is.
      * @param speedLimit The max speed that the robot can get to as a number between 0.0 - 1.0 as 0% speed to 100% speed.
      */
-    public SwerveGoCartesianF(SwerveDriveSubsystem swerve, Translation2d trans, double speedLimit) {
+    public SwerveGoCartesianF(SwerveDriveSubsystemInterface swerve, Translation2d trans, double speedLimit) {
         m_swerve = swerve;
         addRequirements(m_swerve);
         target = m_swerve.getPose().getTranslation().plus(trans);

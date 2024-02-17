@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class ShooterSubsystem extends SubsystemBase {
+public class ShooterSubsystem extends SubsystemBase implements ShooterSubsystemInterface {
     private TalonFX shooterLeft;        // Motor for the left of the actual shooter, assuming that the front of the shooter is the forward direction
     private TalonFX shooterRight;       // Motor for the right of the actual shooter, assuming that the front of the shooter is the forward direction
     private CANSparkMax intakeLeft;     // Motor for the left intake of the shooter, assuming that the front of the shooter is the forward direction
@@ -31,7 +31,19 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final double SHOOTER_ANGLE_OFFSET = 0.0;  // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
 
+    // --------------------------------------------------
+    // Factory pattern
+    // --------------------------------------------------
+    public static ShooterSubsystemInterface create() {
+        try {
+            return new ShooterSubsystem();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        return new ShooterSubsystemMock();
+    }
 
+    // --------------------------------------------------
 
     public ShooterSubsystem() {
         shooterLeft = new TalonFX(Constants.SHOOTER_LEFT_MOTOR_PORT); //top and bottom no?
@@ -65,6 +77,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> Uses some basic PID and feedforwards to get the shooter to spin at a set speed in rotations per second.
      * <p> This must be called during the periodic function to work.
      */
+    @Override
     public void getShooterToSetSpeed() {
         double avgEncoderSpd = (shooterLeft.getVelocity().getValueAsDouble()+shooterRight.getVelocity().getValueAsDouble())/2; //rotations per second allegedly
 
@@ -82,6 +95,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> Gets the shooter to {targetAngle} radians using PID and Feed Forward.
      * <p> This must be called during the periodic function to work.
      */
+    @Override
     public void getShooterToSetAngle() {
         double currentAngle = getShooterAngle();
         double currentVelocity = getShooterAngleVelocity();
@@ -95,6 +109,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> Sets the SHOOTING speed in rotations per second (hopefully), does not change until stated otherwise
      * @param speed The speed of the shooter in rotations per second.
      */
+    @Override
     public void setShooterSpeed(double speed) {
         targetSpeed = speed;
     }
@@ -103,6 +118,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> Sets the target angle for the shooter to be oriented in (looking up or down)
      * @param angleRadians The new angle to get to in radians where 0 radians is fully outstretched and positive radians is upwards.
      */
+    @Override
     public void setShooterAngle(double angleRadians) {
         targetAngle = angleRadians;
     }
@@ -111,6 +127,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> Sets the target angle for the shooter to what it currently is plus {angleRadians} where up is positive and down is negative
      * @param angleRadians The offset the shooter angle should get to in radians.
      */
+    @Override
     public void rotate(double angleRadians) {
         targetAngle += angleRadians;
     }
@@ -119,6 +136,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> Sets the speed of the intake to the motor's speed. (the belt that pulls the game piece from the actual intake)
      * @param speed The speed of the intake as a number between -1.0 and 1.0 inclusive which represents 100% speed outtake and intake respectively.
      */
+    @Override
     public void setIntakeSpeed(double speed) {
         intakeLeft.set(speed);
         intakeRight.set(-speed);
@@ -128,6 +146,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> Determines the angle of the shooter based off of the left motor's current position after applying an offset.
      * @return the angle of the shooter in radians where up is positive and 0 radians is perpendicular with the ground.
      */
+    @Override
     public double getShooterAngle() {
         return (angleMotorRight.getEncoder().getPosition() - SHOOTER_ANGLE_OFFSET) * Constants.NEO_UNITS_TO_RADIANS;
     }
@@ -136,6 +155,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> Gets the current moving velocity of the angle mechanism of the shooter.
      * @return The speed at which the shooter's angle changes in meters per second.
      */
+    @Override
     public double getShooterAngleVelocity() {
         return (angleMotorRight.getEncoder().getVelocity() * Constants.SHOOTER_RPM_TO_MPS);
     }
@@ -144,6 +164,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> Using the break beam sensor, this returns whether or not there is a piece in the upper shooter.
      * @return True if there is a piece in the upper shooter. False if there is none.
      */
+    @Override
     public boolean isPieceInUpperIntake() {
         return intakeUpperSensor.get();
     }
@@ -152,6 +173,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> Using the break beam sensor, this returns whether or not there is a piece in the lower shooter.
      * @return True if there is a piece in the lower shooter. False if there is none.
      */
+    @Override
     public boolean isPieceInLowerIntake() {
         return intakeLowerSensor.get();
     }

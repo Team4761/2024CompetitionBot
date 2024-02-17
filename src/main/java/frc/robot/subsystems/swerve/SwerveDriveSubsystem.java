@@ -7,7 +7,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -36,7 +35,7 @@ import frc.robot.Auto.PrintText;
  * <p> All measurements are in meters and radians (but rotation generally uses Rotation2d which includes both radians and degrees)
  * <p> To make this consistent with PathPlanner and all other commands/odometry, the +x direction should be forwards and the +y direction should be left.
  */
-public class SwerveDriveSubsystem extends SubsystemBase {
+public class SwerveDriveSubsystem extends SubsystemBase implements SwerveDriveSubsystemInterface {
 
     SwerveModuleState[] targetStates = new SwerveModuleState[4];
 
@@ -78,9 +77,22 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private double speedX = 0;
     private double speedY = 0;
 
+    // --------------------------------------------------
+    // Factory pattern
+    // --------------------------------------------------
+    public static SwerveDriveSubsystemInterface create(Translation2d fL, Translation2d fR, Translation2d bL, Translation2d bR) {
+        try {
+            return new SwerveDriveSubsystem(fL, fR, bL, bR);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return new SwerveDriveSubsystemMock();
+        }
+    }
+
+    // --------------------------------------------------
 
     // positions of the wheels relative to center in meters.
-    public SwerveDriveSubsystem (Translation2d fL, Translation2d fR, Translation2d bL, Translation2d bR) {
+    private SwerveDriveSubsystem(Translation2d fL, Translation2d fR, Translation2d bL, Translation2d bR) {
         m_kinematics = new SwerveDriveKinematics(fL, fR, bL, bR);   // Load the relative positions of all our swerve modules (wheels) in relation to the origin.
         m_pose = new Pose2d();  // Starts the position at 0,0
         m_odometry =  new SwerveDriveOdometry(m_kinematics, getGyroRotation(), m_swervePositions, m_pose); // Start the odometry at 0,0
@@ -93,6 +105,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      *  <p> Holonomic (Swerve) autobuilder from pathplanner
      *  <p> See https://pathplanner.dev/pplib-build-an-auto.html#configure-autobuilder for more
      */
+    @Override
     public void configureAutoBuilder() {
         // This just gets the PID values of one motor. All 4 should be equal though!!
         // SparkPIDController spcd = m_backLeftModule.getDriveMotor().getPIDController(); // d for drive
@@ -236,6 +249,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // try applying acceleration cap to inputs in drives instead of on wheels
 
     // set how fast the swerve drive turns, rad/s allegedly
+    @Override
     public void setDriveRot(double sR, boolean squareInputs) {
         if (squareInputs) {
             sR=Math.signum(sR)*sR*sR;
@@ -244,6 +258,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     }
     // set how fast the swerve drive goes, +x is forwards, +y is left and m/s hopefully 
+    @Override
     public void setDriveFXY(double sX, double sY, boolean squareInputs) {
         isRobotRelative = false;
 
@@ -259,6 +274,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     private int lastDone = 10;  // Cycles to sample rotation to make corrections to direction
     // Field Oriented swerve drive, m/s, m/s, rad/s or something, +x is forwards, +y is left
+    @Override
     public void swerveDriveF(double sX, double sY, double sR, boolean squareInputs) {
         isRobotRelative = false;
 
@@ -280,6 +296,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     // Robot oriented swerve drive, m/s, m/s, rad/s
     // +speed is forwards, +strafe is left
+    @Override
     public void swerveDriveR(double speed, double strafe, double speedRot) {
         isRobotRelative = true;
         speedX = speed;
@@ -288,6 +305,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // targetStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(speed, -strafe, speedRot));
     }
 
+    @Override
     public void swerveDriveR(ChassisSpeeds newTargetStates) {
         isRobotRelative = true;
         double relativeSpeed = 1;
@@ -299,6 +317,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Relative SpeedRot", newTargetStates.omegaRadiansPerSecond);
     }
 
+    @Override
     public boolean isOnRedAlliance() {
         Optional<Alliance> ally = DriverStation.getAlliance();
         if(ally.isPresent()) {
@@ -308,6 +327,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     // car, m/s, degrees    
+    @Override
     public void carDrive(double speed, double turn) {
         turn = MathUtil.clamp(turn, -90, 90);
         
@@ -320,12 +340,14 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     }
 
+    @Override
     public void setTargetAngle(Rotation2d r) {
         pointDir = r;
     }
     
     // stuff
     // Degrees
+    @Override
     public double getGyroDegrees() {
         // Subtracted because the gyro was upside down meaning counter clockwise and clockwise were reversed...
         return getGyroRotation().getDegrees();
@@ -333,6 +355,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     private final Rotation2d TWOPI = new Rotation2d(Math.PI*2); // TO BE REMOVED once the gyro is not upside down
     // Radians
+    @Override
     public Rotation2d getGyroRotation() {
         // Subtracted because the gyro was upside down meaning counter clockwise and clockwise were reversed...
         //return MathStuff.subtract(TWOPI,m_gyro.getAngle().minus(gyroOffset));
@@ -341,17 +364,20 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         return new Rotation2d(m_gyro.getAngle()*0.01745329251).minus(gyroOffset);
     }
     
+    @Override
     public Pose2d getPose() {
         return m_pose;
     }
 
     //for on the go field oriented and stuff
+    @Override
     public void zeroGyro() {
         pointDir = pointDir.minus(getGyroRotation());
         gyroOffset = gyroOffset.plus(getGyroRotation());
     }
     
     // Reset the expected position of the bot
+    @Override
     public void resetPose() {
         m_odometry = new SwerveDriveOdometry(m_kinematics, getGyroRotation(), m_swervePositions);
         m_pose = new Pose2d();
@@ -359,6 +385,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     // Reset the inputted pose
     // Only used by the holonomic builder
+    @Override
     public void resetPose(Pose2d pose2d) {
         pose2d = new Pose2d();
         // m_odometry.resetPosition(getGyroRotation(), m_swervePositions,m_pose);
@@ -367,6 +394,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
 
     // This is mainly just for testing. This is what the wiki says to do.
+    @Override
     public Pose2d getPoseForPathPlanner() {
         // System.out.println(m_odometry.getPoseMeters());
         return m_pose;
@@ -375,24 +403,28 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     // This is mainly just for testing. This is what the wiki says to do.
+    @Override
     public void resetPoseForPathPlanner(Pose2d pose) {
         m_odometry.resetPosition(getGyroRotation(), m_swervePositions , m_pose);
         m_pose = pose;
     }
 
     // Returns the current robot-relative chasis speeds.
+    @Override
     public ChassisSpeeds getRobotRelativeSpeeds() {
         ChassisSpeeds cs = m_kinematics.toChassisSpeeds(m_swerveStates);
         // System.out.println("Speeds: " + cs);
         return cs;
     }
 
+    @Override
     public void stop() {
         m_frontLeftModule.setSpeeds(0, 0);
         m_frontRightModule.setSpeeds(0, 0);
         m_backLeftModule.setSpeeds(0, 0);
         m_backRightModule.setSpeeds(0, 0);
     }
+    @Override
     public void test() {
         
         targetStates[0] = new SwerveModuleState(0.2, new Rotation2d());

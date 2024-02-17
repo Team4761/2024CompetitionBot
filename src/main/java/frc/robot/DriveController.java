@@ -1,21 +1,24 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.climber.LoosenClimber;
 import frc.robot.subsystems.climber.TightenClimber;
 import frc.robot.subsystems.swerve.SwerveTurnTo;
+
+import java.util.Arrays;
 
 /**
  * <p> This is the specific controller that controls Swerve due to the fact that swerve requires 2 separate joysticks and buttons to rezero the robot's gyro/position.
  * <p> This also contains controls for the climber since movement and the climber go hand in hand.
  * <p> This also contains Vision buttons (that currently do nothing) and a WestCoast control (that does not work, but was useful for testing with a different robot)
  */
-public class DriveController extends XboxController {
+public class DriveController extends CommandXboxController {
 
-    private RobotMap map;
-    private RobocketsShuffleboard shuffleboard;
+    private final RobotMap map;
+    private final RobocketsShuffleboard shuffleboard;
 
     /**
      * Initializes the Shooter Controller and makes an internal copy of the RobotMap to save performance.
@@ -27,6 +30,28 @@ public class DriveController extends XboxController {
         super(port);
         this.map = map;
         this.shuffleboard = shuffleboard;
+
+        // TODO: this does not really do anything
+        a().toggleOnTrue(Commands.runOnce(() -> System.out.println(map.vision)));
+
+        x().toggleOnTrue(Commands.runOnce(map.swerve::zeroGyro));
+        y().toggleOnTrue(Commands.runOnce(map.swerve::resetPose));
+
+        rightBumper().toggleOnTrue(
+            Commands.startEnd(
+                this::loosenClimber,
+                this::tightenClimber,
+                map.climber
+            )
+        );
+    }
+
+    private void loosenClimber() {
+        CommandScheduler.getInstance().schedule(new LoosenClimber());
+    }
+
+    private void tightenClimber() {
+        CommandScheduler.getInstance().schedule(new TightenClimber());
     }
 
     /**
@@ -50,9 +75,9 @@ public class DriveController extends XboxController {
     private final int SMOOTH_FRAME_LENGTH = 5;
 
     private int smoothNextFrameToWrite = 0;
-    private double[] smoothLeftX = new double[SMOOTH_FRAME_LENGTH];
-    private double[] smoothLeftY = new double[SMOOTH_FRAME_LENGTH];
-    private double[] smoothRightX = new double[SMOOTH_FRAME_LENGTH];
+    private final double[] smoothLeftX = new double[SMOOTH_FRAME_LENGTH];
+    private final double[] smoothLeftY = new double[SMOOTH_FRAME_LENGTH];
+    private final double[] smoothRightX = new double[SMOOTH_FRAME_LENGTH];
 
     /**
      * <p> Applies input smoothing.
@@ -61,17 +86,12 @@ public class DriveController extends XboxController {
      * @return The average (mean) value of the input list of doubles. This will be the average value of a joystick axis.
      */
     private double smooth(double[] history) {
-        double average = 0;
-        for(int i = 0; i < history.length; i++) {
-            average += history[i];
-        }
-        average /= (double)history.length;
-        return average;
+        return Arrays.stream(history).average().orElse(0.0);
     }
 
     /**
      * <p> This should run during the Robot.java's teleopPeriodic method.
-     * <p> This applies input smoothing to the joystick axises to make them smoother.
+     * <p> This applies input smoothing to the joystick axex to make them smoother.
      * <p> This also checks for all button pushes and runs their respected Swerve commands/functions.
      */
     public void teleopPeriodic() {
@@ -87,60 +107,35 @@ public class DriveController extends XboxController {
         double RightX = smooth(smoothRightX);
 
         // Swerve
-        if (map.swerve != null) {
-            double xyCof = 1;//0.75/Math.max(0.001, Math.sqrt(Math.pow(deadzone(controller.getLeftX(), 0.1), 2)+Math.pow(deadzone(controller.getLeftY(), 0.1), 2)));
+        double xyCof = 1;//0.75/Math.max(0.001, Math.sqrt(Math.pow(deadzone(controller.getLeftX(), 0.1), 2)+Math.pow(deadzone(controller.getLeftY(), 0.1), 2)));
 
-            // ROBOT RELATIVE
-            // map.swerve.swerveDriveR(new ChassisSpeeds(
-            //     SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
-            //     SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
-            //     SmartDashboard.getNumber("Swerve Speed", 0.7) * deadzone(RightX, 0.08)   // Rotation
-            // ));
+        // ROBOT RELATIVE
+        // map.swerve.swerveDriveR(new ChassisSpeeds(
+        //     SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftY, 0.1),      // Forward/backwards
+        //     SmartDashboard.getNumber("Swerve Speed", 0.7) * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
+        //     SmartDashboard.getNumber("Swerve Speed", 0.7) * deadzone(RightX, 0.08)   // Rotation
+        // ));
 
-            // FIELD RELATIVE
-            if (RightX==0) {
-                map.swerve.setDriveFXY(
-                    // On the controller, upwards is negative and left is also negative. To correct this, the negative version of both are sent.
-                    shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
-                    shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
-                    true); //square inputs to ease small adjustments
-                map.swerve.setDriveRot(0, false);   // Should not be rotating if not rotating lol
-            } else {
-                map.swerve.swerveDriveF(
-                    // On the controller, upwards is negative and left is also negative. To correct this, the negative version of both are sent.
-                    shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
-                    shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
-                    shuffleboard.getSettingNum("Rotation Speed") * deadzone(RightX, 0.08),   // Rotation
-                    true); //square inputs to ease small adjustments
-            }
-
-            if (getXButtonPressed()) {
-                map.swerve.zeroGyro();
-            }
-            if (getYButtonPressed()) {
-                map.swerve.resetPose();
-            }
-
-            // turn to align with gyro
-            if(getPOV()!=-1) {
-                CommandScheduler.getInstance().schedule(new SwerveTurnTo(map.swerve, new Rotation2d(-getPOV()*0.01745329)));
-            }
+        // FIELD RELATIVE
+        if (RightX==0) {
+            map.swerve.setDriveFXY(
+                // On the controller, upwards is negative and left is also negative. To correct this, the negative version of both are sent.
+                shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftY, 0.1),      // Forward/backwards
+                shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
+                true); //square inputs to ease small adjustments
+            map.swerve.setDriveRot(0, false);   // Should not be rotating if not rotating lol
+        } else {
+            map.swerve.swerveDriveF(
+                // On the controller, upwards is negative and left is also negative. To correct this, the negative version of both are sent.
+                shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftY, 0.1),      // Forward/backwards
+                shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
+                shuffleboard.getSettingNum("Rotation Speed") * deadzone(RightX, 0.08),   // Rotation
+                true); //square inputs to ease small adjustments
         }
 
-        if (map.climber != null) {
-            if (getRightBumperPressed()) {
-                CommandScheduler.getInstance().schedule(new LoosenClimber());
-            }
-            if (getRightBumperReleased()) {
-                CommandScheduler.getInstance().schedule(new TightenClimber());
-            }
-        }
-
-        // Vision
-        if (map.vision != null) {
-            if(getAButtonPressed()){
-                map.vision.toString();
-            }
+        // turn to align with gyro
+        if(getHID().getPOV() !=-1) {
+            CommandScheduler.getInstance().schedule(new SwerveTurnTo(map.swerve, new Rotation2d(-getHID().getPOV() *0.01745329)));
         }
 
         // West Coast
@@ -148,4 +143,6 @@ public class DriveController extends XboxController {
             map.westcoast.arcadeDrive(getLeftY(), getRightX());
         }
     }
+
+
 }

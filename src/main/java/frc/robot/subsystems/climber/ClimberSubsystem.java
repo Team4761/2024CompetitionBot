@@ -9,14 +9,29 @@ import frc.robot.Constants;
  * <p> This should be the simplest subsystem as all it does is run a motor full force in one direction or let it go slack.
  * <p> NOTE: The motor that is connected MUST NOT BE on break mode.
  */
-public class ClimberSubsystem {
+public class ClimberSubsystem implements ClimberSubsystemInterface {
     private CANSparkMax motor;  // The motor connected to the string inside the climber
     private double speed;       // The speed which the motor is constantly set to.
 
+    // --------------------------------------------------
+    // Factory pattern
+    // --------------------------------------------------
+
+    public static ClimberSubsystemInterface create() {
+        try {
+            return new ClimberSubsystem();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return new ClimberSubsystemMock();
+        }
+    }
+
+    // --------------------------------------------------
+    
     /**
      * <p> Initializes the motor. That is all.
      */
-    public ClimberSubsystem() {
+    private ClimberSubsystem() {
         motor = new CANSparkMax(Constants.CLIMBER_MOTOR_PORT, MotorType.kBrushless);
     }
 
@@ -32,6 +47,7 @@ public class ClimberSubsystem {
      * <p> This will be used to tighten and loosen the force on the string inside the climber.
      * @param speed The speed to set the motor at as a value between -1.0 and 1.0.
      */
+    @Override
     public void setSpeed(double speed) {
         this.speed = speed;
     }
