@@ -8,7 +8,10 @@ import frc.robot.Robot;
  * <p> This will also be used to actually climb. Once the climber is hooked up to the chain, it should be tightened to lift the robot up.
  */
 public class TightenClimber extends Command {
-    
+    public TightenClimber() {
+        addRequirements(Robot.getMap().climber);
+    }
+
     /**
      * <p> Literally all this does is make sure the climber motor speed is constantly running to pull it inside.
      */

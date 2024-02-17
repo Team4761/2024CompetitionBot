@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
  * <p> This does NOT turn to a specific rotation, this turns an offset from the current rotation.
  */
 public class SwerveTurnTo extends Command {
-    private SwerveDriveSubsystem m_swerve;
+    private SwerveDriveSubsystemInterface m_swerve;
     private Rotation2d target;
 
     private double Pvalue = 0;
@@ -18,7 +18,7 @@ public class SwerveTurnTo extends Command {
      * @param swerve Reference to the RobotMap's SwerveDriveSubsystem to improve performance.
      * @param rot The desired rotation to turn the robot to by in degrees/radians (it's a Rotation2d so it doesn't matter).
      */
-    public SwerveTurnTo(SwerveDriveSubsystem swerve, Rotation2d rot) {
+    public SwerveTurnTo(SwerveDriveSubsystemInterface swerve, Rotation2d rot) {
         m_swerve = swerve;
         addRequirements(m_swerve);
         target = rot;

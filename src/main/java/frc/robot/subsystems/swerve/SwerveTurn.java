@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
  * <p> This does NOT turn to a specific rotation, this turns an offset from the current rotation.
  */
 public class SwerveTurn extends Command {
-    private SwerveDriveSubsystem m_swerve;
+    private SwerveDriveSubsystemInterface m_swerve;
     private Rotation2d target;
 
     private double Pvalue = 0;
@@ -18,7 +18,7 @@ public class SwerveTurn extends Command {
      * @param swerve Reference to the RobotMap's SwerveDriveSubsystem to improve performance.
      * @param rot The desired rotation to turn the robot by in degrees. Once again, this is NOT the desired final rotation, this is just an offset from the current rotation.
      */
-    public SwerveTurn(SwerveDriveSubsystem swerve, Rotation2d rot) {
+    public SwerveTurn(SwerveDriveSubsystemInterface swerve, Rotation2d rot) {
         m_swerve = swerve;
         addRequirements(m_swerve);
         target = m_swerve.getGyroRotation().plus(rot);

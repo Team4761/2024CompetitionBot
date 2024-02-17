@@ -8,7 +8,11 @@ import frc.robot.Robot;
  * <p> This will be used to hook the climber onto the chain as it needs to be fully extended in order to go over the chain.
  */
 public class LoosenClimber extends Command {
-    
+
+    public LoosenClimber() {
+        addRequirements(Robot.getMap().climber);
+    }
+
     /**
      * <p> Literally all this does is make sure the climber motor is slack and the climber can extend up.
      */

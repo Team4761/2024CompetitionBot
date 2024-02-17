@@ -20,6 +20,7 @@ public class FullIntake extends Command {
      * @param map The RobotMap of the robot to improve performance.
      */
     public FullIntake(double speed, RobotMap map) {
+        addRequirements(map.intake, map.shooter);
         this.speed = speed;
         this.map = map;
         this.timeOut = System.currentTimeMillis() + 5000;

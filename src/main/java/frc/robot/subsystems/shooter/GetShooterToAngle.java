@@ -8,7 +8,7 @@ import frc.robot.Robot;
  */
 public class GetShooterToAngle extends Command {
     private double angle;
-    private ShooterSubsystem shooter;
+    private ShooterSubsystemInterface shooter;
 
     /**
      * <p> Initializes a copy of the shooter subsystem for better performance as well as the angle it should be getting to in radians.
@@ -17,6 +17,7 @@ public class GetShooterToAngle extends Command {
     public GetShooterToAngle(double angleRadians) {
         this.angle = angleRadians;
         this.shooter = Robot.getMap().shooter;
+        addRequirements(this.shooter);
     }
 
     /**
@@ -34,8 +35,7 @@ public class GetShooterToAngle extends Command {
      */
     @Override
     public boolean isFinished() {
-        if (Math.abs(shooter.getShooterAngle() - angle) < 0.01) // If the shooter is within 0.01 radians of the target, stop.
-            return true;
-        return false;
+        // If the shooter is within 0.01 radians of the target, stop.
+        return Math.abs(shooter.getShooterAngle() - angle) < 0.01;
     }
 }

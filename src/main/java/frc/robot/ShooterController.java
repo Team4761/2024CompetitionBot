@@ -1,14 +1,17 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
+import java.util.Arrays;
 
 /**
  * This is the code for the controller that controls the shooter and the intake.
  */
-public class ShooterController extends XboxController {
+public class ShooterController extends CommandXboxController {
     
-    private RobotMap map;
-    private RobocketsShuffleboard shuffleboard;
+    private final RobotMap map;
+    private final RobocketsShuffleboard shuffleboard;
 
     /**
      * Initializes the Shooter Controller and makes an internal copy of the RobotMap to save performance.
@@ -20,6 +23,92 @@ public class ShooterController extends XboxController {
         super(port);
         this.map = map;
         this.shuffleboard = shuffleboard;
+
+        a().toggleOnTrue(
+            Commands.startEnd(
+                this::shooterIn,
+                this::stopShooter,
+                map.shooter
+            )
+        );
+        b().toggleOnTrue(
+            Commands.startEnd(
+                this::shooterOut,
+                this::stopShooter,
+                map.shooter
+            )
+        );
+        x().toggleOnTrue(
+            Commands.startEnd(
+                this::shooterIntakeIn,
+                this::stopShooterIntake,
+                map.shooter
+            )
+        );
+        y().toggleOnTrue(
+            Commands.startEnd(
+                this::shooterIntakeOut,
+                this::stopShooterIntake,
+                map.shooter
+            )
+        );
+
+        leftBumper().toggleOnTrue(
+            Commands.startEnd(
+                this::intakeOn,
+                this::intakeOff,
+                map.intake, map.leds
+            )
+        );
+        rightBumper().toggleOnTrue(
+            Commands.startEnd(
+                this::outtakeOn,
+                this::outtakeOff,
+                map.intake, map.leds
+            )
+        );
+    }
+
+    private void shooterIn() {
+        map.shooter.setShooterSpeed(shuffleboard.getSettingNum("Shooter In Speed"));
+    }
+
+    private void shooterOut() {
+        map.shooter.setShooterSpeed(-shuffleboard.getSettingNum("Shooter Out Speed"));
+    }
+
+    private void stopShooter() {
+        map.shooter.setShooterSpeed(0);
+    }
+
+    private void shooterIntakeIn() {
+        map.shooter.setIntakeSpeed(shuffleboard.getSettingNum("Shooter Intake Speed"));
+    }
+
+    private void shooterIntakeOut() {
+        map.shooter.setIntakeSpeed(-shuffleboard.getSettingNum("Shooter Outtake Speed"));
+    }
+
+    private void stopShooterIntake() {
+        map.shooter.setIntakeSpeed(0);
+    }
+
+    private void intakeOn() {
+        map.intake.intake(shuffleboard.getSettingNum("Intake Speed"));
+        map.leds.NoteIndicator(true);
+    }
+
+    private void intakeOff() {
+        map.intake.intake(0);
+    }
+
+    private void outtakeOn() {
+        map.intake.outtake(shuffleboard.getSettingNum("Outtake Speed"));
+        map.leds.NoteIndicator(false);
+    }
+
+    private void outtakeOff() {
+        map.intake.outtake(0);
     }
 
     /**
@@ -45,8 +134,8 @@ public class ShooterController extends XboxController {
     private final int SMOOTH_FRAME_LENGTH = 5;
 
     private int smoothNextFrameToWrite = 0;
-    private double[] smoothLeftY = new double[SMOOTH_FRAME_LENGTH];     // Contains the past {SMOOTH_FRAME_LENGTH} number of inputs.
-    private double[] smoothRightY = new double[SMOOTH_FRAME_LENGTH];    // Contains the past {SMOOTH_FRAME_LENGTH} number of inputs.
+    private final double[] smoothLeftY = new double[SMOOTH_FRAME_LENGTH];     // Contains the past {SMOOTH_FRAME_LENGTH} number of inputs.
+    private final double[] smoothRightY = new double[SMOOTH_FRAME_LENGTH];    // Contains the past {SMOOTH_FRAME_LENGTH} number of inputs.
 
     /**
      * <p> Applies input smoothing.
@@ -55,12 +144,7 @@ public class ShooterController extends XboxController {
      * @return The average (mean) value of the input list of doubles. This will be the average value of a joystick axis.
      */
     private double smooth(double[] history) {
-        double average = 0;
-        for(int i = 0; i < history.length; i++) {
-            average += history[i];
-        }
-        average /= (double)history.length;
-        return average;
+        return Arrays.stream(history).average().orElse(0.0);
     }
 
     /**
@@ -78,67 +162,9 @@ public class ShooterController extends XboxController {
         double RightY = smooth(smoothRightY);
 
         // Intake
-        if (map.intake != null) {
-            
-            map.intake.rotate(RightY);
-
-            if (getLeftBumperPressed()) {
-                map.intake.intake(shuffleboard.getSettingNum("Intake Speed"));
-            }
-            else if (getRightBumperPressed()) {
-                map.intake.outtake(shuffleboard.getSettingNum("Outtake Speed"));
-            }
-        }
+        map.intake.rotate(RightY);
 
         // Shooter
-        if (map.shooter != null) {
-
-            map.shooter.rotate(LeftY);
-
-            if (getAButtonPressed()) {
-                //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setShooterSpeed(shuffleboard.getSettingNum("Shooter In Speed"));
-            }
-            if (getBButtonPressed()) {
-                //CommandScheduler.getInstance().schedule(new Shoot(-SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setShooterSpeed(-shuffleboard.getSettingNum("Shooter Out Speed"));
-            }
-            if (getYButtonPressed()) {
-                map.shooter.setIntakeSpeed(shuffleboard.getSettingNum("Shooter Intake Speed"));
-            }
-            if (getXButtonPressed()) {
-                map.shooter.setIntakeSpeed(-shuffleboard.getSettingNum("Shooter Outtake Speed"));
-            }
-            if (getAButtonReleased() || getBButtonReleased()) {
-                map.shooter.setShooterSpeed(0);
-            }
-            if (getXButtonReleased() || getYButtonReleased()) {
-                map.shooter.setIntakeSpeed(0);
-            }
-        }
-        
-        //LEDs
-        if (map.leds != null){
-            //if the intake button is pressed it will turn the LEds to orange
-            if(getLeftBumperPressed())
-            {
-                map.leds.NoteIndicator(true);
-            }
-
-            if(getLeftBumperReleased())
-            {
-                map.leds.NoteIndicator(true);
-            }
-            //if the outake button is pressed it will turn the LEDs off
-            if(getRightBumperPressed())
-            {
-                map.leds.NoteIndicator(false);
-            }
-            //if the outake button is pressed it will turn the LEDs off
-            if(getAButtonPressed())
-            {
-                map.leds.NoteIndicator(false);
-            }
-        }
+        map.shooter.rotate(LeftY);
     }
 }
