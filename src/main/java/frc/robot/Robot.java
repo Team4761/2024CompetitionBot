@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
   public static RobocketsShuffleboard shuffleboard = new RobocketsShuffleboard();
   public static RobocketsShuffleboard getShuffleboard() { return shuffleboard; }
 
-  //public static DriveController driveController = new DriveController(Constants.DRIVE_CONTROLLER_PORT, map, shuffleboard);
+  public static DriveController driveController = new DriveController(Constants.DRIVE_CONTROLLER_PORT, map, shuffleboard);
   public static ShooterController shooterController = new ShooterController(Constants.SHOOTER_CONTROLLER_PORT, map, shuffleboard);
 
   /**

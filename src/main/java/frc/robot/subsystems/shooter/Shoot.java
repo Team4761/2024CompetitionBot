@@ -8,7 +8,8 @@ import frc.robot.Robot;
  */
 public class Shoot extends Command {
     private double speed;   // Value between -1 and 1 in rotations per second
-    private long endTime;   // Stores the time when the command should finish executing
+    private long revTime;   // Stores the time when the command should finish executing
+    private long endTime;
 
     /**
      * <p> This initializes the speed which the robot should shoot at in rotations per second and the time which the command should finish executing.
@@ -16,6 +17,7 @@ public class Shoot extends Command {
      */
     public Shoot (double speed) {
         this.speed = speed;
+        this.revTime = System.currentTimeMillis()+2000;
         this.endTime = System.currentTimeMillis()+3000;
     }
     public Shoot (double speed, double seconds) {
@@ -28,7 +30,9 @@ public class Shoot extends Command {
      */
     @Override
     public void execute() {
-        Robot.getMap().shooter.setShooterSpeed(speed);
+        if (revTime <= System.currentTimeMillis())  // If finished reving, shoot
+            Robot.getMap().shooter.setIntakeSpeed(0.3); // Intake the piece into the shooter
+        Robot.getMap().shooter.setShooterSpeed(speed);  // Always be revving the motors
     }
 
     /**

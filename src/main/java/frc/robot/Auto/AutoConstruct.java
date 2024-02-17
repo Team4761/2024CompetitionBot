@@ -25,12 +25,14 @@ public class AutoConstruct extends SendableChooser<String> {
     // Internal Auto names
     private static final String kDefaultAuto = "Default";
     private static final String kOneMeterLeft = "left1meter";
+    private static final String kOneMeterForward = "forward1meter";
     private static final String kPathPlanner1Auto = "pathPlanner1";
     private static final String kPathPlanner2Auto = "pathPlanner2";
     private static final String kAprilDance = "aprilDance";
     private static final String kPathPlanner2Up = "upTwoMeter";
     private static final String kPathPlanner1MockAuto = "pathPlanner1MeterForward";
     private static final String kPathPlanner2MeterSpin = "2meterspin";
+    private static final String prepShooterAuto = "prepshooterauto";
 
     private static AutoConstruct autoSelector;
     private static String m_autoSelected;
@@ -47,12 +49,14 @@ public class AutoConstruct extends SendableChooser<String> {
         // First parameter: The name of the auto displayed on SmartDashboard
         // Second parameter: The internal name of the auto
         addOption("One Meter Left", kOneMeterLeft);
-        addOption("PathPlanner 1 Meter Forward Auto", kPathPlanner1Auto);
-        addOption("PathPlanner 1 Meter Forward Path", kPathPlanner1MockAuto);
-        addOption("PathPlanner Test 2", kPathPlanner2Auto);
-        addOption("April Tag Dance", kAprilDance);
-        addOption("PathPlanner 2 Meter Up", kPathPlanner2Up);
-        addOption("PathPlanner 2 Meter Spin", kPathPlanner2MeterSpin);
+        addOption("One Meter Forward", kOneMeterForward);
+        addOption("Prep Shooter Auto", prepShooterAuto);
+        // addOption("PathPlanner 1 Meter Forward Auto", kPathPlanner1Auto);
+        // addOption("PathPlanner 1 Meter Forward Path", kPathPlanner1MockAuto);
+        // addOption("PathPlanner Test 2", kPathPlanner2Auto);
+        // addOption("April Tag Dance", kAprilDance);
+        // addOption("PathPlanner 2 Meter Up", kPathPlanner2Up);
+        // addOption("PathPlanner 2 Meter Spin", kPathPlanner2MeterSpin);
 
         autoSelector = this;
     }
@@ -87,29 +91,35 @@ public class AutoConstruct extends SendableChooser<String> {
         Command scheduledCommand = null;
         switch (m_autoSelected) {
             case kDefaultAuto:
-                scheduledCommand = new SwerveGoCartesianF(map.swerve, new Translation2d(1, 0));
-            break;
+                scheduledCommand = new MoveBackCommand(2);
+                break;
             case kOneMeterLeft:
                 scheduledCommand = new SwerveGoCartesianF(map.swerve, new Translation2d(0, 1));
-            break;
-            case kPathPlanner1Auto:
-                scheduledCommand = new PathPlannerAuto("1 Meter Auto").andThen(new PrintCommand("Path Finished!"));
-            break;
-            case kPathPlanner1MockAuto:
-                scheduledCommand = AutoBuilder.followPath(PathPlannerPath.fromPathFile("1 Meter Path"))/*.andThen(new SwerveDriveStop())*/;
-            break;
-            case kPathPlanner2Up:
-                scheduledCommand = new PathPlannerAuto("2 Meter Up")/*.andThen(new SwerveDriveStop())*/;
-            break;
-            case kPathPlanner2Auto:
-                scheduledCommand = new PathPlannerAuto("Simple Swerve Auto");
-            break;
-            case kAprilDance:
-                // we do not have code for this yet
-            break;
-            case kPathPlanner2MeterSpin:
-                scheduledCommand = new PathPlannerAuto("2 Meter Spin");
-            break;
+                break;
+            case kOneMeterForward:
+                scheduledCommand = new SwerveGoCartesianF(map.swerve, new Translation2d(1, 0));
+                break;
+            case prepShooterAuto:
+                scheduledCommand = new PrepShooterAuto();
+                break;
+            // case kPathPlanner1Auto:
+            //     scheduledCommand = new PathPlannerAuto("1 Meter Auto").andThen(new PrintCommand("Path Finished!"));
+            // break;
+            // case kPathPlanner1MockAuto:
+            //     scheduledCommand = AutoBuilder.followPath(PathPlannerPath.fromPathFile("1 Meter Path"))/*.andThen(new SwerveDriveStop())*/;
+            // break;
+            // case kPathPlanner2Up:
+            //     scheduledCommand = new PathPlannerAuto("2 Meter Up")/*.andThen(new SwerveDriveStop())*/;
+            // break;
+            // case kPathPlanner2Auto:
+            //     scheduledCommand = new PathPlannerAuto("Simple Swerve Auto");
+            // break;
+            // case kAprilDance:
+            //     // we do not have code for this yet
+            // break;
+            // case kPathPlanner2MeterSpin:
+            //     scheduledCommand = new PathPlannerAuto("2 Meter Spin");
+            // break;
             default:
                 // unsure what the default command would be: maybe just ensure nothing is moving?
             break;

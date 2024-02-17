@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
@@ -81,29 +82,6 @@ public class ShooterController extends XboxController {
         double LeftY = smooth(smoothLeftY);
         double RightY = smooth(smoothRightY);
 
-        // Intake
-        if (map.intake != null) {
-            
-            // map.intake.setAngleMotorSpeed(getRightY());
-
-            if (getLeftBumperPressed()) {
-                map.intake.intake(shuffleboard.getSettingNum("Intake Speed"));
-            }
-            else if (getRightBumperPressed()) {
-                map.intake.outtake(shuffleboard.getSettingNum("Outtake Speed"));
-            }   
-
-            else if(getRightBumperReleased() || getLeftBumperReleased()){
-                map.intake.stop();
-            }
-
-            else if (getAButtonPressed()){
-                map.intake.goToRotation(new Rotation2d(Units.degreesToRadians(45)));
-            }
-            else if (getBButtonPressed()){
-                map.intake.goToRotation(new Rotation2d(Units.degreesToRadians(0)));
-            }
-        }
 
         // Shooter
         if (map.shooter != null) {
@@ -116,7 +94,7 @@ public class ShooterController extends XboxController {
 
             map.shooter.rotate(LeftY); // sets target pos
 
-            if (getAButtonPressed()) {
+            if (getXButtonPressed()) {
                 //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
                 map.shooter.setShooterSpeed(shuffleboard.getSettingNum("Shooter In Speed"));
             }
@@ -127,14 +105,20 @@ public class ShooterController extends XboxController {
             if (getYButtonPressed()) {
                 map.shooter.setIntakeSpeed(shuffleboard.getSettingNum("Shooter Intake Speed"));
             }
-            if (getXButtonPressed()) {
+            if (getAButtonPressed()) {
                 map.shooter.setIntakeSpeed(-shuffleboard.getSettingNum("Shooter Outtake Speed"));
             }
-            if (getAButtonReleased() || getBButtonReleased()) {
+            if (getXButtonReleased() || getBButtonReleased()) {
                 map.shooter.setShooterSpeed(0);
             }
-            if (getXButtonReleased() || getYButtonReleased()) {
+            if (getAButtonReleased() || getYButtonReleased()) {
                 map.shooter.setIntakeSpeed(0);
+            }
+            if (getLeftBumperPressed()) {
+                map.shooter.setShooterAngle(Units.degreesToRadians(55));    // Shooting position
+            }
+            if (getRightBumperPressed()) {
+                map.shooter.setShooterAngle(Units.degreesToRadians(90));    // Upright position
             }
         }
         

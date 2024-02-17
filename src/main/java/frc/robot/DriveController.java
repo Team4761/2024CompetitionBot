@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.climber.LoosenClimber;
@@ -47,7 +48,7 @@ public class DriveController extends XboxController {
     // This records the past 20 inputs received from the controller, and averages them out
     // This way, rather than a controller going from 0 to 1 in 1 cycle, it takes a couple cycles to reach 1
     // This way, the motors to not instantly accelerate
-    private final int SMOOTH_FRAME_LENGTH = 5;
+    private final int SMOOTH_FRAME_LENGTH = 3;
 
     private int smoothNextFrameToWrite = 0;
     private double[] smoothLeftX = new double[SMOOTH_FRAME_LENGTH];
@@ -127,12 +128,37 @@ public class DriveController extends XboxController {
             }
         }
 
+        // Climber
         if (map.climber != null) {
             if (getRightBumperPressed()) {
                 CommandScheduler.getInstance().schedule(new LoosenClimber());
             }
             if (getRightBumperReleased()) {
                 CommandScheduler.getInstance().schedule(new TightenClimber());
+            }
+        }
+
+        // Intake
+        if (map.intake != null) {
+            
+            // map.intake.setAngleMotorSpeed(getRightY());
+
+            if (getLeftBumperPressed()) {
+                map.intake.intake(shuffleboard.getSettingNum("Intake Speed"));
+            }
+            else if (getRightBumperPressed()) {
+                map.intake.outtake(shuffleboard.getSettingNum("Outtake Speed"));
+            }   
+
+            else if(getRightBumperReleased() || getLeftBumperReleased()){
+                map.intake.stop();
+            }
+
+            else if (getAButtonPressed()){
+                map.intake.goToRotation(new Rotation2d(Units.degreesToRadians(45)));    // Starting position (upright)
+            }
+            else if (getBButtonPressed()){
+                map.intake.goToRotation(new Rotation2d(Units.degreesToRadians(0))); // Actual intake position (on the ground)
             }
         }
 
