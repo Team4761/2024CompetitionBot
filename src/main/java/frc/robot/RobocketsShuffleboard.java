@@ -109,10 +109,10 @@ public class RobocketsShuffleboard {
      */
     public void addCommands() {
         // Swerve commands
-        addCommand("Go 1 Meter Forward", new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(1,0)));
-        addCommand("Go 1 Meter Left", new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(0,1)));
-        addCommand("Turn 90 Degrees", new SwerveTurn(Robot.getMap().swerve, new Rotation2d(Units.degreesToRadians(90))));
-        addCommand("Turn To 90 Degrees", new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Units.degreesToRadians(90))));
+        // addCommand("Go 1 Meter Forward", new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(1,0)));
+        // addCommand("Go 1 Meter Left", new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(0,1)));
+        // addCommand("Turn 90 Degrees", new SwerveTurn(Robot.getMap().swerve, new Rotation2d(Units.degreesToRadians(90))));
+        // addCommand("Turn To 90 Degrees", new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Units.degreesToRadians(90))));
 
         // Shooter commands
         addCommand("Shoot", new Shoot(getSettingNum("Shooter Out Speed")));
@@ -123,7 +123,7 @@ public class RobocketsShuffleboard {
         addCommand("Full Intake", new FullIntake(getSettingNum("Full Intake Speed"), Robot.getMap()));
 
         // LED commands
-        // addCommand("LED Charge Up", new LedChargeUp(3000, Robot.getMap().leds)); DOESN'T WORK RN
+        addCommand("LED Charge Up", new LedChargeUp(3000, Robot.getMap()));
 
         // Climber commands
         addCommand("Loosen Climber", new LoosenClimber());
