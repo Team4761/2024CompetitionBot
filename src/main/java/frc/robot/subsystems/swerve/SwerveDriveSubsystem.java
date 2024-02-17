@@ -7,7 +7,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -41,10 +40,15 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     SwerveModuleState[] targetStates = new SwerveModuleState[4];
 
     // motors offset in degrees && i think negative is ccw
-    private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , 36.5,false,  1.0);    // Formerly -54.5, 1.0,  1.0
-    private SwerveModuleTalon m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT ,   -86, false, -1.0);      // Formerly -6, -1.0, -1.0
-    private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT , Constants.BL_ENCODER_PORT ,  22, false, -1.0);       // Formerly -68, 1.0, -1.0
-    private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , 172, false,  -1.0);      // Formerly 82, 1.0,  -1.0
+    // private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , 83.30076,false,  -1.0);    // Formerly -54.5, 1.0,  1.0
+    // private SwerveModuleTalon m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT ,   -61.74209, false, -1.0);      // Formerly -6, -1.0, -1.0
+    // private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT , Constants.BL_ENCODER_PORT ,  -69.78506, true, -1.0);       // Formerly -68, 1.0, -1.0
+    // private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , -16.87491, true,  -1.0);      // Formerly 82, 1.0,  -1.0
+
+    private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , 240.673,true,  -1.0);    // Formerly -54.5, 1.0,  1.0
+    private SwerveModuleTalon m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT ,   294.52, false, -1.0);      // Formerly -6, -1.0, -1.0
+    private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT , Constants.BL_ENCODER_PORT ,  291.445, false, -1.0);       // Formerly -68, 1.0, -1.0
+    private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , -203.897, false,  -1.0);      // Formerly 82, 1.0,  -1.0
 
     public static boolean isRobotRelative = false;
 
@@ -212,6 +216,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                 pointDir = getGyroRotation();
 
             lastDone = 10;
+            
         }
 
         // Gets the target states from either {swerveDriveF} or {swerveDriveR} and applies them to individual modules (wheels)
@@ -225,8 +230,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         m_frontRightModule.go();
         m_backLeftModule.go();
         m_backRightModule.go();
-
-
+        
 
         //System.out.println("Back Left target/measure: "+targetStates[2].angle.getDegrees()+" | "+m_backLeftModule.getRotation().getDegrees());
         //System.out.println("Ecoders: "+m_frontLeftModule.getRotation().getDegrees()+", "+m_frontRightModule.getRotation().getDegrees()+", "+m_backLeftModule.getRotation().getDegrees()+", "+m_backRightModule.getRotation().getDegrees());
@@ -254,7 +258,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         }
         
         speedX = sX;
-        speedY = sY;
+        speedY = -sY;
     }
 
     private int lastDone = 10;  // Cycles to sample rotation to make corrections to direction
@@ -273,7 +277,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         }
         
         speedX = sX;
-        speedY = sY;
+        speedY = -sY;
         speedRot = sR;
         
     }
@@ -283,7 +287,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public void swerveDriveR(double speed, double strafe, double speedRot) {
         isRobotRelative = true;
         speedX = speed;
-        speedY = strafe;
+        speedY = -strafe;
         this.speedRot = speedRot;
         // targetStates = m_kinematics.toSwerveModuleStates(new ChassisSpeeds(speed, -strafe, speedRot));
     }
@@ -292,7 +296,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         isRobotRelative = true;
         double relativeSpeed = 1;
         speedX = newTargetStates.vxMetersPerSecond * relativeSpeed;
-        speedY = newTargetStates.vyMetersPerSecond * relativeSpeed;
+        speedY = -newTargetStates.vyMetersPerSecond * relativeSpeed;
         speedRot = -newTargetStates.omegaRadiansPerSecond;
         SmartDashboard.putNumber("Relative SpeedX", newTargetStates.vxMetersPerSecond);
         SmartDashboard.putNumber("Relative SpeedY", newTargetStates.vyMetersPerSecond);

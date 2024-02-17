@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkLowLevel;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -23,7 +24,7 @@ public class SwerveModuleTalon extends SubsystemBase{
     private double offset;
 
     private double sM;
-    private final double driveConversionFactor = 0.0388385473906813; // This converts the encoders arbitrary units to meters travelled by the motor. The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
+    private final double driveConversionFactor = 1.0; //0.0388385473906813; // This converts the encoders arbitrary units to meters travelled by the motor. The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
 
     // m/s, rotation2d
     private SwerveModuleState targetState = new SwerveModuleState();
@@ -188,7 +189,22 @@ public class SwerveModuleTalon extends SubsystemBase{
     }
     public Rotation2d getRotation() {
         // multiplied by 360 because it says its in rotations, unsure if correct
-        return new Rotation2d((encoder.getAbsolutePosition().getValueAsDouble()*360 + offset + 90) * 0.0174533);   // Converts the encoder ticks into radians after applying an offset.
+        // switch ((int)offset) {
+        //     case 0:
+        //         return new Rotation2d((encoder.getAbsolutePosition().getValueAsDouble()*360 + SmartDashboard.getNumber("FL Offset", 0.0) + 90) * 0.0174533);
+        //     case 1:
+        //         return new Rotation2d((encoder.getAbsolutePosition().getValueAsDouble()*360 + SmartDashboard.getNumber("FR Offset", 0.0) + 90) * 0.0174533);
+        //     case 2:
+        //         return new Rotation2d((encoder.getAbsolutePosition().getValueAsDouble()*360 + SmartDashboard.getNumber("BL Offset", 0.0) + 90) * 0.0174533);
+        //     case 3:
+        //         return new Rotation2d((encoder.getAbsolutePosition().getValueAsDouble()*360 + SmartDashboard.getNumber("BR Offset", 0.0) + 90) * 0.0174533);
+        //     default:
+        //     break;
+            
+        // }
+
+        // Previous magic number: 0.0174533
+        return new Rotation2d(Units.degreesToRadians(encoder.getAbsolutePosition().getValueAsDouble()*360 + offset + 90));   // Converts the encoder ticks into radians after applying an offset.
     }
 
     public SwerveModuleState getState() {
