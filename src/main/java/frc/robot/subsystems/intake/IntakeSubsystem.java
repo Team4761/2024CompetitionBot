@@ -21,18 +21,18 @@ public class IntakeSubsystem extends SubsystemBase{
     private PIDController anglePID;         // Will be used to get the shooter a desired angle.
     private ArmFeedforward angleFeedForward;// Will be used to maintain the shooter's angle.
 
-    private Rotation2d targetAngle; // The angle the intake should get to where 0 degrees is (undecided).
+    private Rotation2d targetAngle = new Rotation2d(); // The angle the intake should get to where 0 degrees is (undecided).
 
     private static double INTAKE_ANGLE_OFFSET = 0.0;    // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
 
 
     public IntakeSubsystem() {
-        intakeL = new CANSparkMax(Constants.INTAKE_LEFT_PORT, MotorType.kBrushless);
+        intakeL = new CANSparkMax(Constants.INTAKE_LEFT_PORT, MotorType.kBrushed);
         intakeR = new CANSparkMax(Constants.INTAKE_RIGHT_PORT, MotorType.kBrushless);
         angleMotorLeft = new CANSparkMax(Constants.INTAKE_ANGLE_LEFT_MOTOR_PORT, MotorType.kBrushless);
 
-        anglePID = new PIDController(1.0, 0, 0);  // These values have yet to be tuned.
-        angleFeedForward = new ArmFeedforward(0, 0.91, 1.95); // Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
+        anglePID = new PIDController(.25, 0, 0);  // These values have yet to be tuned.
+        angleFeedForward = new ArmFeedforward(0,0,0); //ks = 0, kg = 0.91, kv = 1.95// Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
 
     }
 
@@ -80,6 +80,10 @@ public class IntakeSubsystem extends SubsystemBase{
         targetAngle = new Rotation2d(targetAngle.getRadians() + offsetRadians);
     }
 
+    public void setAngleMotorSpeed(double speed){
+        angleMotorLeft.set(speed);
+    }
+
     /**
      * <p> This sets the target rotation of the intake to {rotation} and will get to that rotation during its periodic function where up is positive and down is negative.
      * @param rotation The new rotation to get to.
@@ -102,5 +106,10 @@ public class IntakeSubsystem extends SubsystemBase{
      */
     public double getIntakeAngleVelocity() {
         return (angleMotorLeft.getEncoder().getVelocity() * Constants.SHOOTER_RPM_TO_MPS);
+    }
+
+    public void stop(){
+        intakeL.set(0);
+        intakeR.set(0);
     }
 }
