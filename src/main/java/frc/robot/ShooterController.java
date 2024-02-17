@@ -46,7 +46,7 @@ public class ShooterController extends XboxController {
     // This records the past 5 inputs received from the controller, and averages them out
     // This way, rather than a controller going from 0 to 1 in 1 cycle, it takes a couple cycles to reach 1
     // This way, the motors to not instantly accelerate
-    private final int SMOOTH_FRAME_LENGTH = 3;
+    private final int SMOOTH_FRAME_LENGTH = 1;
 
     private int smoothNextFrameToWrite = 0;
     private double[] smoothLeftY = new double[SMOOTH_FRAME_LENGTH];     // Contains the past {SMOOTH_FRAME_LENGTH} number of inputs.
@@ -84,7 +84,7 @@ public class ShooterController extends XboxController {
         // Intake
         if (map.intake != null) {
             
-            // map.intake.setAngleMotorSpeed(getRightY());
+            // map.intake.setAngleMotorSpeed(getRightY() * 0.05);
 
             if (getLeftBumperPressed()) {
                 map.intake.intake(shuffleboard.getSettingNum("Intake Speed"));
@@ -114,7 +114,7 @@ public class ShooterController extends XboxController {
                 CommandScheduler.getInstance().schedule(new IntakeAndShoot(20));
             }
 
-            map.shooter.rotate(LeftY); // sets target pos
+            map.shooter.rotate(0.04*LeftY); // sets target pos
 
             if (getAButtonPressed()) {
                 //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
