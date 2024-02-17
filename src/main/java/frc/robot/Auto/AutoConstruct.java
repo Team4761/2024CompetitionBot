@@ -33,6 +33,7 @@ public class AutoConstruct extends SendableChooser<String> {
     private static final String kPathPlanner1MockAuto = "pathPlanner1MeterForward";
     private static final String kPathPlanner2MeterSpin = "2meterspin";
     private static final String prepShooterAuto = "prepshooterauto";
+    private static final String kShootAuto = "shootAuto";
 
     private static AutoConstruct autoSelector;
     private static String m_autoSelected;
@@ -51,6 +52,7 @@ public class AutoConstruct extends SendableChooser<String> {
         addOption("One Meter Left", kOneMeterLeft);
         addOption("One Meter Forward", kOneMeterForward);
         addOption("Prep Shooter Auto", prepShooterAuto);
+        addOption("Shoot Auto", kShootAuto);
         // addOption("PathPlanner 1 Meter Forward Auto", kPathPlanner1Auto);
         // addOption("PathPlanner 1 Meter Forward Path", kPathPlanner1MockAuto);
         // addOption("PathPlanner Test 2", kPathPlanner2Auto);
@@ -91,7 +93,7 @@ public class AutoConstruct extends SendableChooser<String> {
         Command scheduledCommand = null;
         switch (m_autoSelected) {
             case kDefaultAuto:
-                scheduledCommand = new MoveBackCommand(2);
+                scheduledCommand = new MoveBackCommand(1.2);
                 break;
             case kOneMeterLeft:
                 scheduledCommand = new SwerveGoCartesianF(map.swerve, new Translation2d(0, 1));
@@ -101,6 +103,9 @@ public class AutoConstruct extends SendableChooser<String> {
                 break;
             case prepShooterAuto:
                 scheduledCommand = new PrepShooterAuto();
+                break;
+            case kShootAuto:
+                scheduledCommand = new ShootAuto();
                 break;
             // case kPathPlanner1Auto:
             //     scheduledCommand = new PathPlannerAuto("1 Meter Auto").andThen(new PrintCommand("Path Finished!"));

@@ -24,6 +24,7 @@ public class GetIntakeToSetPosition extends Command {
 
     @Override
     public boolean isFinished() {
+        System.out.println("Rotation:" + Math.abs(intake.getIntakeAngle().getRadians()));
         if (Math.abs(intake.getIntakeAngle().getRadians() - angleToGoTo) <= MARGIN_OF_ERROR)
             return true;
         return false;

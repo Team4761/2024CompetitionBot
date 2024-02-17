@@ -63,10 +63,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    //AutoConstruct.scheduleSelectedCommand(map);
+    AutoConstruct.scheduleSelectedCommand(map);
 
     
-    CommandScheduler.getInstance().schedule(new IntakeAndShoot(20));
+    // CommandScheduler.getInstance().schedule(new IntakeAndShoot(20));
   }
 
   /** This function is called periodically during autonomous. */
