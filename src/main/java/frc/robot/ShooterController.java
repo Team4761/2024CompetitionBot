@@ -88,7 +88,7 @@ public class ShooterController extends XboxController {
             map.shooter.setShooterAngleSpeed(RightY); // sets raw speed because no more time
 
             if(getRightTriggerAxis()>0.5) {
-                CommandScheduler.getInstance().schedule(new IntakeAndShoot(20));
+                CommandScheduler.getInstance().schedule(new IntakeAndShoot(50));
             }
 
             map.shooter.rotate(0.04*LeftY); // sets target pos
@@ -114,7 +114,7 @@ public class ShooterController extends XboxController {
                 map.shooter.setIntakeSpeed(0);
             }
             if (getLeftBumperPressed()) {
-                map.shooter.setShooterAngle(Units.degreesToRadians(63));    // Shooting position
+                map.shooter.setShooterAngle(Units.degreesToRadians(55));    // Shooting position
             }
             if (getRightBumperPressed()) {
                 map.shooter.setShooterAngle(Units.degreesToRadians(90));    // Upright position

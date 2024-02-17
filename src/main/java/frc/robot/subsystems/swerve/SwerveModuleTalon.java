@@ -158,8 +158,8 @@ public class SwerveModuleTalon extends SubsystemBase{
         //System.out.println(targetState.angle.getDegrees()+", "+getRotation().getDegrees()+", "+sM);
 
         //both need a P value to adjust it to the right speed
-        double steerA = MathStuff.subtract(targetState.angle, getRotation()).getRotations()*sM*36;
-        double steerB = Math.signum(steerA)*0.1;
+        double steerA = MathStuff.subtract(targetState.angle, getRotation()).getRotations()*sM*60;
+        double steerB = Math.signum(steerA)*0.15;
         //System.out.println(steerA+steerB);
         steer.setVoltage(steerA+steerB);
 

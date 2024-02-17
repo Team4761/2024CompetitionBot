@@ -9,7 +9,7 @@ public class PrepShooterAuto extends SequentialCommandGroup {
     public PrepShooterAuto() {
         super(
             new GetIntakeToSetPosition(Units.degreesToRadians(0)),  // Move the intake down
-            new GetShooterToAngle(Units.degreesToRadians(63)),      // Get the shooter to shooting position
+            new GetShooterToAngle(Units.degreesToRadians(55)),      // Get the shooter to shooting position
             new MoveBackCommand(1.2) // Move 2 meters back
         );
     }

@@ -8,6 +8,9 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -18,12 +21,14 @@ public class IntakeSubsystem extends SubsystemBase{
 
     private CANSparkMax angleMotorLeft; // Motor for angling the shooter up and down, assuming that the front of the shooter is the forward direction
 
+    private DutyCycleEncoder encoder;
+
     private PIDController anglePID;         // Will be used to get the shooter a desired angle.
     private ArmFeedforward angleFeedForward;// Will be used to maintain the shooter's angle.
 
     private Rotation2d targetAngle = new Rotation2d(); // The angle the intake should get to where 0 degrees is (undecided).
 
-    private static double INTAKE_ANGLE_OFFSET = 0.0;    // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
+    private static double INTAKE_ANGLE_OFFSET = Units.degreesToRadians(-4.308705);    // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
 
 
     public IntakeSubsystem() {
@@ -31,13 +36,20 @@ public class IntakeSubsystem extends SubsystemBase{
         intakeR = new CANSparkMax(Constants.INTAKE_RIGHT_PORT, MotorType.kBrushless);
         angleMotorLeft = new CANSparkMax(Constants.INTAKE_ANGLE_LEFT_MOTOR_PORT, MotorType.kBrushless);
 
-        anglePID = new PIDController(.25, 0, 0);  // These values have yet to be tuned.
-        angleFeedForward = new ArmFeedforward(0,0,0); //ks = 0, kg = 0.91, kv = 1.95// Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
+        targetAngle = new Rotation2d(Constants.INTAKE_START_POSITION);
+
+        encoder = new DutyCycleEncoder(2);
+
+        anglePID = new PIDController(.30, 0, 0);  // These values have yet to be tuned.
+        angleFeedForward = new ArmFeedforward(0,0, 0); //ks = 0, kg = 0.91, kv = 1.95// Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
 
     }
 
     public void periodic() {
         getIntakeToSetAngle();
+
+        SmartDashboard.putNumber("Intake Setpoint Desired", targetAngle.getDegrees());
+        SmartDashboard.putNumber("Intake Angle", getIntakeAngle().getDegrees());
     }
 
 
@@ -97,7 +109,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * @return the angle of the shooter in radians where up is positive and 0 radians is perpendicular with the ground.
      */
     public Rotation2d getIntakeAngle() {
-        return new Rotation2d((angleMotorLeft.getEncoder().getPosition() - INTAKE_ANGLE_OFFSET) * Constants.NEO_UNITS_TO_RADIANS);
+        return new Rotation2d(encoder.getAbsolutePosition() * Constants.ENCODER_UNITS_TO_RADIANS + INTAKE_ANGLE_OFFSET);
     }
 
     /**

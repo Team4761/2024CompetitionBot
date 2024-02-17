@@ -72,6 +72,8 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Shooter Speed R", shooterRight.getVelocity().getValueAsDouble()*0.5);
         
         SmartDashboard.putNumber("Shooter Angle", getShooterAngle().getDegrees());
+
+        SmartDashboard.putNumber("Shooter Setpoint Desired", Units.radiansToDegrees(targetAngle));
     }
 
 

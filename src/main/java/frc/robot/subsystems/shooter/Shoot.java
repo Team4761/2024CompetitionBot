@@ -22,6 +22,7 @@ public class Shoot extends Command {
     }
     public Shoot (double speed, double seconds) {
         this.speed = speed;
+        this.revTime = System.currentTimeMillis()+(long)(seconds*1000-1000);
         this.endTime = System.currentTimeMillis()+(long)(seconds*1000);
     }
 
@@ -30,8 +31,8 @@ public class Shoot extends Command {
      */
     @Override
     public void execute() {
-        if (revTime <= System.currentTimeMillis())  // If finished reving, shoot
-            Robot.getMap().shooter.setIntakeSpeed(0.3); // Intake the piece into the shooter
+        // if (revTime <= System.currentTimeMillis())  // If finished reving, shoot
+        //     Robot.getMap().shooter.setIntakeSpeed(0.3); // Intake the piece into the shooter
         Robot.getMap().shooter.setShooterSpeed(speed);  // Always be revving the motors
     }
 

@@ -17,6 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -339,7 +340,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // Radians
     public Rotation2d getGyroRotation() {
         // Subtracted because the gyro was upside down meaning counter clockwise and clockwise were reversed...
-        //return MathStuff.subtract(TWOPI,m_gyro.getAngle().minus(gyroOffset));
+        // return MathStuff.subtract(TWOPI, new Rotation2d(Units.degreesToRadians(m_gyro.getAngle())).minus(gyroOffset));
         
         // no longer subtracted because new gyro but idk | the number is pi/180
         return new Rotation2d(m_gyro.getAngle()*0.01745329251).minus(gyroOffset);
@@ -353,6 +354,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public void zeroGyro() {
         pointDir = pointDir.minus(getGyroRotation());
         gyroOffset = gyroOffset.plus(getGyroRotation());
+    }
+
+    public void zeroGyro(Rotation2d offset) {
+        pointDir = pointDir.minus(getGyroRotation().plus(offset));
+        gyroOffset = gyroOffset.plus(getGyroRotation().plus(offset));
     }
     
     // Reset the expected position of the bot
@@ -399,20 +405,20 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
     public void test() {
         
-        targetStates[0] = new SwerveModuleState(0.2, new Rotation2d());
-        targetStates[1] = new SwerveModuleState(0.2, new Rotation2d());
-        targetStates[2] = new SwerveModuleState(0.2, new Rotation2d());
-        targetStates[3] = new SwerveModuleState(0.2, new Rotation2d());
-        
-        m_frontLeftModule .setTargetState(targetStates[0], false);
-        m_frontRightModule.setTargetState(targetStates[1], false);
-        m_backLeftModule  .setTargetState(targetStates[2], false);
-        m_backRightModule .setTargetState(targetStates[3], false);
+        //targetStates[0] = new SwerveModuleState(0.2, new Rotation2d());
+        //targetStates[1] = new SwerveModuleState(0.2, new Rotation2d());
+        //targetStates[2] = new SwerveModuleState(0.2, new Rotation2d());
+        //targetStates[3] = new SwerveModuleState(0.2, new Rotation2d());
+      //  
+        //m_frontLeftModule .setTargetState(targetStates[0], false);
+        //m_frontRightModule.setTargetState(targetStates[1], false);
+        //m_backLeftModule  .setTargetState(targetStates[2], false);
+        //m_backRightModule .setTargetState(targetStates[3], false);
 
-        //m_frontLeftModule.getSteerMotor().set(0.5);
-        //m_frontRightModule.getSteerMotor().set(0.5);
-        //m_backLeftModule.getSteerMotor().set(0.5);
-        //m_backRightModule.getSteerMotor().set(0.5);
+        m_frontLeftModule.getSteerMotor().set(0.5);
+        m_frontRightModule.getSteerMotor().set(0.5);
+        m_backLeftModule.getSteerMotor().set(0.5);
+        m_backRightModule.getSteerMotor().set(0.5);
     }
 
     public SwerveDriveKinematics getKinematics(){

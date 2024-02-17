@@ -103,14 +103,14 @@ public class DriveController extends XboxController {
                 map.swerve.setDriveFXY(
                     // On the controller, upwards is negative and left is also negative. To correct this, the negative version of both are sent.
                     shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
-                    shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
+                    shuffleboard.getSettingNum("Movement Speed") * xyCof * deadzone(LeftX, 0.1),    // Left/Right
                     true); //square inputs to ease small adjustments
                 map.swerve.setDriveRot(0, false);   // Should not be rotating if not rotating lol
             } else {
                 map.swerve.swerveDriveF(
                     // On the controller, upwards is negative and left is also negative. To correct this, the negative version of both are sent.
                     shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
-                    shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
+                    shuffleboard.getSettingNum("Movement Speed") * xyCof * deadzone(LeftX, 0.1),    // Left/Right
                     shuffleboard.getSettingNum("Rotation Speed") * deadzone(RightX, 0.08),   // Rotation
                     true); //square inputs to ease small adjustments
             }
@@ -155,10 +155,10 @@ public class DriveController extends XboxController {
             }
 
             else if (getAButtonPressed()){
-                map.intake.goToRotation(new Rotation2d(Units.degreesToRadians(45)));    // Starting position (upright)
+                map.intake.goToRotation(new Rotation2d(Constants.INTAKE_START_POSITION));    // Starting position (upright)
             }
             else if (getBButtonPressed()){
-                map.intake.goToRotation(new Rotation2d(Units.degreesToRadians(0))); // Actual intake position (on the ground)
+                map.intake.goToRotation(new Rotation2d(Constants.INTAKE_INTAKE_POSITION)); // Actual intake position (on the ground)
             }
         }
 
