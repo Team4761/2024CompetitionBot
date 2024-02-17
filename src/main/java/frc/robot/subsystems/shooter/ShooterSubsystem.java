@@ -3,14 +3,19 @@ package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+
 
 public class ShooterSubsystem extends SubsystemBase {
     private TalonFX shooterLeft;        // Motor for the left of the actual shooter, assuming that the front of the shooter is the forward direction
@@ -18,6 +23,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private CANSparkMax intakeLeft;     // Motor for the left intake of the shooter, assuming that the front of the shooter is the forward direction
     private CANSparkMax intakeRight;    // Motor for the right intake of the shooter, assuming that the front of the shooter is the forward direction
     private CANSparkMax angleMotorRight;// Motor for angling the shooter up and down, assuming that the front of the shooter is the forward direction
+
+    private DutyCycleEncoder encoder;    // Absolute encoder for the angle of the shooter
 
     private PIDController anglePID;         // Will be used to get the shooter a desired angle.
     private ArmFeedforward angleFeedForward;// Will be used to maintain the shooter's angle.
@@ -29,7 +36,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private double targetSpeed;         // Shooting speed in rotations of the wheel / second
     private double targetAngle;         // Shooting angle in radians. The origin should be when the shooter is perpendicular with the ground (flat and fully outstretched).
 
-    private final double SHOOTER_ANGLE_OFFSET = 0.0;  // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
+    private final double SHOOTER_ANGLE_OFFSET = 0.6351;  // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
 
 
 
@@ -40,26 +47,31 @@ public class ShooterSubsystem extends SubsystemBase {
         intakeRight = new CANSparkMax(Constants.SHOOTER_INTAKE_RIGHT_MOTOR_PORT, MotorType.kBrushless);
         angleMotorRight = new CANSparkMax(Constants.SHOOTER_ANGLE_RIGHT_MOTOR_PORT, MotorType.kBrushless);
 
-        anglePID = new PIDController(0.3, 0.0, 0.0);    // Placeholder values, has yet to be tuned.
-        angleFeedForward = new ArmFeedforward(0,0,0);   //ks = 0, kg = 0.91, kv = 1.95    // Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
+        encoder = new DutyCycleEncoder(3); //needs port
+        //right now 0 is parallel to ground and increases going up
+
+        anglePID = new PIDController(2.8, 0.01, 0.0);    // Placeholder values, has yet to be tuned.
+        angleFeedForward = new ArmFeedforward(0,0.2,1.1,0.01); //recalc numbers with questionable inputs
+        
+        //ks = 0, kg = 0.91, kv = 1.95    // Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
 
         intakeUpperSensor = new DigitalInput(Constants.SHOOTER_SENSOR_UPPER_PORT);
         intakeLowerSensor = new DigitalInput(Constants.SHOOTER_SENSOR_LOWER_PORT);
 
         targetSpeed = 0.0;
-        targetAngle = 0.0;
+        targetAngle = Units.degreesToRadians(63); //63 gets to 55ish
 
     }
 
 
     public void periodic() {
         getShooterToSetSpeed();     // Gets the shooter to speed up to {targetSpeed} rotations per second.
-        //getShooterToSetAngle();     // Gets the shooter to angle at {targetAngle} radians.
+        getShooterToSetAngle();     // Gets the shooter to angle at {targetAngle} radians.
         
         SmartDashboard.putNumber("Shooter Speed L", shooterLeft.getVelocity().getValueAsDouble()*0.5);
         SmartDashboard.putNumber("Shooter Speed R", shooterRight.getVelocity().getValueAsDouble()*0.5);
         
-        SmartDashboard.putNumber("Shooter Angle", getShooterAngle());
+        SmartDashboard.putNumber("Shooter Angle", getShooterAngle().getDegrees());
     }
 
 
@@ -101,12 +113,12 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> This must be called during the periodic function to work.
      */
     public void getShooterToSetAngle() {
-        double currentAngle = getShooterAngle();
+        double currentAngle = getShooterAngle().getRadians();
         double currentVelocity = getShooterAngleVelocity();
-        double speed = anglePID.calculate(currentAngle, targetAngle) + angleFeedForward.calculate(targetAngle, 0.0);
+        double speed = anglePID.calculate(currentAngle, targetAngle) + angleFeedForward.calculate(targetAngle, 0.9*(targetAngle-currentAngle));
 
         // Neither of the below have been tested (i.e. idk which one should be reversed rn)
-        angleMotorRight.set(speed);
+        angleMotorRight.setVoltage(speed); //voltage because battery drain stuff
     }
 
     /**
@@ -146,8 +158,8 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> Determines the angle of the shooter based off of the left motor's current position after applying an offset.
      * @return the angle of the shooter in radians where up is positive and 0 radians is perpendicular with the ground.
      */
-    public double getShooterAngle() {
-        return (angleMotorRight.getEncoder().getPosition() - SHOOTER_ANGLE_OFFSET) * Constants.NEO_UNITS_TO_RADIANS;
+    public Rotation2d getShooterAngle() {
+        return new Rotation2d((encoder.getAbsolutePosition() - SHOOTER_ANGLE_OFFSET)*Math.PI*2);
     }
 
     /**
