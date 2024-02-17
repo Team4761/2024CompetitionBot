@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 
 /**
@@ -80,13 +82,24 @@ public class ShooterController extends XboxController {
         // Intake
         if (map.intake != null) {
             
-            map.intake.rotate(RightY);
+            // map.intake.setAngleMotorSpeed(getRightY());
 
             if (getLeftBumperPressed()) {
                 map.intake.intake(shuffleboard.getSettingNum("Intake Speed"));
             }
             else if (getRightBumperPressed()) {
                 map.intake.outtake(shuffleboard.getSettingNum("Outtake Speed"));
+            }   
+
+            else if(getRightBumperReleased() || getLeftBumperReleased()){
+                map.intake.stop();
+            }
+
+            else if (getAButtonPressed()){
+                map.intake.goToRotation(new Rotation2d(Units.degreesToRadians(45)));
+            }
+            else if (getBButtonPressed()){
+                map.intake.goToRotation(new Rotation2d(Units.degreesToRadians(0)));
             }
         }
 
