@@ -93,7 +93,9 @@ public class ShooterController extends XboxController {
         // Shooter
         if (map.shooter != null) {
 
-            map.shooter.rotate(LeftY);
+            map.shooter.setShooterAngleSpeed(RightY); // sets raw speed because no more time
+
+            map.shooter.rotate(LeftY); // sets target pos
 
             if (getAButtonPressed()) {
                 //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
