@@ -39,7 +39,7 @@ public class ShooterSubsystem extends SubsystemBase {
         intakeRight = new CANSparkMax(Constants.SHOOTER_INTAKE_RIGHT_MOTOR_PORT, MotorType.kBrushless);
         angleMotorRight = new CANSparkMax(Constants.SHOOTER_ANGLE_RIGHT_MOTOR_PORT, MotorType.kBrushless);
 
-        anglePID = new PIDController(1.0, 0.0, 0.0);    // Placeholder values, has yet to be tuned.
+        anglePID = new PIDController(0.0, 0.0, 0.0);    // Placeholder values, has yet to be tuned.
         angleFeedForward = new ArmFeedforward(0.0, 0.91, 1.95);   // Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
 
         intakeUpperSensor = new DigitalInput(Constants.SHOOTER_SENSOR_UPPER_PORT);
