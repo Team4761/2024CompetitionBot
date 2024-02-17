@@ -156,7 +156,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             getGyroRotation(),
             m_swervePositions
         );
-        m_pose = new Pose2d(m_pose.getX(), -m_pose.getY(), m_pose.getRotation());   // The y value needs to be negative to make left +y
+        m_pose = new Pose2d(m_pose.getX(), m_pose.getY(), m_pose.getRotation());   // The y value needs to be negative to make left +y
 
         //forward is +x. left is +y
 

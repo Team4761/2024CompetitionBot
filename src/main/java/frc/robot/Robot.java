@@ -92,7 +92,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    //driveController.teleopPeriodic();
+    driveController.teleopPeriodic();
     shooterController.teleopPeriodic();
     // Run any commands
     CommandScheduler.getInstance().run();
