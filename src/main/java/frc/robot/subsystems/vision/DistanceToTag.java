@@ -47,4 +47,17 @@ public class DistanceToTag extends Command{
         swerve.swerveDriveF(speed,0,0, false);
     }
 
+    @Override
+    public boolean isFinished(){
+        if(Math.abs(actualDistance - desiredDistance) < .25){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void end(boolean interrupted){
+        swerve.swerveDriveF(0,0,0, false);
+    }
+
 }
