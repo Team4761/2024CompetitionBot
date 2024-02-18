@@ -3,6 +3,7 @@ package frc.robot.subsystems.vision;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
@@ -24,11 +25,13 @@ public class TurnToTag extends Command {
     public void execute(){
         this.result = vision.getLatestResult();
         if(result.hasTargets()){
-            targetYaw = result.getBestTarget().getYaw();
+            //The yaw is in degrees fromthe result and changed to radians
+            targetYaw = Units.degreesToRadians(result.getBestTarget().getYaw());
             rot = -controller.calculate(targetYaw, setPoint);
         }
         else{
             rot = 0;
+            targetYaw = 0;
         }
         swerve.swerveDriveF(0, 0, rot, false);
     }
