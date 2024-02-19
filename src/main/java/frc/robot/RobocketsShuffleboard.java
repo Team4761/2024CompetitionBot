@@ -91,6 +91,7 @@ public class RobocketsShuffleboard {
         addSwerveSetting("Movement Speed", 0.5);
         addSwerveSetting("Rotation Speed", 0.5);
         addSwerveSetting("Is Robot Relative", true);
+        addSwerveSetting("Swerve Steer Tolerance", 1.0);
 
         // Intake settings
         addIntakeSetting("Intake Speed", 0.5);

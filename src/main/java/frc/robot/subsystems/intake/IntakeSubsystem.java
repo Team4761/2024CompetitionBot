@@ -46,7 +46,7 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
     public void periodic() {
-        getIntakeToSetAngle();
+        // getIntakeToSetAngle();
 
         SmartDashboard.putNumber("Intake Setpoint Desired", targetAngle.getDegrees());
         SmartDashboard.putNumber("Intake Angle", getIntakeAngle().getDegrees());

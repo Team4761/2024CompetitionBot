@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 
 public class SwerveModuleTalon extends SubsystemBase{
@@ -25,6 +26,7 @@ public class SwerveModuleTalon extends SubsystemBase{
 
     private double sM;
     private final double driveConversionFactor = 0.0525772192354474; //0.0388385473906813; // This converts the encoders arbitrary units to meters travelled by the motor. The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
+    private final double TOLERANCE_VOLTAGE_STEER = 0.25; // The minimum speed the steer should be able to get to in voltage. This is to prevent jittering.
 
     // m/s, rotation2d
     private SwerveModuleState targetState = new SwerveModuleState();
@@ -160,8 +162,14 @@ public class SwerveModuleTalon extends SubsystemBase{
         //both need a P value to adjust it to the right speed
         double steerA = MathStuff.subtract(targetState.angle, getRotation()).getRotations()*sM*60;
         double steerB = Math.signum(steerA)*0.15;
-        //System.out.println(steerA+steerB);
-        steer.setVoltage(steerA+steerB);
+        SmartDashboard.putNumber("FL Voltage", steerA+steerB);
+        // If the speed is less than the tolerance, it shouldn't rotate at all. This is to prevent jittering
+        if (Math.abs(steerA + steerB) <= Robot.getShuffleboard().getSettingNum("Swerve Steer Tolerance")) {
+            steer.setVoltage(0);
+        }
+        else {
+            steer.setVoltage(steerA+steerB);
+        }
 
         //if(true)
         double driveA = targetState.speedMetersPerSecond*10;
@@ -204,7 +212,8 @@ public class SwerveModuleTalon extends SubsystemBase{
         // }
 
         // Previous magic number: 0.0174533
-        return new Rotation2d(Units.degreesToRadians(encoder.getAbsolutePosition().getValueAsDouble()*360 + offset + 90));   // Converts the encoder ticks into radians after applying an offset.
+        // This takes the encoder native rotation units and converts it to degrees (multiplies by 360), applies an offet, and then converts it to radians
+        return new Rotation2d(Units.degreesToRadians(encoder.getAbsolutePosition().getValueAsDouble()*360 + offset));   // Converts the encoder ticks into radians after applying an offset.
     }
 
     public SwerveModuleState getState() {
