@@ -20,6 +20,7 @@
       "/Shuffleboard/Debug/Commands/Full Intake": "Command",
       "/Shuffleboard/Debug/Commands/Go 1 Meter Forward": "Command",
       "/Shuffleboard/Debug/Commands/Go 1 Meter Left": "Command",
+      "/Shuffleboard/Debug/Commands/LED Charge Up": "Command",
       "/Shuffleboard/Debug/Commands/Loosen Climber": "Command",
       "/Shuffleboard/Debug/Commands/Shoot": "Command",
       "/Shuffleboard/Debug/Commands/Shoot At 45 Degrees": "Command",

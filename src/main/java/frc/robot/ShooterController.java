@@ -85,21 +85,22 @@ public class ShooterController extends XboxController {
         // Shooter
         if (map.shooter != null) {
 
-            map.shooter.setShooterAngleSpeed(RightY); // sets raw speed because no more time
+            //map.shooter.setShooterAngleSpeed(-RightY); // sets raw speed because no more time
 
-            if(getRightTriggerAxis()>0.5) {
-                CommandScheduler.getInstance().schedule(new IntakeAndShoot(50));
-            }
+            //if(getRightTriggerAxis()>0.5) {
+            //    CommandScheduler.getInstance().schedule(new IntakeAndShoot(shuffleboard.getSettingNum("Shooter Out Speed")));
+            //}
 
-            map.shooter.rotate(0.04*LeftY); // sets target pos
+            map.shooter.rotate(-0.04*LeftY); // sets target pos
 
-            if (getXButtonPressed()) {
+            //positive shooter speed is out
+            if (getRightTriggerAxis()>0.5) {
                 //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setShooterSpeed(shuffleboard.getSettingNum("Shooter In Speed"));
+                map.shooter.setShooterSpeed(shuffleboard.getSettingNum("Shooter Out Speed"));
             }
             if (getBButtonPressed()) {
                 //CommandScheduler.getInstance().schedule(new Shoot(-SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setShooterSpeed(-shuffleboard.getSettingNum("Shooter Out Speed"));
+                map.shooter.setShooterSpeed(-shuffleboard.getSettingNum("Shooter In Speed"));
             }
             if (getYButtonPressed()) {
                 map.shooter.setIntakeSpeed(shuffleboard.getSettingNum("Shooter Intake Speed"));
@@ -107,7 +108,7 @@ public class ShooterController extends XboxController {
             if (getAButtonPressed()) {
                 map.shooter.setIntakeSpeed(-shuffleboard.getSettingNum("Shooter Outtake Speed"));
             }
-            if (getXButtonReleased() || getBButtonReleased()) {
+            if (getRightTriggerAxis()<0.5 || getBButtonReleased()) {
                 map.shooter.setShooterSpeed(0);
             }
             if (getAButtonReleased() || getYButtonReleased()) {

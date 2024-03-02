@@ -56,6 +56,14 @@
     }
   },
   {
+    "name": "/Shuffleboard/Settings/Swerve/Swerve Steer Tolerance",
+    "type": "double",
+    "value": 1.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
     "name": "/Shuffleboard/Settings/Intake/Intake Speed",
     "type": "double",
     "value": 0.5,
@@ -65,6 +73,14 @@
   },
   {
     "name": "/Shuffleboard/Settings/Intake/Outtake Speed",
+    "type": "double",
+    "value": 0.5,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Shuffleboard/Settings/Intake/Full Intake Setting",
     "type": "double",
     "value": 0.5,
     "properties": {
