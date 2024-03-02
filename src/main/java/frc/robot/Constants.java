@@ -69,4 +69,8 @@ public class Constants
     // Position Constants
     public static double INTAKE_START_POSITION = Units.degreesToRadians(120.0); // In radians
     public static double INTAKE_INTAKE_POSITION = Units.degreesToRadians(10.0); // In radians
+
+    public static double SHOOTER_SHOOT_ANGLE = Units.degreesToRadians(55);  // In radians (Is untuned WIP)
+    public static double SHOOTER_TWO_NOTE_SHOOT_ANGLE = Units.degreesToRadians(50); // In radians (Is untuned WIP)
+    public static double SHOOTER_THREE_NOTE_SHOOT_ANGLE = Units.degreesToRadians(47); // In radians (Is untuned WIP)
 }

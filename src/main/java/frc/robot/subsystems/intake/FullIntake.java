@@ -1,6 +1,7 @@
 package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 /**
@@ -19,9 +20,9 @@ public class FullIntake extends Command {
      * @param speed The speed to run the intake at as a number between 0.0 to 1.0
      * @param map The RobotMap of the robot to improve performance.
      */
-    public FullIntake(double speed, RobotMap map) {
+    public FullIntake(double speed) {
         this.speed = speed;
-        this.map = map;
+        this.map = Robot.getMap();
         this.timeOut = System.currentTimeMillis() + 5000;
     }
 
@@ -37,7 +38,7 @@ public class FullIntake extends Command {
     /**
      * <p> This checks whether or not there is a game piece at the top of the shooter and ends when the game piece gets there.
      * <p> This will also end the command after a time out of 5 seconds.
-     * @return True if there is a piece in the upper shooter. True if the command has been running for 5 seconds. False otherwise.
+     * @return True if there is a piece in the upper shooter or if the command has been running for 5 seconds. False otherwise.
      */
     @Override
     public boolean isFinished() {
