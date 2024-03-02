@@ -121,7 +121,7 @@ public class RobocketsShuffleboard {
         addCommand("Shoot At 45 Degrees", new ShootAtAngle(Units.degreesToRadians(45), getSettingNum("Shooter Out Speed")));
         
         // Intake settings
-        addCommand("Full Intake", new FullIntake(getSettingNum("Full Intake Speed"), Robot.getMap()));
+        addCommand("Full Intake", new FullIntake(getSettingNum("Full Intake Speed")));
 
         // LED commands
         addCommand("LED Charge Up", new LedChargeUp(3000, Robot.getMap()));

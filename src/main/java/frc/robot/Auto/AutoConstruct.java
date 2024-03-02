@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.swerve.SwerveDriveStop;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
 import frc.robot.RobotMap;
+import frc.robot.Auto.fullautos.*;
 
 /**
  * <p> This entire class exists solely not to clutter up Robot.java with auto code that gets written in random spots
@@ -34,6 +35,10 @@ public class AutoConstruct extends SendableChooser<String> {
     private static final String kPathPlanner2MeterSpin = "2meterspin";
     private static final String prepShooterAuto = "prepshooterauto";
     private static final String kShootAuto = "shootAuto";
+
+    private static final String kOneNoteAuto = "oneNoteAuto";
+    private static final String kTwoNoteAuto = "twoNoteAuto";
+    private static final String kThreeNoteAuto = "threeNoteAuto";
 
     private static AutoConstruct autoSelector;
     private static String m_autoSelected;
@@ -59,6 +64,9 @@ public class AutoConstruct extends SendableChooser<String> {
         // addOption("April Tag Dance", kAprilDance);
         // addOption("PathPlanner 2 Meter Up", kPathPlanner2Up);
         // addOption("PathPlanner 2 Meter Spin", kPathPlanner2MeterSpin);
+        addOption("One Note Auto", kOneNoteAuto);
+        addOption("Two Note Auto", kTwoNoteAuto);
+        addOption("Three Note Auto", kThreeNoteAuto);
 
         autoSelector = this;
     }
@@ -125,6 +133,15 @@ public class AutoConstruct extends SendableChooser<String> {
             // case kPathPlanner2MeterSpin:
             //     scheduledCommand = new PathPlannerAuto("2 Meter Spin");
             // break;
+            case kOneNoteAuto:
+                scheduledCommand = new OneNoteAuto();
+                break;
+            case kTwoNoteAuto:
+                scheduledCommand = new TwoNoteAuto();
+                break;
+            case kThreeNoteAuto:
+                scheduledCommand = new ThreeNoteAuto();
+                break;
             default:
                 // unsure what the default command would be: maybe just ensure nothing is moving?
             break;
