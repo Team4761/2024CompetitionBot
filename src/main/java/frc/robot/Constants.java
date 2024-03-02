@@ -1,4 +1,4 @@
-  package frc.robot;
+package frc.robot;
 
 import edu.wpi.first.math.util.Units;
 
@@ -28,18 +28,19 @@ public class Constants
     public static int BR_ENCODER_PORT = 25;  // DIO Port?
 
     // Intake (currently conflicts with Swerve ports)
-    public static int INTAKE_RIGHT_PORT = 3;        // CAN Port.
-    public static int INTAKE_LEFT_PORT = 11;         // CAN Port. 
-    public static int INTAKE_ANGLE_LEFT_MOTOR_PORT = 30;   // CAN Port.
+    public static int INTAKE_TOP_PORT = 1;        // CAN Port.
+    public static int INTAKE_BOT_PORT = 30;         // CAN Port. 
+    public static int INTAKE_ANGLE_LEFT_MOTOR_PORT = 11;   // CAN Port.
 
     // Shooter
     public static int SHOOTER_LEFT_MOTOR_PORT = 15;  // CAN Port.
     public static int SHOOTER_RIGHT_MOTOR_PORT = 16;  // CAN Port.
     public static int SHOOTER_INTAKE_LEFT_MOTOR_PORT = 2;  // CAN Port. 
-    public static int SHOOTER_INTAKE_RIGHT_MOTOR_PORT = 4;  // CAN Port.
-    public static int SHOOTER_ANGLE_RIGHT_MOTOR_PORT = 1;  // CAN Port.
-    public static int SHOOTER_SENSOR_UPPER_PORT = 0;    // DIO Port.
+    public static int SHOOTER_INTAKE_RIGHT_MOTOR_PORT = 3;  // CAN Port.
+    public static int SHOOTER_ANGLE_RIGHT_MOTOR_PORT = 4;  // CAN Port.
+    public static int SHOOTER_SENSOR_UPPER_PORT = 0;    // DIO Port. breakbeams
     public static int SHOOTER_SENSOR_LOWER_PORT = 1;    // DIO Port.
+    //public static int BREAKBEAM_IS_BROKEN = 0;
 
     public static double ENCODER_UNITS_TO_RADIANS = Math.PI * 2;  // Based on the motor's current position, this converts the native units to the rotation in radians.
     public static double SHOOTER_RPM_TO_MPS = 0.001;        // PLACEHOLDER. This converts the speed which the shooter is angling itself from rotations per minute to meters per second

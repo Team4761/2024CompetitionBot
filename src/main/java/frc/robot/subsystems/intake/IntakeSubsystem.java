@@ -16,8 +16,8 @@ import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase{ 
     // Neos that actually intake (left or right facing forward)
-    private CANSparkMax intakeL;
-    private CANSparkMax intakeR;
+    private CANSparkMax intakeT;
+    private CANSparkMax intakeB;
 
     private CANSparkMax angleMotorLeft; // Motor for angling the shooter up and down, assuming that the front of the shooter is the forward direction
 
@@ -32,13 +32,13 @@ public class IntakeSubsystem extends SubsystemBase{
 
 
     public IntakeSubsystem() {
-        intakeL = new CANSparkMax(Constants.INTAKE_LEFT_PORT, MotorType.kBrushed);
-        intakeR = new CANSparkMax(Constants.INTAKE_RIGHT_PORT, MotorType.kBrushless);
+        intakeB = new CANSparkMax(Constants.INTAKE_BOT_PORT, MotorType.kBrushed);
+        intakeT = new CANSparkMax(Constants.INTAKE_TOP_PORT, MotorType.kBrushless);
         angleMotorLeft = new CANSparkMax(Constants.INTAKE_ANGLE_LEFT_MOTOR_PORT, MotorType.kBrushless);
 
         targetAngle = new Rotation2d(Constants.INTAKE_START_POSITION);
 
-        encoder = new DutyCycleEncoder(2);
+        encoder = new DutyCycleEncoder(3);
 
         anglePID = new PIDController(.30, 0, 0);  // These values have yet to be tuned.
         angleFeedForward = new ArmFeedforward(0,0, 0); //ks = 0, kg = 0.91, kv = 1.95// Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
@@ -71,8 +71,8 @@ public class IntakeSubsystem extends SubsystemBase{
      * @param speed The speed to run the motors as a number between 0.0 to 1.0
      */
     public void intake(double speed) {
-        intakeL.set(speed);
-        intakeR.set(-speed);
+        intakeB.set(speed);
+        intakeT.set(-speed);
     }
 
     /**
@@ -80,8 +80,8 @@ public class IntakeSubsystem extends SubsystemBase{
      * @param speed The speed to run the motors at as a number between 0.0 to 1.0
      */
     public void outtake(double speed) {
-        intakeL.set(-speed);
-        intakeR.set(speed);
+        intakeB.set(-speed);
+        intakeT.set(speed);
     }
 
     /**
@@ -121,7 +121,7 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
     public void stop(){
-        intakeL.set(0);
-        intakeR.set(0);
+        intakeB.set(0);
+        intakeT.set(0);
     }
 }

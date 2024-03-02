@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -40,7 +41,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private final double SHOOTER_ANGLE_OFFSET = 0.6351;  // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
 
 
-
     public ShooterSubsystem() {
         shooterLeft = new TalonFX(Constants.SHOOTER_LEFT_MOTOR_PORT); //top and bottom no?
         shooterRight = new TalonFX(Constants.SHOOTER_RIGHT_MOTOR_PORT);
@@ -48,7 +48,7 @@ public class ShooterSubsystem extends SubsystemBase {
         intakeRight = new CANSparkMax(Constants.SHOOTER_INTAKE_RIGHT_MOTOR_PORT, MotorType.kBrushless);
         angleMotorRight = new CANSparkMax(Constants.SHOOTER_ANGLE_RIGHT_MOTOR_PORT, MotorType.kBrushless);
 
-        encoder = new DutyCycleEncoder(3); //needs port
+        encoder = new DutyCycleEncoder(2); //needs port
         //right now 0 is parallel to ground and increases going up
 
         anglePID = new PIDController(2.8, 0.01, 0.0);    // Placeholder values, has yet to be tuned.
@@ -70,12 +70,15 @@ public class ShooterSubsystem extends SubsystemBase {
         getShooterToSetSpeed();     // Gets the shooter to speed up to {targetSpeed} rotations per second.
         getShooterToSetAngle();     // Gets the shooter to angle at {targetAngle} radians.
         
-        SmartDashboard.putNumber("Shooter Speed L", shooterLeft.getVelocity().getValueAsDouble()*0.5);
-        SmartDashboard.putNumber("Shooter Speed R", shooterRight.getVelocity().getValueAsDouble()*0.5);
+        SmartDashboard.putNumber("Shooter Speed L", shooterLeft.getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("Shooter Speed R", shooterRight.getVelocity().getValueAsDouble());
         
         SmartDashboard.putNumber("Shooter Angle", getShooterAngle().getDegrees());
 
         SmartDashboard.putNumber("Shooter Setpoint Desired", Units.radiansToDegrees(targetAngle));
+
+        SmartDashboard.putBoolean("Breakbeam lower", isPieceInLowerIntake());
+        SmartDashboard.putBoolean("Breakbeam upper", isPieceInUpperIntake());
     }
 
 
@@ -84,24 +87,24 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> Uses some basic PID and feedforwards to get the shooter to spin at a set speed in rotations per second.
      * <p> This must be called during the periodic function to work.
      */
+    
+    private SimpleMotorFeedforward shootingFFTop= new SimpleMotorFeedforward(0.01, 0.112); //right
+    private SimpleMotorFeedforward shootingFFBot= new SimpleMotorFeedforward(0.01, 0.115); //left
+
     public void getShooterToSetSpeed() {
-        double kP = 0.2;
-        double kV = 0.1;
 
-        double feedForwardS = 0.001; //whatever number to overcome static friction
+        double kP = 0.08;
 
-        double accelFactor = kP * (targetSpeed-shooterLeft.getVelocity().getValueAsDouble()*0.5); // P kinda
-        double feedForwardV = kV * shooterLeft.getVelocity().getValueAsDouble()*0.5; //magic numbers no math or testing done yet, ideally holds velocity
-        
-        double spdOut = accelFactor + feedForwardV + feedForwardS;
+        double accelFactor = kP * (targetSpeed-shooterLeft.getVelocity().getValueAsDouble()); // P kinda
+        accelFactor = MathUtil.clamp(-2, accelFactor, 2);
+        double spdOut = accelFactor + shootingFFBot.calculate(targetSpeed);
 
         shooterLeft.setVoltage(spdOut); //probably test then use setVoltage
         
         //other half
-        accelFactor = kP * (targetSpeed-shooterRight.getVelocity().getValueAsDouble()*0.5); // P kinda
-        feedForwardV = kV * shooterRight.getVelocity().getValueAsDouble()*0.5; //magic numbers no math or testing done yet, ideally holds velocity
-        
-        spdOut = accelFactor + feedForwardV + feedForwardS;
+        accelFactor = kP * (targetSpeed-shooterRight.getVelocity().getValueAsDouble()); // P kinda
+        accelFactor = MathUtil.clamp(-2, accelFactor, 2);
+        spdOut = accelFactor + shootingFFTop.calculate(targetSpeed);
 
         shooterRight.setVoltage(spdOut);  // As of Jan 20, 2024, the speeds are not reversed
     }
