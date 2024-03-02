@@ -13,7 +13,7 @@ import frc.robot.subsystems.vision.VisionSubsystem;
 
 public class PoseEstimatorSubsystem extends SubsystemBase{
     
-    //Necessary for estimator
+    //Necessary for estimator 
     private RobotMap map = Robot.getMap();
     private Pose2d pose = new Pose2d();
     private SwerveDriveKinematics kinematics;

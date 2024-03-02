@@ -6,7 +6,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.swerve.MathStuff;
 
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -61,6 +62,7 @@ public class ShooterSubsystem extends SubsystemBase {
         targetSpeed = 0.0;
         targetAngle = Units.degreesToRadians(63); //63 gets to 55ish
 
+        intakeRight.setInverted(true);
     }
 
 
@@ -144,7 +146,9 @@ public class ShooterSubsystem extends SubsystemBase {
      * @param angleRadians The offset the shooter angle should get to in radians.
      */
     public void rotate(double angleRadians) {
-        targetAngle += angleRadians;
+        // limit target angle so shooter doesnt go backwards
+        targetAngle = MathUtil.clamp(0, targetAngle+angleRadians, Math.PI/2);
+        
     }
 
     /**
@@ -153,7 +157,7 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void setIntakeSpeed(double speed) {
         intakeLeft.set(speed);
-        intakeRight.set(-speed);
+        intakeRight.set(speed); // setted inverted to true
     }
 
     /**
