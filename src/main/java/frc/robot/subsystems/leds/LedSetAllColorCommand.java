@@ -1,19 +1,21 @@
 package frc.robot.subsystems.leds;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 public class LedSetAllColorCommand extends Command {
     private final RobotMap robotMap;
     private final int r;
-    private final int b;
     private final int g;
+    private final int b;
+    
 
-    public LedSetAllColorCommand(RobotMap robotMap, int r, int b, int g) {
-        this.robotMap = robotMap;
+    public LedSetAllColorCommand(int r, int g, int b) {
+        this.robotMap = Robot.getMap();
         this.r = r;
-        this.b = b;
         this.g = g;
+        this.b = b;   
     }
 
     @Override
