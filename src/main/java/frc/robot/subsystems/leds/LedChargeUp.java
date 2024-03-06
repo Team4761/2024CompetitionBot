@@ -13,11 +13,11 @@ public class LedChargeUp extends SequentialCommandGroup {
     public LedChargeUp(double time, RobotMap robotMap) {
         int numIncrements = LED_LENGTH / BANK_SIZE;
         double timeEachIncrement = time / numIncrements;
-        addCommands(new LedSetAllColorCommand(robotMap, 0, 0, 0));
+        addCommands(new LedSetAllColorCommand( 0, 0, 0));
         for (int increment = 0; increment < numIncrements; increment++) {
             addCommands(new LedBankCommand(robotMap, increment).withTimeout(timeEachIncrement));
         }
-        addCommands(new LedSetAllColorCommand(robotMap, 0, 0, 0));
+        addCommands(new LedSetAllColorCommand(0, 0, 0));
     }
 
     private static class LedBankCommand extends Command {
