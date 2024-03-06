@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.leds.LedSubsystem;
@@ -47,7 +46,7 @@ public class RobotMap
     {
 
         intake = new IntakeSubsystem();
-        swerve = new SwerveDriveSubsystem(new Translation2d(0.31115, 0.31115), new Translation2d(0.31115, -0.31115), new Translation2d(-0.31115, 0.31115), new Translation2d(-0.31115, -0.31115));    // All translations are the swerve module positions relative to the center of the bot
+        // swerve = new SwerveDriveSubsystem(new Translation2d(0.31115, 0.31115), new Translation2d(0.31115, -0.31115), new Translation2d(-0.31115, 0.31115), new Translation2d(-0.31115, -0.31115));    // All translations are the swerve module positions relative to the center of the bot
         // vision = new VisionSubsystem();
         shooter = new ShooterSubsystem();
         // leds = new LedSubsystem();

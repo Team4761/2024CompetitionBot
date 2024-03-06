@@ -4,7 +4,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.shooter.AutoShooterIntake;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
 
 /**
@@ -98,22 +100,23 @@ public class ShooterController extends XboxController {
                 //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
                 map.shooter.setShooterSpeed(shuffleboard.getSettingNum("Shooter Out Speed"));
             }
-            if (getBButtonPressed()) {
+            if (getLeftTriggerAxis()>0.5) {
                 //CommandScheduler.getInstance().schedule(new Shoot(-SmartDashboard.getNumber("Shooter Speed", 0.5)));
                 map.shooter.setShooterSpeed(-shuffleboard.getSettingNum("Shooter In Speed"));
             }
             if (getYButtonPressed()) {
-                map.shooter.setIntakeSpeed(shuffleboard.getSettingNum("Shooter Intake Speed"));
+                // map.shooter.setIntakeSpeed(shuffleboard.getSettingNum("Shooter Intake Speed"));
+                CommandScheduler.getInstance().schedule(new AutoShooterIntake());
             }
-            if (getAButtonPressed()) {
-                map.shooter.setIntakeSpeed(-shuffleboard.getSettingNum("Shooter Outtake Speed"));
-            }
-            if (getRightTriggerAxis()<0.5 || getBButtonReleased()) {
+            // if (getAButtonPressed()) {
+            //     map.shooter.setIntakeSpeed(-shuffleboard.getSettingNum("Shooter Outtake Speed"));
+            // }
+            if (getRightTriggerAxis()<0.5 && getLeftTriggerAxis()<0.5) {
                 map.shooter.setShooterSpeed(0);
             }
-            if (getAButtonReleased() || getYButtonReleased()) {
-                map.shooter.setIntakeSpeed(0);
-            }
+            // if (getAButtonReleased() || getYButtonReleased()) {
+            //     map.shooter.setIntakeSpeed(0);
+            // }
             if (getLeftBumperPressed()) {
                 map.shooter.setShooterAngle(Units.degreesToRadians(55));    // Shooting position
             }
@@ -144,6 +147,10 @@ public class ShooterController extends XboxController {
             {
                 map.leds.NoteIndicator(false);
             }
+        }
+
+        if (map.intake != null) {
+            map.intake.setAngleMotorSpeed(getRightY());
         }
     }
 }

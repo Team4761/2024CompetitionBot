@@ -10,8 +10,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Auto.AutoConstruct;
-import frc.robot.subsystems.shooter.*;
+import frc.robot.Auto.AutoConstruct;  
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to

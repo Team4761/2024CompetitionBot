@@ -28,11 +28,11 @@ public class IntakeSubsystem extends SubsystemBase{
 
     private Rotation2d targetAngle = new Rotation2d(); // The angle the intake should get to where 0 degrees is (undecided).
 
-    private static double INTAKE_ANGLE_OFFSET = Units.degreesToRadians(-4.308705);    // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
+    private static double INTAKE_ANGLE_OFFSET = Units.degreesToRadians(-180);    // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
 
 
     public IntakeSubsystem() {
-        intakeB = new CANSparkMax(Constants.INTAKE_BOT_PORT, MotorType.kBrushed);
+        intakeB = new CANSparkMax(Constants.INTAKE_BOT_PORT, MotorType.kBrushless);
         intakeT = new CANSparkMax(Constants.INTAKE_TOP_PORT, MotorType.kBrushless);
         angleMotorLeft = new CANSparkMax(Constants.INTAKE_ANGLE_LEFT_MOTOR_PORT, MotorType.kBrushless);
 

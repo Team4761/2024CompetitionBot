@@ -38,7 +38,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private double targetSpeed;         // Shooting speed in rotations of the wheel / second
     private double targetAngle;         // Shooting angle in radians. The origin should be when the shooter is perpendicular with the ground (flat and fully outstretched).
 
-    private final double SHOOTER_ANGLE_OFFSET = 0.6351;  // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
+    private final double SHOOTER_ANGLE_OFFSET = Units.degreesToRadians(73.45681383642034) / (Math.PI*2);  // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
 
 
     public ShooterSubsystem() {
@@ -60,7 +60,7 @@ public class ShooterSubsystem extends SubsystemBase {
         intakeLowerSensor = new DigitalInput(Constants.SHOOTER_SENSOR_LOWER_PORT);
 
         targetSpeed = 0.0;
-        targetAngle = Units.degreesToRadians(63); //63 gets to 55ish
+        targetAngle = Units.degreesToRadians(Constants.SHOOTER_START_ANGLE); //63 gets to 55ish
 
         intakeRight.setInverted(true);
     }
@@ -181,17 +181,19 @@ public class ShooterSubsystem extends SubsystemBase {
 
     /**
      * <p> Using the break beam sensor, this returns whether or not there is a piece in the upper shooter.
+     * <p> Negated after testing to make it return positive when a piece is found.
      * @return True if there is a piece in the upper shooter. False if there is none.
      */
     public boolean isPieceInUpperIntake() {
-        return intakeUpperSensor.get();
+        return !intakeUpperSensor.get();
     }
 
     /**
      * <p> Using the break beam sensor, this returns whether or not there is a piece in the lower shooter.
+     * <p> Negated after testing to make it return positive when a piece is found.
      * @return True if there is a piece in the lower shooter. False if there is none.
      */
     public boolean isPieceInLowerIntake() {
-        return intakeLowerSensor.get();
+        return !intakeLowerSensor.get();
     }
 }

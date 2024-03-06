@@ -140,8 +140,6 @@ public class DriveController extends XboxController {
 
         // Intake
         if (map.intake != null) {
-            
-            // map.intake.setAngleMotorSpeed(getRightY());
 
             if (getLeftBumperPressed()) {
                 map.intake.intake(shuffleboard.getSettingNum("Intake Speed"));

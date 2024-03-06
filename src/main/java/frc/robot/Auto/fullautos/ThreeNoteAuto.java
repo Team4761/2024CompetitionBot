@@ -30,6 +30,20 @@ import frc.robot.subsystems.swerve.SwerveTurnTo;
  */
 public class ThreeNoteAuto extends SequentialCommandGroup {
 
+    /**
+     * <p> The robot must be placed so that when the intake drops, it falls directly on top of a note.
+     * <p>
+     * <p> This does 8 things:
+     * <p> 1) It primes the intake by getting it down to the ground.
+     * <p> 2) It gets the shooter to the shooting angle (Constants.SHOOTER_SHOOT_ANGLE rotation)
+     * <p> 3) It revs the shooter up and then runs the top intake (shooter intake) to actually fire.
+     * <p> 4) It runs the bottom and top intake to get the note to the actual shooter, changing the shooter's angle in the process.
+     * <p> 5) It gets the shooter back to the correct angle, and then shoots.
+     * <p> 6) It uses a series of move commands to get to the top note in the alliance side of notes.
+     * <p> 7) It full intakes the note while turning 33 degrees to face the speaker to shoot.
+     * <p> 8) It revs up the shooter and then shoots.
+     * <p> 9) It backs up 1 meter.
+     */
     public ThreeNoteAuto() {
         super(
             new ShootAuto(),
