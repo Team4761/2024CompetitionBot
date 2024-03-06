@@ -71,7 +71,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * @param speed The speed to run the motors as a number between 0.0 to 1.0
      */
     public void intake(double speed) {
-        intakeB.set(speed);
+        intakeB.set(-speed);
         intakeT.set(-speed);
     }
 
@@ -80,7 +80,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * @param speed The speed to run the motors at as a number between 0.0 to 1.0
      */
     public void outtake(double speed) {
-        intakeB.set(-speed);
+        intakeB.set(speed);
         intakeT.set(speed);
     }
 
