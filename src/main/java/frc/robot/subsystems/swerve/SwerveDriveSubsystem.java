@@ -189,7 +189,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         SmartDashboard.putBoolean("Robot Relative", isRobotRelative);
 
-                targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speedX, speedY, -speedRot*0.8, getGyroRotation()));
         
         targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromRobotRelativeSpeeds(speedX, speedY, speedRot*0.8, getGyroRotation()));
             
