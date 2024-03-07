@@ -47,10 +47,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT , Constants.BL_ENCODER_PORT ,  -69.78506, true, -1.0);       // Formerly -68, 1.0, -1.0
     // private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , -16.87491, true,  -1.0);      // Formerly 82, 1.0,  -1.0
     
-    private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , -29.5313 ,false,  -1.0, 0.25);    // Formerly -54.5, 1.0,  1.0
-    private SwerveModuleTalon m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT ,   22.6757, false, -1.0, 0.44); //last value is kS value for rotating motor to stop it from being stuck      // Formerly -6, -1.0, -1.0
-    private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT , Constants.BL_ENCODER_PORT ,  23.2-180, false, -1.0);       // Formerly -68, 1.0, -1.0
-    private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , 243, false,  -1.0);      // Formerly 82, 1.0,  -1.0
+    private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , -29.5313 ,false,  1.0, 0.25);    // Formerly -54.5, 1.0,  1.0
+    private SwerveModuleTalon m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT ,   22.6757, false, 1.0, 0.5); //last value is kS value for rotating motor to stop it from being stuck      // Formerly -6, -1.0, -1.0
+    private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT , Constants.BL_ENCODER_PORT ,  23.2-180, false, 1.0);       // Formerly -68, 1.0, -1.0
+    private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , 243, false,  1.0);      // Formerly 82, 1.0,  -1.0
 
     public static boolean isRobotRelative = false;
 
@@ -91,7 +91,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         m_pose = new Pose2d();  // Starts the position at 0,0
         m_odometry =  new SwerveDriveOdometry(m_kinematics, getGyroRotation(), m_swervePositions, m_pose); // Start the odometry at 0,0
         targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, getGyroRotation()));
-    
         configureAutoBuilder();
     }
 
@@ -198,10 +197,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         
 
         // Gets the target states from either {swerveDriveF} or {swerveDriveR} and applies them to individual modules (wheels)
-        m_frontLeftModule .setTargetState(targetStates[0], true);
-        m_frontRightModule.setTargetState(targetStates[1], true);
-        m_backLeftModule  .setTargetState(targetStates[2], true);
-        m_backRightModule .setTargetState(targetStates[3], true);
+        m_frontLeftModule .setTargetState(targetStates[0], false);
+        m_frontRightModule.setTargetState(targetStates[1], false);
+        m_backLeftModule  .setTargetState(targetStates[2], false);
+        m_backRightModule .setTargetState(targetStates[3], false);
 
 
         m_frontLeftModule.go();

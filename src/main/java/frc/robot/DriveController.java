@@ -101,9 +101,9 @@ public class DriveController extends XboxController {
             // FIELD RELATIVE
             if (RightX==0) {
                 map.swerve.setDriveFXY(
-                    // On the controller, upwards is negative. To correct this, the negative version of both are sent.
+                    // On the controller, upwards and left is negative. To correct this, the negative version of both are sent.
                     shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
-                    shuffleboard.getSettingNum("Movement Speed") * xyCof * deadzone(LeftX, 0.1),    // Left/Right
+                    shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
                     true); //square inputs to ease small adjustments
                 map.swerve.setDriveRot(0, false);   // Should not be rotating if not rotating lol
             } else {

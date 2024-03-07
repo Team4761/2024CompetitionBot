@@ -179,7 +179,7 @@ public class SwerveModuleTalon extends SubsystemBase{
         //both need a P value to adjust it to the right speed
         double steerP = -MathStuff.subtract(targetState.angle, getRotation()).getRotations()*sM*kP;
         double steerFF = Math.signum(steerP)*kS;
-        SmartDashboard.putNumber("FL Voltage", steerP+steerFF);
+        
         steer.setVoltage(steerP);
         
         //if(true)
@@ -225,7 +225,7 @@ public class SwerveModuleTalon extends SubsystemBase{
         // Previous magic number: 0.0174533
         // This takes the encoder native rotation units and converts it to degrees (multiplies by 360), applies an offet, and then converts it to radians
         // CLOCKWISE POSITIVE!!!!!!!!!!!!!!!!!!
-        return new Rotation2d(-Units.degreesToRadians(encoder.getAbsolutePosition().getValueAsDouble()*360 + offset));   // Converts the encoder ticks into radians after applying an offset.
+        return new Rotation2d(Units.degreesToRadians(encoder.getAbsolutePosition().getValueAsDouble()*360 + offset));   // Converts the encoder ticks into radians after applying an offset.
     }
 
     public SwerveModuleState getState() {

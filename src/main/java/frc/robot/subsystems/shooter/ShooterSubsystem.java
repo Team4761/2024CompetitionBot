@@ -89,7 +89,7 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     
     private SimpleMotorFeedforward shootingFFTop= new SimpleMotorFeedforward(0.01, 0.112); //right
-    private SimpleMotorFeedforward shootingFFBot= new SimpleMotorFeedforward(0.01, 0.115); //left
+    private SimpleMotorFeedforward shootingFFBot= new SimpleMotorFeedforward(0.01, 0.13); //left
 
     public void getShooterToSetSpeed() {
 
