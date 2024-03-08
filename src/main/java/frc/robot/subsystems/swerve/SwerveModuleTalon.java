@@ -1,12 +1,17 @@
 package frc.robot.subsystems.swerve;
 
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 import com.revrobotics.CANSparkLowLevel;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -28,7 +33,7 @@ public class SwerveModuleTalon extends SubsystemBase{
     private final double driveConversionFactor = 0.0525772192354474; //0.0388385473906813; // This converts the encoders arbitrary units to meters travelled by the motor. The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
     private final double TOLERANCE_VOLTAGE_STEER = 0.25; // The minimum speed the steer should be able to get to in voltage. This is to prevent jittering.
 
-    private double kS = 0.15; //kS feedforward for rotate motor
+    private double kS = 0.17; //kS feedforward for rotate motor
 
     // m/s, rotation2d
     private SwerveModuleState targetState = new SwerveModuleState();
@@ -48,6 +53,7 @@ public class SwerveModuleTalon extends SubsystemBase{
         drive = new TalonFX(driveID);
         steer = new CANSparkMax(steerID, CANSparkLowLevel.MotorType.kBrushless);
         encoder = new CANcoder(encoderID);
+
 
         // The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
 
@@ -160,28 +166,26 @@ public class SwerveModuleTalon extends SubsystemBase{
      * <p>Keep in mind that this function has a lot of unexplained "magic numbers" 
      * <p>For more information track down Ian and ask him what the hell he wrote
      */
+
     public void go() {
+
+
         //System.out.println("speed: "+targetState.speedMetersPerSecond);
         // get to the set positions 
             
+        double kP = 30;
         //System.out.println(targetState.angle.getDegrees()+", "+getRotation().getDegrees()+", "+sM);
 
         //both need a P value to adjust it to the right speed
-        double steerA = MathStuff.subtract(targetState.angle, getRotation()).getRotations()*sM*60;
-        double steerB = Math.signum(steerA)*kS;
-        SmartDashboard.putNumber("FL Voltage", steerA+steerB);
-        // If the speed is less than the tolerance, it shouldn't rotate at all. This is to prevent jittering
-        if (Math.abs(steerA + steerB) <= Robot.getShuffleboard().getSettingNum("Swerve Steer Tolerance")) {
-            steer.setVoltage(0);
-        }
-        else {
-            steer.setVoltage(steerA+steerB);
-        }
-
+        double steerP = -MathStuff.subtract(targetState.angle, getRotation()).getRotations()*sM*kP;
+        double steerFF = Math.signum(steerP)*kS;
+        
+        steer.setVoltage(steerP);
+        
         //if(true)
-        double driveA = targetState.speedMetersPerSecond*10;
-        double driveB = Math.signum(driveA)*0.36;
-        drive.setVoltage(driveA+driveB);
+        double driveP = targetState.speedMetersPerSecond*10;
+        double driveFF = Math.signum(driveP)*0.36;
+        drive.setVoltage(driveP+driveFF);
     }
 
     public void setSpeeds(double d, double s) {
@@ -193,7 +197,7 @@ public class SwerveModuleTalon extends SubsystemBase{
         SmartDashboard.putNumber("Module Position", drive.getPosition().getValueAsDouble());
         return new SwerveModulePosition(
             drive.getPosition().getValueAsDouble()*driveConversionFactor,   // The meters that the wheel has moved
-            MathStuff.negative(getRotation()) // 2048 ticks to radians is 2pi/2048
+            getRotation() // 2048 ticks to radians is 2pi/2048
         );
     }
     public double getDriveVelocity() { //rpms default supposedy, actual drive speed affected by gear ratio and wheel circumfernce
@@ -220,6 +224,7 @@ public class SwerveModuleTalon extends SubsystemBase{
 
         // Previous magic number: 0.0174533
         // This takes the encoder native rotation units and converts it to degrees (multiplies by 360), applies an offet, and then converts it to radians
+        // CLOCKWISE POSITIVE!!!!!!!!!!!!!!!!!!
         return new Rotation2d(Units.degreesToRadians(encoder.getAbsolutePosition().getValueAsDouble()*360 + offset));   // Converts the encoder ticks into radians after applying an offset.
     }
 

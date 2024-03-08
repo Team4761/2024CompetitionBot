@@ -48,7 +48,7 @@ public class DriveController extends XboxController {
     // This records the past 20 inputs received from the controller, and averages them out
     // This way, rather than a controller going from 0 to 1 in 1 cycle, it takes a couple cycles to reach 1
     // This way, the motors to not instantly accelerate
-    private final int SMOOTH_FRAME_LENGTH = 3;
+    private final int SMOOTH_FRAME_LENGTH = 1;
 
     private int smoothNextFrameToWrite = 0;
     private double[] smoothLeftX = new double[SMOOTH_FRAME_LENGTH];
@@ -101,7 +101,7 @@ public class DriveController extends XboxController {
             // FIELD RELATIVE
             if (RightX==0) {
                 map.swerve.setDriveFXY(
-                    // On the controller, upwards is negative and left is also negative. To correct this, the negative version of both are sent.
+                    // On the controller, upwards and left is negative. To correct this, the negative version of both are sent.
                     shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
                     shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
                     true); //square inputs to ease small adjustments
@@ -110,7 +110,7 @@ public class DriveController extends XboxController {
                 map.swerve.swerveDriveF(
                     // On the controller, upwards is negative and left is also negative. To correct this, the negative version of both are sent.
                     shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
-                    shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
+                    shuffleboard.getSettingNum("Movement Speed") * xyCof * deadzone(LeftX, 0.1),    // Left/Right
                     shuffleboard.getSettingNum("Rotation Speed") * deadzone(RightX, 0.08),   // Rotation
                     true); //square inputs to ease small adjustments
             }
