@@ -149,8 +149,20 @@ public class ShooterController extends XboxController {
             }
         }
 
+        // Intake
         if (map.intake != null) {
+            // map.intake.rotate(getRightY());
             map.intake.setAngleMotorSpeed(getRightY());
+            
+            if (getXButtonPressed()) {
+                map.intake.intake(Robot.getShuffleboard().getSettingNum("Intake Speed"));
+            }
+            if (getBButtonPressed()) {
+                map.intake.outtake(Robot.getShuffleboard().getSettingNum("Outtake Speed"));
+            }
+            if (!getXButtonPressed() && getBButtonPressed()) {
+                map.intake.intake(0);
+            }
         }
     }
 }

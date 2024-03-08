@@ -28,7 +28,9 @@ public class IntakeSubsystem extends SubsystemBase{
 
     private Rotation2d targetAngle = new Rotation2d(); // The angle the intake should get to where 0 degrees is (undecided).
 
-    private static double INTAKE_ANGLE_OFFSET = Units.degreesToRadians(-180);    // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
+    private static double INTAKE_ANGLE_OFFSET = Units.degreesToRadians(0);    // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
+    private static double MAX_ANGLE = Units.degreesToRadians(90);
+    private static double MIN_ANGLE = Units.degreesToRadians(0);
 
 
     public IntakeSubsystem() {
@@ -40,7 +42,7 @@ public class IntakeSubsystem extends SubsystemBase{
 
         encoder = new DutyCycleEncoder(3);
 
-        anglePID = new PIDController(.30, 0, 0);  // These values have yet to be tuned.
+        anglePID = new PIDController(1, 0, 0);  // These values have yet to be tuned.
         angleFeedForward = new ArmFeedforward(0,0, 0); //ks = 0, kg = 0.91, kv = 1.95// Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
 
     }
@@ -62,8 +64,8 @@ public class IntakeSubsystem extends SubsystemBase{
         double currentVelocity = getIntakeAngleVelocity();
         double speed = anglePID.calculate(currentAngle, targetAngle.getRadians()) + angleFeedForward.calculate(targetAngle.getRadians(), 0.0);
 
-        // Neither of the below have been tested (i.e. idk which one should be reversed rn)
-        angleMotorLeft.set(speed);
+        if (!(getIntakeAngle().getRadians() < 0) || getIntakeAngle().getDegrees()-10 >= Constants.INTAKE_START_POSITION)
+            angleMotorLeft.set(speed);
     }
 
     /**
@@ -71,7 +73,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * @param speed The speed to run the motors as a number between 0.0 to 1.0
      */
     public void intake(double speed) {
-        intakeB.set(speed);
+        intakeB.set(-speed);
         intakeT.set(-speed);
     }
 
@@ -80,7 +82,7 @@ public class IntakeSubsystem extends SubsystemBase{
      * @param speed The speed to run the motors at as a number between 0.0 to 1.0
      */
     public void outtake(double speed) {
-        intakeB.set(-speed);
+        intakeB.set(speed);
         intakeT.set(speed);
     }
 
@@ -89,19 +91,32 @@ public class IntakeSubsystem extends SubsystemBase{
      * @param offsetRadians
      */
     public void rotate(double offsetRadians) {
-        targetAngle = new Rotation2d(targetAngle.getRadians() + offsetRadians);
+        if (targetAngle.getRadians() + offsetRadians < MIN_ANGLE)
+            targetAngle = new Rotation2d(MIN_ANGLE);
+        else if (targetAngle.getRadians() + offsetRadians > MAX_ANGLE)
+            targetAngle = new Rotation2d(MAX_ANGLE);
+        else
+            targetAngle = new Rotation2d(targetAngle.getRadians() + offsetRadians);
     }
 
     public void setAngleMotorSpeed(double speed){
+        
         angleMotorLeft.set(speed);
     }
 
     /**
      * <p> This sets the target rotation of the intake to {rotation} and will get to that rotation during its periodic function where up is positive and down is negative.
+     * <p> This constrains the rotation to a max or minimum value
      * @param rotation The new rotation to get to.
      */
     public void goToRotation(Rotation2d rotation) {
-        targetAngle = rotation;
+
+        if (rotation.getRadians() < MIN_ANGLE)
+            targetAngle = new Rotation2d(MIN_ANGLE);
+        else if (rotation.getRadians() > MAX_ANGLE)
+            targetAngle = new Rotation2d(MAX_ANGLE);
+        else
+            targetAngle = rotation;
     }
 
     /**
@@ -123,5 +138,13 @@ public class IntakeSubsystem extends SubsystemBase{
     public void stop(){
         intakeB.set(0);
         intakeT.set(0);
+    }
+
+    /**
+     * SHOULD ONLY BE USED FOR DEBUGGING.
+     * @param speed The speed to set the motor to as a value between -1 and 1
+     */
+    public void setAngleMotorSpeedDebugging(double speed) {
+        angleMotorLeft.set(speed);
     }
 }

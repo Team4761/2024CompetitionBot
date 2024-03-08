@@ -67,8 +67,9 @@ public class Constants
     public static double SWERVE_D = 0.0;    // WIP, not implemented yet
 
     // Position Constants
-    public static double INTAKE_START_POSITION = Units.degreesToRadians(90.0); // In radians
+    public static double INTAKE_START_POSITION = Units.degreesToRadians(263.0); // In radians
     public static double INTAKE_INTAKE_POSITION = Units.degreesToRadians(10.0); // In radians
+    public static double INTAKE_ACTIVE_DRIVING_POSITION = Units.degreesToRadians(290);  // In radians
 
     public static double SHOOTER_START_ANGLE = Units.degreesToRadians(90);  // In radians
     public static double SHOOTER_SHOOT_ANGLE = Units.degreesToRadians(55);  // In radians (Is untuned WIP)

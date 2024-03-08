@@ -39,6 +39,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private double targetAngle;         // Shooting angle in radians. The origin should be when the shooter is perpendicular with the ground (flat and fully outstretched).
 
     private final double SHOOTER_ANGLE_OFFSET = Units.degreesToRadians(73.45681383642034) / (Math.PI*2);  // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
+    private static double MAX_ANGLE = Units.degreesToRadians(72);
+    private static double MIN_ANGLE = Units.degreesToRadians(0);
 
 
     public ShooterSubsystem() {
@@ -51,7 +53,7 @@ public class ShooterSubsystem extends SubsystemBase {
         encoder = new DutyCycleEncoder(2); //needs port
         //right now 0 is parallel to ground and increases going up
 
-        anglePID = new PIDController(2.8, 0.01, 0.0);    // Placeholder values, has yet to be tuned.
+        anglePID = new PIDController(4, 0.01, 0.0);    // Placeholder values, has yet to be tuned.
         angleFeedForward = new ArmFeedforward(0,0.2,1.1,0.01); //recalc numbers with questionable inputs
         
         //ks = 0, kg = 0.91, kv = 1.95    // Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
@@ -106,7 +108,8 @@ public class ShooterSubsystem extends SubsystemBase {
         accelFactor = MathUtil.clamp(-2, accelFactor, 2);
         spdOut = accelFactor + shootingFFTop.calculate(targetSpeed);
 
-        shooterRight.setVoltage(spdOut);  // As of Jan 20, 2024, the speeds are not reversed
+        if (!(getShooterAngle().getRadians() < 0))
+            shooterRight.setVoltage(spdOut);  // As of Jan 20, 2024, the speeds are not reversed
     }
 
 
@@ -141,7 +144,12 @@ public class ShooterSubsystem extends SubsystemBase {
      * @param angleRadians The new angle to get to in radians where 0 radians is fully outstretched and positive radians is upwards.
      */
     public void setShooterAngle(double angleRadians) {
-        targetAngle = angleRadians;
+        if (targetAngle < MIN_ANGLE)
+            targetAngle = MIN_ANGLE;
+        else if (targetAngle > MAX_ANGLE)
+            targetAngle = MAX_ANGLE;
+        else
+            targetAngle = angleRadians;
     }
 
     /**
@@ -150,7 +158,12 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void rotate(double angleRadians) {
         // limit target angle so shooter doesnt go backwards
-        targetAngle = MathUtil.clamp(0, targetAngle+angleRadians, Math.PI/2);
+        if (targetAngle + angleRadians < MIN_ANGLE)
+            targetAngle = MIN_ANGLE;
+        else if (targetAngle + angleRadians > MAX_ANGLE)
+            targetAngle = MAX_ANGLE;
+        else
+            targetAngle = MathUtil.clamp(0, targetAngle+angleRadians, Math.PI/2);
         
     }
 
