@@ -33,7 +33,7 @@ public class SwerveModuleTalon extends SubsystemBase{
     private final double driveConversionFactor = 0.0525772192354474; //0.0388385473906813; // This converts the encoders arbitrary units to meters travelled by the motor. The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
     private final double TOLERANCE_VOLTAGE_STEER = 0.25; // The minimum speed the steer should be able to get to in voltage. This is to prevent jittering.
 
-    private double kS = 0.17; //kS feedforward for rotate motor
+    private double kS = 0.22; //kS feedforward for rotate motor
 
     // m/s, rotation2d
     private SwerveModuleState targetState = new SwerveModuleState();
