@@ -86,6 +86,7 @@ public class RobocketsShuffleboard {
         addShooterSetting("Shooter Out Speed", 0.5);
         addShooterSetting("Shooter Intake Speed", 0.5);
         addShooterSetting("Shooter Outtake Speed", 0.5);
+        addShooterSetting("Amp Shoot Speed", 10);
 
         // Swerve settings
         addSwerveSetting("Movement Speed", 0.5);
