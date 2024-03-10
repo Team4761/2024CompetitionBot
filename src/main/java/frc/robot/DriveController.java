@@ -86,6 +86,7 @@ public class DriveController extends XboxController {
         double LeftX = smooth(smoothLeftX);
         double LeftY = smooth(smoothLeftY);
         double RightX = smooth(smoothRightX);
+ 
 
         // Swerve
         if (map.swerve != null) {
@@ -99,21 +100,13 @@ public class DriveController extends XboxController {
             // ));
 
             // FIELD RELATIVE
-            if (RightX==0) {
-                map.swerve.setDriveFXY(
-                    // On the controller, upwards and left is negative. To correct this, the negative version of both are sent.
-                    shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
-                    shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
-                    true); //square inputs to ease small adjustments
-                map.swerve.setDriveRot(0, false);   // Should not be rotating if not rotating lol
-            } else {
-                map.swerve.swerveDriveF(
-                    // On the controller, upwards is negative and left is also negative. To correct this, the negative version of both are sent.
-                    shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
-                    shuffleboard.getSettingNum("Movement Speed") * xyCof * deadzone(LeftX, 0.1),    // Left/Right
-                    shuffleboard.getSettingNum("Rotation Speed") * deadzone(RightX, 0.08),   // Rotation
-                    true); //square inputs to ease small adjustments
-            }
+            map.swerve.swerveDriveF(
+                // On the controller, upwards is negative and left is also negative. To correct this, the negative version of both are sent.
+                shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftY, 0.1),      // Foward/backwards
+                shuffleboard.getSettingNum("Movement Speed") * -xyCof * deadzone(LeftX, 0.1),    // Left/Right
+                shuffleboard.getSettingNum("Rotation Speed") * -deadzone(RightX, 0.08),   // Rotation
+                true); //square inputs to ease small adjustments
+            
 
             if (getXButtonPressed()) {
                 map.swerve.zeroGyro();
@@ -141,23 +134,23 @@ public class DriveController extends XboxController {
         // Intake
         if (map.intake != null) {
 
-            if (getLeftBumperPressed()) {
+            if (getRightBumperPressed()) {
                 map.intake.intake(shuffleboard.getSettingNum("Intake Speed"));
             }
-            else if (getRightBumperPressed()) {
+            else if (getLeftBumperPressed()) {
                 map.intake.outtake(shuffleboard.getSettingNum("Outtake Speed"));
             }   
 
-            else if(getRightBumperReleased() || getLeftBumperReleased()){
+            if(getRightBumperReleased() || getLeftBumperReleased()){
                 map.intake.stop();
             }
 
-            else if (getAButtonPressed()){
+            /*else if (getAButtonPressed()){
                 map.intake.goToRotation(new Rotation2d(Constants.INTAKE_START_POSITION));    // Starting position (upright)
             }
             else if (getBButtonPressed()){
                 map.intake.goToRotation(new Rotation2d(Constants.INTAKE_INTAKE_POSITION)); // Actual intake position (on the ground)
-            }
+            }*/
         }
 
         // Vision

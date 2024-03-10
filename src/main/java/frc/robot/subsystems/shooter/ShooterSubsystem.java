@@ -38,7 +38,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private double targetSpeed;         // Shooting speed in rotations of the wheel / second
     private double targetAngle;         // Shooting angle in radians. The origin should be when the shooter is perpendicular with the ground (flat and fully outstretched).
 
-    private final double SHOOTER_ANGLE_OFFSET = Units.degreesToRadians(73.45681383642034) / (Math.PI*2);  // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
+    private final double SHOOTER_ANGLE_OFFSET = Units.degreesToRadians(76) / (Math.PI*2);  // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
     private static double MAX_ANGLE = Units.degreesToRadians(72);
     private static double MIN_ANGLE = Units.degreesToRadians(0);
 
@@ -53,8 +53,8 @@ public class ShooterSubsystem extends SubsystemBase {
         encoder = new DutyCycleEncoder(2); //needs port
         //right now 0 is parallel to ground and increases going up
 
-        anglePID = new PIDController(4, 0.01, 0.0);    // Placeholder values, has yet to be tuned.
-        angleFeedForward = new ArmFeedforward(0,0.2,1.1,0.01); //recalc numbers with questionable inputs
+        anglePID = new PIDController(5, 0.2, 0.1);    // Placeholder values, has yet to be tuned.
+        angleFeedForward = new ArmFeedforward(0,0.18,1.1,0.01); //recalc numbers with questionable inputs
         
         //ks = 0, kg = 0.91, kv = 1.95    // Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
 
@@ -90,8 +90,8 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> This must be called during the periodic function to work.
      */
     
-    private SimpleMotorFeedforward shootingFFTop= new SimpleMotorFeedforward(0.01, 0.112); //right
-    private SimpleMotorFeedforward shootingFFBot= new SimpleMotorFeedforward(0.01, 0.13); //left
+    private SimpleMotorFeedforward shootingFFTop= new SimpleMotorFeedforward(0.01, 0.125); //right
+    private SimpleMotorFeedforward shootingFFBot= new SimpleMotorFeedforward(0.01, 0.125); //left
 
     public void getShooterToSetSpeed() {
 
@@ -112,7 +112,6 @@ public class ShooterSubsystem extends SubsystemBase {
             shooterRight.setVoltage(spdOut);  // As of Jan 20, 2024, the speeds are not reversed
     }
 
-
     public void setShooterAngleSpeed(double speed) {
         angleMotorRight.set(speed);
     }
@@ -124,8 +123,7 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void getShooterToSetAngle() {
         double currentAngle = getShooterAngle().getRadians();
-        double currentVelocity = getShooterAngleVelocity();
-        double speed = anglePID.calculate(currentAngle, targetAngle) + angleFeedForward.calculate(targetAngle, 0.9*(targetAngle-currentAngle));
+        double speed = MathUtil.clamp(-4, anglePID.calculate(currentAngle, targetAngle), 4) + angleFeedForward.calculate(targetAngle, 3*MathUtil.clamp(-0.75, targetAngle-currentAngle, 0.75));
 
         // Neither of the below have been tested (i.e. idk which one should be reversed rn)
         angleMotorRight.setVoltage(speed); //voltage because battery drain stuff
@@ -137,6 +135,9 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void setShooterSpeed(double speed) {
         targetSpeed = speed;
+    }
+    public double getTargetSpeed() {
+        return targetSpeed;
     }
 
     /**

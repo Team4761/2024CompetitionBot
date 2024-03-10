@@ -47,8 +47,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT , Constants.BL_ENCODER_PORT ,  -69.78506, true, -1.0);       // Formerly -68, 1.0, -1.0
     // private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , -16.87491, true,  -1.0);      // Formerly 82, 1.0,  -1.0
     
-    private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , -29.5313 ,false,  1.0, 0.25);    // Formerly -54.5, 1.0,  1.0
-    private SwerveModuleTalon m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT ,   22.6757, false, 1.0, 0.5); //last value is kS value for rotating motor to stop it from being stuck      // Formerly -6, -1.0, -1.0
+    private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , -29.5313 ,false,  1.0);    // Formerly -54.5, 1.0,  1.0
+    private SwerveModuleTalon m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT ,   22.6757, false, 1.0); //last value is kS value for rotating motor to stop it from being stuck      // Formerly -6, -1.0, -1.0
     private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT , Constants.BL_ENCODER_PORT ,  23.2-180, false, 1.0);       // Formerly -68, 1.0, -1.0
     private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , 243, false,  1.0);      // Formerly 82, 1.0,  -1.0
 
@@ -197,10 +197,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         
 
         // Gets the target states from either {swerveDriveF} or {swerveDriveR} and applies them to individual modules (wheels)
-        m_frontLeftModule .setTargetState(targetStates[0], false);
-        m_frontRightModule.setTargetState(targetStates[1], false);
-        m_backLeftModule  .setTargetState(targetStates[2], false);
-        m_backRightModule .setTargetState(targetStates[3], false);
+        m_frontLeftModule .setTargetState(targetStates[0], true);
+        m_frontRightModule.setTargetState(targetStates[1], true);
+        m_backLeftModule  .setTargetState(targetStates[2], true);
+        m_backRightModule .setTargetState(targetStates[3], true);
 
 
         m_frontLeftModule.go();
@@ -235,7 +235,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         speedY = sY;
     }
 
-    private int lastDone = 10;  // Cycles to sample rotation to make corrections to direction
     // Field Oriented swerve drive, m/s, m/s, rad/s or something, +x is forwards, +y is left
     public void swerveDriveF(double sX, double sY, double sR, boolean squareInputs) {
         isRobotRelative = false;
@@ -316,7 +315,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // return MathStuff.subtract(TWOPI, new Rotation2d(Units.degreesToRadians(m_gyro.getAngle())).minus(gyroOffset));
         
         // no longer subtracted because new gyro but idk | the number is pi/180
-        return new Rotation2d(m_gyro.getAngle()*0.01745329251).minus(gyroOffset);
+        return new Rotation2d(-m_gyro.getAngle()*0.01745329251).minus(gyroOffset);
     }
     
     public Pose2d getPose() {

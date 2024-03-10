@@ -42,7 +42,7 @@ public class IntakeSubsystem extends SubsystemBase{
 
         encoder = new DutyCycleEncoder(3);
 
-        anglePID = new PIDController(1, 0, 0);  // These values have yet to be tuned.
+        anglePID = new PIDController(0, 0, 0);  // These values have yet to be tuned.
         angleFeedForward = new ArmFeedforward(0,0, 0); //ks = 0, kg = 0.91, kv = 1.95// Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
 
     }

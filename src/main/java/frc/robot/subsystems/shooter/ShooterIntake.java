@@ -25,6 +25,7 @@ public class ShooterIntake extends Command {
     @Override
     public void execute() {
         Robot.getMap().shooter.setIntakeSpeed(speed);
+        System.out.print("1 ");
     }
 
     /**

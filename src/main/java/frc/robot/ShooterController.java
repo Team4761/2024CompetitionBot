@@ -6,7 +6,9 @@ import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.shooter.AutoShooterIntake;
+import frc.robot.subsystems.shooter.AutoSourceIntake;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
 
 /**
@@ -77,51 +79,40 @@ public class ShooterController extends XboxController {
      */
     public void teleopPeriodic() {
         smoothLeftY[smoothNextFrameToWrite] = deadzone(getLeftY(), 0.08);
-        smoothRightY[smoothNextFrameToWrite] = deadzone(getRightY(), 0.08);
+        smoothRightY[smoothNextFrameToWrite] = deadzone(getRightY(), 0.15);
         smoothNextFrameToWrite++;
         smoothNextFrameToWrite %= SMOOTH_FRAME_LENGTH;
 
         double LeftY = smooth(smoothLeftY);
         double RightY = smooth(smoothRightY);
 
+               
+
         // Shooter
         if (map.shooter != null) {
 
-            //map.shooter.setShooterAngleSpeed(-RightY); // sets raw speed because no more time
-
-            //if(getRightTriggerAxis()>0.5) {
-            //    CommandScheduler.getInstance().schedule(new IntakeAndShoot(shuffleboard.getSettingNum("Shooter Out Speed")));
-            //}
-
             map.shooter.rotate(-0.04*LeftY); // sets target pos
 
-            //positive shooter speed is out
-            if (getRightTriggerAxis()>0.5) {
-                //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setShooterSpeed(shuffleboard.getSettingNum("Shooter Out Speed"));
+            if (getAButtonPressed()) { //shoot
+                CommandScheduler.getInstance().schedule(new IntakeAndShoot(shuffleboard.getSettingNum("Shooter Out Speed")));
             }
-            if (getLeftTriggerAxis()>0.5) {
-                //CommandScheduler.getInstance().schedule(new Shoot(-SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setShooterSpeed(-shuffleboard.getSettingNum("Shooter In Speed"));
+            
+            if (getPOV()==0) { // shoot at amp speed
+                CommandScheduler.getInstance().schedule(new IntakeAndShoot(10l));
             }
-            if (getYButtonPressed()) {
-                // map.shooter.setIntakeSpeed(shuffleboard.getSettingNum("Shooter Intake Speed"));
+            if (getPOV() == 180) { // down dpad for source intake
+                CommandScheduler.getInstance().schedule(new AutoSourceIntake());
+            }
+
+            if (getYButtonPressed()) { // uptakes until top breakbeam
                 CommandScheduler.getInstance().schedule(new AutoShooterIntake());
             }
-            // if (getAButtonPressed()) {
-            //     map.shooter.setIntakeSpeed(-shuffleboard.getSettingNum("Shooter Outtake Speed"));
-            // }
-            if (getRightTriggerAxis()<0.5 && getLeftTriggerAxis()<0.5) {
-                map.shooter.setShooterSpeed(0);
-            }
-            // if (getAButtonReleased() || getYButtonReleased()) {
-            //     map.shooter.setIntakeSpeed(0);
-            // }
+            
             if (getLeftBumperPressed()) {
-                map.shooter.setShooterAngle(Units.degreesToRadians(55));    // Shooting position
+                map.shooter.setShooterAngle(Units.degreesToRadians(47));    // ground intake angle
             }
             if (getRightBumperPressed()) {
-                map.shooter.setShooterAngle(Units.degreesToRadians(90));    // Upright position
+                map.shooter.setShooterAngle(Units.degreesToRadians(60));    // shooting/amp/source intake angle
             }
         }
         
@@ -152,15 +143,15 @@ public class ShooterController extends XboxController {
         // Intake
         if (map.intake != null) {
             // map.intake.rotate(getRightY());
-            map.intake.setAngleMotorSpeed(getRightY());
+            map.intake.setAngleMotorSpeed(-RightY*0.4);
             
-            if (getXButtonPressed()) {
-                map.intake.intake(Robot.getShuffleboard().getSettingNum("Intake Speed"));
-            }
             if (getBButtonPressed()) {
-                map.intake.outtake(Robot.getShuffleboard().getSettingNum("Outtake Speed"));
+                map.intake.intake(Robot.getShuffleboard().getSettingNum("Intake Speed")); // goes up
             }
-            if (!getXButtonPressed() && getBButtonPressed()) {
+            if (getXButtonPressed()) {
+                map.intake.outtake(Robot.getShuffleboard().getSettingNum("Outtake Speed")); // goes down
+            }
+            if (getXButtonReleased() || getBButtonReleased()) {
                 map.intake.intake(0);
             }
         }
