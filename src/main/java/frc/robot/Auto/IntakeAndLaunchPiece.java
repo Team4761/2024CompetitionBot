@@ -1,10 +1,13 @@
 package frc.robot.Auto;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 public class IntakeAndLaunchPiece extends Command {
+
+    private final long TIMEOUT = 2000;           // The number of seconds that can pass before the command should time out
     
     private double intakeBottomSpeed;       // The speed the intake should run at as a value between -1 and 1. Positive is intake.
     private double intakeTopSpeed;          // The speed that the shooter's intake should run at as a value between -1 and 1. Positive is intake.
@@ -15,6 +18,7 @@ public class IntakeAndLaunchPiece extends Command {
 
     private boolean hadPieceInShooter;  // Keeps track of if there EVER was a piece in the top of the shooter.
     private long endTime;
+    private long timeoutTime;
 
 
     /**
@@ -24,12 +28,16 @@ public class IntakeAndLaunchPiece extends Command {
      * @param shooterSpeed The speed to run the shooter at in rotations per second. Max is around 50 RPS.
      */
     public IntakeAndLaunchPiece(double intakeSpeed, double shootSpeed) {
+        this.intake = Robot.getMap().intake;
+        this.shooter = Robot.getMap().shooter;
+
         this.intakeBottomSpeed = intakeSpeed;
         this.intakeTopSpeed = intakeSpeed;
         this.shootSpeed = shootSpeed;
 
         this.hadPieceInShooter = false; // Starts at false, becomes true once the top break beam is broken.
         this.endTime = 0;   // Placeholder value; does not mean anything, but it does fix potential errors of not being initialized.
+        this.timeoutTime = System.currentTimeMillis() + TIMEOUT;
     }
 
     
@@ -51,9 +59,10 @@ public class IntakeAndLaunchPiece extends Command {
         if (hadPieceInShooter && System.currentTimeMillis() >= endTime) {
             return true;
         }
-        else {
-            return false;
+        if (System.currentTimeMillis() >= timeoutTime) {
+            return true;
         }
+        return false;
     }
 
     @Override

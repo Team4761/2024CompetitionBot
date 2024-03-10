@@ -34,7 +34,7 @@ public class GetShooterToAngle extends Command {
      */
     @Override
     public boolean isFinished() {
-        if (Math.abs(shooter.getShooterAngle().getRadians() - angle) < 0.01) // If the shooter is within 0.01 radians of the target, stop.
+        if (Math.abs(shooter.getShooterAngle().getRadians() - angle) < 1) // If the shooter is within 0.01 radians of the target, stop.
             return true;
         return false;
     }

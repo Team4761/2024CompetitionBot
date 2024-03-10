@@ -62,7 +62,7 @@ public class ShooterSubsystem extends SubsystemBase {
         intakeLowerSensor = new DigitalInput(Constants.SHOOTER_SENSOR_LOWER_PORT);
 
         targetSpeed = 0.0;
-        targetAngle = Units.degreesToRadians(Constants.SHOOTER_START_ANGLE); //63 gets to 55ish
+        targetAngle = Units.degreesToRadians(72); //63 gets to 55ish
 
         intakeRight.setInverted(true);
     }

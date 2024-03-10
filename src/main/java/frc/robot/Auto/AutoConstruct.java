@@ -35,6 +35,8 @@ public class AutoConstruct extends SendableChooser<String> {
     private static final String kPathPlanner2MeterSpin = "2meterspin";
     private static final String prepShooterAuto = "prepshooterauto";
     private static final String kShootAuto = "shootAuto";
+    private static final String kMessEmUpAutoLeft = "messEmUpAutoLeft";
+    private static final String kMessEmUpAutoRight = "messEmUpAutoRight";
 
     private static final String kOneNoteAuto = "oneNoteAuto";
     private static final String kTwoNoteAuto = "twoNoteAuto";
@@ -67,6 +69,8 @@ public class AutoConstruct extends SendableChooser<String> {
         addOption("One Note Auto", kOneNoteAuto);
         addOption("Two Note Auto", kTwoNoteAuto);
         addOption("Three Note Auto", kThreeNoteAuto);
+        addOption("Mess Em Up Auto Left", kMessEmUpAutoLeft);
+        addOption("Mess Em Up Auto Right", kMessEmUpAutoRight);
 
         autoSelector = this;
     }
@@ -141,6 +145,12 @@ public class AutoConstruct extends SendableChooser<String> {
                 break;
             case kThreeNoteAuto:
                 scheduledCommand = new ThreeNoteAuto();
+                break;
+            case kMessEmUpAutoLeft:
+                scheduledCommand = new MessEmUpAuto(true);
+                break;
+            case kMessEmUpAutoRight:
+                scheduledCommand = new MessEmUpAuto(false);
                 break;
             default:
                 // unsure what the default command would be: maybe just ensure nothing is moving?

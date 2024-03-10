@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -15,8 +16,9 @@ public class IntakeAndShoot extends ParallelCommandGroup {
         super(
             new Shoot(speed, 1.8),
             new SequentialCommandGroup(
-                new WaitCommand(1),
-                new ShooterIntake(0.8)
+                new WaitCommand(1.3),
+                new ShooterIntake(0.5),
+                new PrintCommand("Finished IntakeAndShoot!")
             )
         );
     }

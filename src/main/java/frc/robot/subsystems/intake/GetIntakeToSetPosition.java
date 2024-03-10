@@ -19,7 +19,8 @@ public class GetIntakeToSetPosition extends Command {
 
     @Override
     public void initialize() {
-       intake.goToRotation(new Rotation2d(angleToGoTo));
+        intake.setAngleMotorSpeed( Math.signum(intake.getIntakeAngle().getRadians() - angleToGoTo) * 0.4 );
+    //    intake.goToRotation(new Rotation2d(angleToGoTo));
     }
 
     @Override

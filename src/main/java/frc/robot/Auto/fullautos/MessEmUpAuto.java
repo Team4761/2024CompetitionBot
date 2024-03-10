@@ -2,6 +2,7 @@ package frc.robot.Auto.fullautos;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -12,6 +13,7 @@ import frc.robot.subsystems.intake.GetIntakeToSetPosition;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.intake.RunIntake;
 import frc.robot.subsystems.shooter.GetShooterToAngle;
+import frc.robot.subsystems.shooter.IntakeAndShoot;
 import frc.robot.subsystems.shooter.Shoot;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
@@ -50,11 +52,11 @@ public class MessEmUpAuto extends SequentialCommandGroup {
     public MessEmUpAuto(boolean shouldGoLeft) {
         super(
             new SequentialCommandGroup(                                                                     // Get the intake down first and then the shooter up.
-                new GetIntakeToSetPosition(Constants.INTAKE_INTAKE_POSITION),                               // Get the intake to the down position
+                // new GetIntakeToSetPosition(Constants.INTAKE_INTAKE_POSITION),                               // Get the intake to the down position
                 new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE)                                       // Get the shooter to connect with the intake
             ),
             new ParallelCommandGroup(                                                                       // Move back while lightly shooting the piece out
-                new Shoot(3, 1),                                                              // Lightly shoot the piece
+                new IntakeAndShoot(10),                                                               // Lightly shoot the piece
                 new MoveBackCommand(DISTANCE_FROM_LINE_TO_NOTES)                                            // Move back WIP meters
             ),
             new IntakeLaunchMove(shouldGoLeft, DISTANCE_BETWEEN_NOTES),                                     // Full intake the piece, shoot it out, and move left or right
