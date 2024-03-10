@@ -17,7 +17,7 @@ public class AutoShooterIntake extends Command {
      */
     public AutoShooterIntake () {
         this.speed = Robot.getShuffleboard().getSettingNum("Shooter Intake Speed");
-        this.timeOutTime = System.currentTimeMillis()+10000;    // 10 second time out
+        this.timeOutTime = System.currentTimeMillis()+8000;    // 10 second time out
         this.shooter = Robot.getMap().shooter;
     }
 
@@ -35,7 +35,7 @@ public class AutoShooterIntake extends Command {
      */
     @Override
     public boolean isFinished() {
-        if (shooter.isPieceInUpperIntake())
+        if (shooter.isPieceInUpperIntake() || timeOutTime <= System.currentTimeMillis())
             return true;
         return false;
     }
