@@ -14,7 +14,7 @@ public class StopShooter extends Command {
 
     public StopShooter () {
         //timeout
-        this.deccelRate = 4;
+        this.deccelRate = 2;
         endTime = System.currentTimeMillis()+1000;
     }
     /**
@@ -35,7 +35,7 @@ public class StopShooter extends Command {
         // if (revTime <= System.currentTimeMillis())  // If finished reving, shoot
         //     Robot.getMap().shooter.setIntakeSpeed(0.3); // Intake the piece into the shooter
         double curTarget = Robot.getMap().shooter.getTargetSpeed();
-        Robot.getMap().shooter.setShooterSpeed(curTarget-Math.max(deccelRate, Math.abs(curTarget))*Math.signum(curTarget));  // Always be revving the motors
+        Robot.getMap().shooter.setShooterSpeed(curTarget-Math.min(deccelRate, Math.abs(curTarget))*Math.signum(curTarget));  // Always be revving the motors
     }
 
     /**

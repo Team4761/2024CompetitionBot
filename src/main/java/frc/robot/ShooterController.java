@@ -79,7 +79,7 @@ public class ShooterController extends XboxController {
      */
     public void teleopPeriodic() {
         smoothLeftY[smoothNextFrameToWrite] = deadzone(getLeftY(), 0.08);
-        smoothRightY[smoothNextFrameToWrite] = deadzone(getRightY(), 0.08);
+        smoothRightY[smoothNextFrameToWrite] = deadzone(getRightY(), 0.15);
         smoothNextFrameToWrite++;
         smoothNextFrameToWrite %= SMOOTH_FRAME_LENGTH;
 
@@ -143,7 +143,7 @@ public class ShooterController extends XboxController {
         // Intake
         if (map.intake != null) {
             // map.intake.rotate(getRightY());
-            map.intake.setAngleMotorSpeed(-getRightY()*0.4);
+            map.intake.setAngleMotorSpeed(-RightY*0.4);
             
             if (getBButtonPressed()) {
                 map.intake.intake(Robot.getShuffleboard().getSettingNum("Intake Speed")); // goes up
