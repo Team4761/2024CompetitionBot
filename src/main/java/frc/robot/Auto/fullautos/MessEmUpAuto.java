@@ -33,7 +33,7 @@ import frc.robot.subsystems.swerve.SwerveGoCartesianF;
      */
 public class MessEmUpAuto extends SequentialCommandGroup {
     
-    private final static double DISTANCE_BETWEEN_NOTES = 1.0;          // The distance between the center of the notes in the center of the field
+    private final static double DISTANCE_BETWEEN_NOTES = 0.3;          // The distance between the center of the notes in the center of the field
     private final static double DISTANCE_FROM_LINE_TO_NOTES = 1.0;     // The distance between the alliance line and the edge of the first center note.
 
     /**

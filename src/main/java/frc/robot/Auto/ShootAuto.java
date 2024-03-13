@@ -25,7 +25,7 @@ public class ShootAuto extends SequentialCommandGroup {
     */
     public ShootAuto() {
         super(
-                new GetIntakeToSetPosition(Units.degreesToRadians(0)),  // Move the intake down
+                new GetIntakeToSetPosition(Units.degreesToRadians(Constants.INTAKE_INTAKE_POSITION)),  // Move the intake down
                 new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE),      // Get the shooter to shooting position
                 new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")) // Shoot with the speed on the shuffleboard
         );

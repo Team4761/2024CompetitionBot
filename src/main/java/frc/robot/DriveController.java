@@ -153,6 +153,13 @@ public class DriveController extends XboxController {
             }*/
         }
 
+        // Shooter
+        if (map.shooter != null) {
+            if (getRightBumperPressed()) {
+                map.shooter.setShooterAngle(Constants.SHOOTER_INTAKE_ANGLE);
+            }
+        }
+
         // Vision
         if (map.vision != null) {
             if(getAButtonPressed()){

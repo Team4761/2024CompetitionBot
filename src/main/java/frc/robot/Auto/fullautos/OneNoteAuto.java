@@ -3,6 +3,7 @@ package frc.robot.Auto.fullautos;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Auto.MoveBackCommand;
 import frc.robot.Auto.ShootAuto;
+import frc.robot.subsystems.swerve.ZeroGyro;
 
 /**
  * <p> This does 4 things:
@@ -23,7 +24,8 @@ public class OneNoteAuto extends SequentialCommandGroup {
     public OneNoteAuto() {
         super(
             new ShootAuto(),
-            new MoveBackCommand(1.0)
+            new ZeroGyro(),
+            new MoveBackCommand(3.0)
         );
     }
 }

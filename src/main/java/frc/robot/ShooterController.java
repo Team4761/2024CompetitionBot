@@ -101,7 +101,8 @@ public class ShooterController extends XboxController {
                 CommandScheduler.getInstance().schedule(new IntakeAndShoot(10l));
             }
             if (getPOV() == 180) { // down dpad for source intake
-                CommandScheduler.getInstance().schedule(new AutoSourceIntake());
+                map.shooter.setShooterSpeed(-shuffleboard.getSettingNum("Shooter In Speed"));
+                // CommandScheduler.getInstance().schedule(new AutoSourceIntake());
             }
 
             if (getYButtonPressed()) { // uptakes until top breakbeam
