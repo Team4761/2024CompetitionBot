@@ -1,13 +1,16 @@
 package frc.robot.Auto.fullautos;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Auto.MoveBackCommand;
 import frc.robot.Auto.ShootAuto;
 import frc.robot.subsystems.intake.FullIntake;
+import frc.robot.subsystems.intake.RunIntake;
 import frc.robot.subsystems.shooter.GetShooterToAngle;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
+import frc.robot.subsystems.swerve.Move;
 
 /**
  * <p> The robot must be placed so that when the intake drops, it falls directly on the center note on the alliance side.
@@ -36,8 +39,14 @@ public class TwoNoteAuto extends SequentialCommandGroup {
     public TwoNoteAuto() {
         super(
             new ShootAuto(),
+            new ParallelCommandGroup(
+                new MoveBackCommand(2),
+                new RunIntake(0.3)
+            ),
+            new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
             new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed")),
             new GetShooterToAngle(Constants.SHOOTER_TWO_NOTE_SHOOT_ANGLE),
+            new Move(2,0),
             new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")),
             new MoveBackCommand(1.0)
         );

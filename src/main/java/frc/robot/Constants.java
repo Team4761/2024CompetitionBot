@@ -68,7 +68,7 @@ public class Constants
 
     // Position Constants
     public static double INTAKE_START_POSITION = Units.degreesToRadians(263.0); // In radians
-    public static double INTAKE_INTAKE_POSITION = Units.degreesToRadians(5.0); // In radians
+    public static double INTAKE_INTAKE_POSITION = Units.degreesToRadians(350.0); // In radians
     public static double INTAKE_ACTIVE_DRIVING_POSITION = Units.degreesToRadians(290);  // In radians
 
     public static double SHOOTER_START_ANGLE = Units.degreesToRadians(72);  // In radians

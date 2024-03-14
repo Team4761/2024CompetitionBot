@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
+import frc.robot.subsystems.swerve.Move;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
 
 public class MoveBackCommand extends SequentialCommandGroup{
@@ -15,7 +16,7 @@ public class MoveBackCommand extends SequentialCommandGroup{
      */
     public MoveBackCommand(double distance){
         super(
-            new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-distance, 0)),
+            new Move(-distance, 0),
             new PrintCommand("Finished Move Back!")
         );
     }
