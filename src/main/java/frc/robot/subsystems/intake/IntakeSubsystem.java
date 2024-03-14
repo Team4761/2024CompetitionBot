@@ -64,8 +64,9 @@ public class IntakeSubsystem extends SubsystemBase{
         double currentVelocity = getIntakeAngleVelocity();
         double speed = anglePID.calculate(currentAngle, targetAngle.getRadians()) + angleFeedForward.calculate(targetAngle.getRadians(), 0.0);
 
-        if (!(getIntakeAngle().getRadians() < 0) || getIntakeAngle().getDegrees()-10 >= Constants.INTAKE_START_POSITION)
-            angleMotorLeft.set(speed);
+        //!(getIntakeAngle().getRadians() < 0) is always true
+        //if (!(getIntakeAngle().getRadians() < 0) || getIntakeAngle().getDegrees()-10 >= Constants.INTAKE_START_POSITION)
+        //    angleMotorLeft.set(speed);
     }
 
     /**
@@ -100,8 +101,21 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
     public void setAngleMotorSpeed(double speed){
-        
-        angleMotorLeft.set(speed);
+        //limit movement to only inwards at outer bounds
+        // +speed makes angle increase
+        //if (speed>0) {
+        //    if (getIntakeAngle().getDegrees()<250 || getIntakeAngle().getDegrees()>350) {
+                angleMotorLeft.set(speed);
+        //    } else {
+        //        angleMotorLeft.set(0);
+        //    }
+        //} else {
+        //    if (getIntakeAngle().getDegrees()>5) {
+        //        angleMotorLeft.set(speed);
+        //    } else {
+        //        angleMotorLeft.set(0);
+        //    }
+        //}
     }
 
     /**

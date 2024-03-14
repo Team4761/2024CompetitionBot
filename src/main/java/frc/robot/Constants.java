@@ -30,14 +30,14 @@ public class Constants
     // Intake (currently conflicts with Swerve ports)
     public static int INTAKE_TOP_PORT = 1;        // CAN Port.
     public static int INTAKE_BOT_PORT = 30;         // CAN Port. 
-    public static int INTAKE_ANGLE_LEFT_MOTOR_PORT = 11;   // CAN Port.
+    public static int INTAKE_ANGLE_LEFT_MOTOR_PORT = 4;   // CAN Port.
 
     // Shooter
     public static int SHOOTER_LEFT_MOTOR_PORT = 15;  // CAN Port.
     public static int SHOOTER_RIGHT_MOTOR_PORT = 16;  // CAN Port.
     public static int SHOOTER_INTAKE_LEFT_MOTOR_PORT = 2;  // CAN Port. 
     public static int SHOOTER_INTAKE_RIGHT_MOTOR_PORT = 3;  // CAN Port.
-    public static int SHOOTER_ANGLE_RIGHT_MOTOR_PORT = 4;  // CAN Port.
+    public static int SHOOTER_ANGLE_RIGHT_MOTOR_PORT = 11;  // CAN Port.
     public static int SHOOTER_SENSOR_UPPER_PORT = 0;    // DIO Port. breakbeams
     public static int SHOOTER_SENSOR_LOWER_PORT = 1;    // DIO Port.
     //public static int BREAKBEAM_IS_BROKEN = 0;

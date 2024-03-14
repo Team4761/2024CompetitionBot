@@ -15,7 +15,7 @@ public class StopShooter extends Command {
     public StopShooter () {
         //timeout
         this.deccelRate = 2;
-        endTime = System.currentTimeMillis()+1000;
+        endTime = System.currentTimeMillis()+2500;
     }
     /**
      * <p> This initializes the decceleration rate of the shooter | rotations/s^2.
@@ -24,7 +24,7 @@ public class StopShooter extends Command {
     public StopShooter (double deccelRate) {
         //timeout
         this.deccelRate = deccelRate;
-        endTime = System.currentTimeMillis()+1000;
+        endTime = System.currentTimeMillis()+2500;
     }
 
     /**

@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.controllers;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -7,6 +7,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.RobocketsShuffleboard;
+import frc.robot.Robot;
+import frc.robot.RobotMap;
 import frc.robot.subsystems.shooter.AutoShooterIntake;
 import frc.robot.subsystems.shooter.AutoSourceIntake;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
@@ -91,7 +94,7 @@ public class ShooterController extends XboxController {
         // Shooter
         if (map.shooter != null) {
 
-            map.shooter.rotate(-0.04*LeftY); // sets target pos
+            map.shooter.rotate(-0.04*deadzone(getLeftY(), 0.08)); // sets target pos
 
             if (getAButtonPressed()) { //shoot
                 CommandScheduler.getInstance().schedule(new IntakeAndShoot(shuffleboard.getSettingNum("Shooter Out Speed")));
@@ -143,7 +146,7 @@ public class ShooterController extends XboxController {
         // Intake
         if (map.intake != null) {
             // map.intake.rotate(getRightY());
-            map.intake.setAngleMotorSpeed(-RightY*0.4);
+            map.intake.setAngleMotorSpeed(-deadzone(getRightY(), 0.15)*0.3);
             
             if (getBButtonPressed()) {
                 map.intake.intake(Robot.getShuffleboard().getSettingNum("Intake Speed")); // goes up

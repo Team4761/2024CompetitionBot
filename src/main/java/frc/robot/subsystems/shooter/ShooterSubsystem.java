@@ -14,8 +14,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.controllers.VibrateController;
 import frc.robot.subsystems.swerve.MathStuff;
 
 
@@ -62,13 +65,21 @@ public class ShooterSubsystem extends SubsystemBase {
         intakeLowerSensor = new DigitalInput(Constants.SHOOTER_SENSOR_LOWER_PORT);
 
         targetSpeed = 0.0;
-        targetAngle = Units.degreesToRadians(72); //63 gets to 55ish
+        targetAngle = Units.degreesToRadians(Constants.SHOOTER_START_ANGLE); //63 gets to 55ish
 
         intakeRight.setInverted(true);
     }
 
-
+    boolean lowerPieceLast = false;
     public void periodic() {
+        // rumble for intake intake breakbeam
+        if(isPieceInLowerIntake() && !lowerPieceLast) {
+            CommandScheduler.getInstance().schedule(new VibrateController(Robot.shooterController, 1));
+        }
+        lowerPieceLast = isPieceInLowerIntake();
+
+
+
         getShooterToSetSpeed();     // Gets the shooter to speed up to {targetSpeed} rotations per second.
         getShooterToSetAngle();     // Gets the shooter to angle at {targetAngle} radians.
         
@@ -81,6 +92,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         SmartDashboard.putBoolean("Breakbeam lower", isPieceInLowerIntake());
         SmartDashboard.putBoolean("Breakbeam upper", isPieceInUpperIntake());
+
     }
 
 
@@ -134,7 +146,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * @param speed The speed of the shooter in rotations per second.
      */
     public void setShooterSpeed(double speed) {
-        targetSpeed = speed;
+        targetSpeed = speed;        
     }
     public double getTargetSpeed() {
         return targetSpeed;

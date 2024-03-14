@@ -1,9 +1,11 @@
-package frc.robot;
+package frc.robot.controllers;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.RobocketsShuffleboard;
+import frc.robot.RobotMap;
 import frc.robot.subsystems.climber.LoosenClimber;
 import frc.robot.subsystems.climber.TightenClimber;
 import frc.robot.subsystems.swerve.SwerveTurnTo;
