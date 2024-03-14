@@ -13,6 +13,7 @@ import frc.robot.RobotMap;
 import frc.robot.subsystems.shooter.AutoShooterIntake;
 import frc.robot.subsystems.shooter.AutoSourceIntake;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
+import frc.robot.Constants;
 
 /**
  * This is the code for the controller that controls the shooter and the intake.
