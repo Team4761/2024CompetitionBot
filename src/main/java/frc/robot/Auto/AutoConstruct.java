@@ -10,9 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.swerve.SwerveDriveStop;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
 import frc.robot.RobotMap;
 import frc.robot.Auto.fullautos.*;
@@ -37,6 +34,7 @@ public class AutoConstruct extends SendableChooser<String> {
     private static final String kShootAuto = "shootAuto";
     private static final String kMessEmUpAutoLeft = "messEmUpAutoLeft";
     private static final String kMessEmUpAutoRight = "messEmUpAutoRight";
+    private static final String kDoNothing = "doNothingAuto";
 
     private static final String kOneNoteAuto = "oneNoteAuto";
     private static final String kTwoNoteAuto = "twoNoteAuto";
@@ -56,6 +54,7 @@ public class AutoConstruct extends SendableChooser<String> {
 
         // First parameter: The name of the auto displayed on SmartDashboard
         // Second parameter: The internal name of the auto
+        //addOption("Do Nothing", "");
         addOption("One Meter Left", kOneMeterLeft);
         addOption("One Meter Forward", kOneMeterForward);
         addOption("Prep Shooter Auto", prepShooterAuto);
@@ -71,6 +70,7 @@ public class AutoConstruct extends SendableChooser<String> {
         addOption("Three Note Auto", kThreeNoteAuto);
         addOption("Mess Em Up Auto Left", kMessEmUpAutoLeft);
         addOption("Mess Em Up Auto Right", kMessEmUpAutoRight);
+        addOption("Do Nothing Auto", kDoNothing);
 
         autoSelector = this;
     }
@@ -151,6 +151,8 @@ public class AutoConstruct extends SendableChooser<String> {
                 break;
             case kMessEmUpAutoRight:
                 scheduledCommand = new MessEmUpAuto(false);
+                break;
+            case kDoNothing:
                 break;
             default:
                 // unsure what the default command would be: maybe just ensure nothing is moving?

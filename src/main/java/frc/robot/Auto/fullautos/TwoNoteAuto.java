@@ -44,11 +44,11 @@ public class TwoNoteAuto extends SequentialCommandGroup {
                 new RunIntake(0.3)
             ),
             new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
-            new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed")),
+            new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed"), Robot.getShuffleboard().getSettingNum("Shooter Intake Speed")),
             new GetShooterToAngle(Constants.SHOOTER_TWO_NOTE_SHOOT_ANGLE),
             new Move(2,0),
             new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")),
-            new MoveBackCommand(1.0)
+            new MoveBackCommand(2.0)
         );
     }
 }

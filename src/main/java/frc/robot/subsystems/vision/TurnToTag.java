@@ -19,7 +19,7 @@ public class TurnToTag extends Command {
     public TurnToTag(SwerveDriveSubsystem swerve, VisionSubsystem vision){
         this.swerve = swerve;
         this.vision = vision;
-        controller = new PIDController(0,0,0);
+        controller = new PIDController(3,0,0.01);
     }
     @Override
     public void execute(){
@@ -33,7 +33,7 @@ public class TurnToTag extends Command {
             rot = 0;
             targetYaw = 0;
         }
-        swerve.swerveDriveF(0, 0, rot, false);
+        swerve.setDriveRot(rot, false);
     }
 
     @Override
@@ -46,6 +46,6 @@ public class TurnToTag extends Command {
 
     @Override
     public void end(boolean interrupted){
-        swerve.swerveDriveF(0,0,0,false);
+        swerve.setDriveRot(0,false);
     }
 }

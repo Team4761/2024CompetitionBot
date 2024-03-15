@@ -1,7 +1,5 @@
 package frc.robot.subsystems.intake;
 
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -9,10 +7,14 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.controllers.VibrateController;
 
 public class IntakeSubsystem extends SubsystemBase{ 
     // Neos that actually intake (left or right facing forward)
@@ -22,6 +24,8 @@ public class IntakeSubsystem extends SubsystemBase{
     private CANSparkMax angleMotorLeft; // Motor for angling the shooter up and down, assuming that the front of the shooter is the forward direction
 
     private DutyCycleEncoder encoder;
+    
+    private DigitalInput intakeSensor;    // breakbeam at entrance of intake
 
     private PIDController anglePID;         // Will be used to get the shooter a desired angle.
     private ArmFeedforward angleFeedForward;// Will be used to maintain the shooter's angle.
@@ -42,14 +46,32 @@ public class IntakeSubsystem extends SubsystemBase{
 
         encoder = new DutyCycleEncoder(3);
 
-        anglePID = new PIDController(0, 0, 0);  // These values have yet to be tuned.
+        intakeSensor = new DigitalInput(4);
+
+        anglePID = new PIDController(0, 0, 0);  // These values have yet to be tuned. was 1,0,0
         angleFeedForward = new ArmFeedforward(0,0, 0); //ks = 0, kg = 0.91, kv = 1.95// Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
 
     }
 
+    boolean beamLast = false;
     public void periodic() {
+        // rumble when intake breakbeam broken
+        if(isPieceInIntake() && !beamLast) {
+            CommandScheduler.getInstance().schedule(new VibrateController(Robot.driveController, 1));
+        }
+        beamLast = isPieceInIntake();
+
+        
+        if (Robot.getMap().leds != null) { // set leds to blue when note is in intake
+            if (isPieceInIntake()) {
+                Robot.getMap().leds.SetAllColor(0, 0, 100);
+            }
+        }
+
+
         // getIntakeToSetAngle();
 
+        SmartDashboard.putBoolean("Intake Beam", isPieceInIntake());
         SmartDashboard.putNumber("Intake Setpoint Desired", targetAngle.getDegrees());
         SmartDashboard.putNumber("Intake Angle", getIntakeAngle().getDegrees());
     }
@@ -92,7 +114,8 @@ public class IntakeSubsystem extends SubsystemBase{
      * @param offsetRadians
      */
     public void rotate(double offsetRadians) {
-        if (targetAngle.getRadians() + offsetRadians < MIN_ANGLE)
+        // min and max currently not set correctly
+        if (targetAngle.getRadians() + offsetRadians < MIN_ANGLE) //why plus offset
             targetAngle = new Rotation2d(MIN_ANGLE);
         else if (targetAngle.getRadians() + offsetRadians > MAX_ANGLE)
             targetAngle = new Rotation2d(MAX_ANGLE);
@@ -102,20 +125,20 @@ public class IntakeSubsystem extends SubsystemBase{
 
     public void setAngleMotorSpeed(double speed){
         //limit movement to only inwards at outer bounds
-        // +speed makes angle increase
-        //if (speed>0) {
-        //    if (getIntakeAngle().getDegrees()<250 || getIntakeAngle().getDegrees()>350) {
+        // speed makes angle decrease (up)
+        if (speed>0) {
+            if (getIntakeAngle().getDegrees()>277 || getIntakeAngle().getDegrees()<10) { // let it go up to 205
                 angleMotorLeft.set(speed);
-        //    } else {
-        //        angleMotorLeft.set(0);
-        //    }
-        //} else {
-        //    if (getIntakeAngle().getDegrees()>5) {
-        //        angleMotorLeft.set(speed);
-        //    } else {
-        //        angleMotorLeft.set(0);
-        //    }
-        //}
+            } else {
+                angleMotorLeft.set(0);
+            }
+        } else {
+            if (getIntakeAngle().getDegrees()<350&&getIntakeAngle().getDegrees()>10) { // let it go down to 350
+                angleMotorLeft.set(speed);
+            } else {
+                angleMotorLeft.set(0);
+            }
+        }
     }
 
     /**
@@ -152,6 +175,10 @@ public class IntakeSubsystem extends SubsystemBase{
     public void stop(){
         intakeB.set(0);
         intakeT.set(0);
+    }
+
+    public boolean isPieceInIntake() {
+        return !intakeSensor.get();
     }
 
     /**

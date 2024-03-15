@@ -7,7 +7,6 @@ import frc.robot.Robot;
 import frc.robot.subsystems.intake.GetIntakeToSetPosition;
 import frc.robot.subsystems.shooter.GetShooterToAngle;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
-import frc.robot.subsystems.shooter.Shoot;
 
 /**
  * <p> This does 3 things:

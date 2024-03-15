@@ -1,7 +1,6 @@
 package frc.robot.controllers;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobocketsShuffleboard;
@@ -170,9 +169,5 @@ public class DriveController extends XboxController {
             }
         }
 
-        // West Coast
-        if (map.westcoast != null) {
-            map.westcoast.arcadeDrive(getLeftY(), getRightX());
-        }
     }
 }

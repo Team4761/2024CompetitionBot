@@ -47,7 +47,8 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
     public ThreeNoteAuto() {
         super(
             new ShootAuto(),
-            new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed")),
+            // how does the robot get the second note
+            new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed"), Robot.getShuffleboard().getSettingNum("Shooter Intake Speed")),
             new GetShooterToAngle(Constants.SHOOTER_TWO_NOTE_SHOOT_ANGLE),
             new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")),
             new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(0.0, -1.4)),  // Translation was found using path planner and eyeballing it

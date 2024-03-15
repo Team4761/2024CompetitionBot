@@ -12,7 +12,8 @@ import frc.robot.RobotMap;
  */
 public class FullIntake extends Command {
     private RobotMap map;   // The robot's RobotMap to access the intake and shooter subsystems.
-    private double speed;   // The speed to run the whole system at.
+    private double intakeSpeed;   // The speed to run the intake at
+    private double uptakeSpeed;   // The speed to run the uptake at
     private long timeOut;   // The time at which the command should end.
 
     /**
@@ -20,8 +21,17 @@ public class FullIntake extends Command {
      * @param speed The speed to run the intake at as a number between 0.0 to 1.0
      * @param map The RobotMap of the robot to improve performance.
      */
+    
     public FullIntake(double speed) {
-        this.speed = speed;
+        this.intakeSpeed = speed;
+        this.uptakeSpeed = speed;
+        this.map = Robot.getMap();
+        this.timeOut = System.currentTimeMillis() + 5000;
+    }
+
+    public FullIntake(double inSpeed, double upSpeed) {
+        this.intakeSpeed = inSpeed;
+        this.uptakeSpeed = upSpeed;
         this.map = Robot.getMap();
         this.timeOut = System.currentTimeMillis() + 5000;
     }
@@ -31,8 +41,8 @@ public class FullIntake extends Command {
      */
     @Override
     public void execute() {
-        map.intake.intake(speed);
-        map.shooter.setIntakeSpeed(speed);
+        map.intake.intake(intakeSpeed);
+        map.shooter.setIntakeSpeed(uptakeSpeed);
     }
 
     /**
