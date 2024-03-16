@@ -3,6 +3,7 @@ package frc.robot.controllers;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants;
 import frc.robot.RobocketsShuffleboard;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
@@ -112,7 +113,7 @@ public class ShooterController extends XboxController {
                 map.shooter.setShooterAngle(Units.degreesToRadians(47));    // ground intake angle
             }
             if (getRightBumperPressed()) {
-                map.shooter.setShooterAngle(Units.degreesToRadians(60));    // shooting/amp/source intake angle
+                map.shooter.setShooterAngle(Units.degreesToRadians(Constants.SHOOTER_SHOOT_ANGLE));    // shooting/amp/source intake angle
             }
         }
         

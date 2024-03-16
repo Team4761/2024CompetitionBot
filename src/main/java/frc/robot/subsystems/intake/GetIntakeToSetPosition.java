@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
 public class GetIntakeToSetPosition extends Command {
-    private final double MARGIN_OF_ERROR = Units.degreesToRadians(5);   // The range of error that the command can stop when reaching.
+    private final double MARGIN_OF_ERROR = Units.degreesToRadians(10);   // The range of error that the command can stop when reaching.
     private final long TIMEOUT = 4000;
 
     private double angleToGoTo; // In radians

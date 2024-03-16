@@ -8,12 +8,14 @@ import frc.robot.Robot;
  */
 public class RunIntake extends Command {
     
-    private final long DEFAULT_TIME = 2000; // The default time which the command should end at in milliseconds
 
     private double speed;   // The speed to run the intake at as a value between -1 and 1 where + is intake and - is outtake
     private long endTime;   // The time at which the command should end
 
     private IntakeSubsystem intake; // A pointer to the main Robot's intake.
+
+    private long duration = 2000; // The default time which the command should end at in milliseconds
+
 
     /**
      * <p> Runs the intake at with speed {speed} for 2 seconds.
@@ -22,7 +24,6 @@ public class RunIntake extends Command {
     public RunIntake(double speed) {
         this.intake = Robot.getMap().intake;
         this.speed = speed;
-        this.endTime = System.currentTimeMillis() + DEFAULT_TIME;
     }
 
     /**
@@ -33,6 +34,10 @@ public class RunIntake extends Command {
     public RunIntake(double speed, long duration) {
         this.intake = Robot.getMap().intake;
         this.speed = speed;
+        this.duration = duration;
+    }
+
+    public void initialize() {
         this.endTime = System.currentTimeMillis() + duration;
     }
 
@@ -43,6 +48,7 @@ public class RunIntake extends Command {
     @Override
     public void execute() {
         intake.intake(speed);
+        System.out.print("1.");
     }
 
     /**
