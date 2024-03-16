@@ -113,7 +113,7 @@ public class ShooterController extends XboxController {
                 map.shooter.setShooterAngle(Units.degreesToRadians(47));    // ground intake angle
             }
             if (getRightBumperPressed()) {
-                map.shooter.setShooterAngle(Units.degreesToRadians(Constants.SHOOTER_SHOOT_ANGLE));    // shooting/amp/source intake angle
+                map.shooter.setShooterAngle(Constants.SHOOTER_SHOOT_ANGLE);    // shooting/amp/source intake angle
             }
         }
         

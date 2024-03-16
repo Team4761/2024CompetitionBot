@@ -226,8 +226,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         isRobotRelative = false;
 
         if (squareInputs) {
-            sX*=sX;
-            sY*=sY;
+            sX*=sX*Math.signum(sX);
+            sY*=sY*Math.signum(sY);
         }
         
         speedX = sX;
@@ -242,8 +242,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         // input squaring, makes small adjustments easier while allowing higher speeds 
         if (squareInputs) {
-            sX*=sX;
-            sY*=sY;
+            sX*=sX*Math.signum(sX);
+            sY*=sY*Math.signum(sY);
             sR=Math.signum(sR)*sR*sR;
         }
         

@@ -43,13 +43,14 @@ public class TwoNoteAuto extends SequentialCommandGroup {
             new ShootAuto(),
             new ParallelCommandGroup(
                 new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-2, 0)),
-                new RunIntake(1, 1500)
+                new RunIntake(1, 2200)
             ).withTimeout(2.5),
             new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
             new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed"), Robot.getShuffleboard().getSettingNum("Shooter Intake Speed")),
-            new GetShooterToAngle(Constants.SHOOTER_TWO_NOTE_SHOOT_ANGLE),
+            //new GetShooterToAngle(Constants.SHOOTER_TWO_NOTE_SHOOT_ANGLE), no need because it goes back
+            new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE),      // Get the shooter to shooting position
             new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(2, 0)),
-            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")),
+            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")), // Shoot with the speed on the shuffleboard
             new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-2.5, 0))
         );
     }
