@@ -113,9 +113,9 @@ public class AutoConstruct extends SendableChooser<String> {
             case kOneMeterForward:
                 scheduledCommand = new SwerveGoCartesianF(map.swerve, new Translation2d(1, 0));
                 break;
-            case prepShooterAuto:
-                scheduledCommand = new PrepShooterAuto();
-                break;
+            // case prepShooterAuto:
+            //     scheduledCommand = new PrepShooterAuto();
+            //     break;
             case kShootAuto:
                 scheduledCommand = new ShootAuto();
                 break;
