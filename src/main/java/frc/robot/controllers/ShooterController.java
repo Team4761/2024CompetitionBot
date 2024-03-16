@@ -146,10 +146,10 @@ public class ShooterController extends XboxController {
             // map.intake.rotate(getRightY());
             map.intake.setAngleMotorSpeed(-deadzone(getRightY(), 0.15)*0.3);
             
-            if (getBButtonPressed()) {
+            if (getXButtonPressed()) {
                 map.intake.intake(Robot.getShuffleboard().getSettingNum("Intake Speed")); // goes up
             }
-            if (getXButtonPressed()) {
+            if (getBButtonPressed()) {
                 map.intake.outtake(Robot.getShuffleboard().getSettingNum("Outtake Speed")); // goes down
             }
             if (getXButtonReleased() || getBButtonReleased()) {

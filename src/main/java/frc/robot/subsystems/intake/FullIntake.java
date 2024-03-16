@@ -26,13 +26,16 @@ public class FullIntake extends Command {
         this.intakeSpeed = speed;
         this.uptakeSpeed = speed;
         this.map = Robot.getMap();
-        this.timeOut = System.currentTimeMillis() + 5000;
     }
 
     public FullIntake(double inSpeed, double upSpeed) {
         this.intakeSpeed = inSpeed;
         this.uptakeSpeed = upSpeed;
         this.map = Robot.getMap();
+    }
+
+    @Override
+    public void initialize() {
         this.timeOut = System.currentTimeMillis() + 5000;
     }
 

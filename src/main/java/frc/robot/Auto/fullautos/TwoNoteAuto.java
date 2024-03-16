@@ -2,6 +2,7 @@ package frc.robot.Auto.fullautos;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -41,15 +42,18 @@ public class TwoNoteAuto extends SequentialCommandGroup {
     public TwoNoteAuto() {
         super(
             new ShootAuto(),
+            new ParallelRaceGroup(
+                new ParallelCommandGroup(
+                    new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
+                    new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-2, 0))
+                ),
+                new RunIntake(1, 2500) //stop intaking if cartesian done and stop cartesian if 2500 timeout
+            ),
             new ParallelCommandGroup(
-                new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-2, 0)),
-                new RunIntake(1, 2200)
-            ).withTimeout(2.5),
-            new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
-            new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed"), Robot.getShuffleboard().getSettingNum("Shooter Intake Speed")),
-            //new GetShooterToAngle(Constants.SHOOTER_TWO_NOTE_SHOOT_ANGLE), no need because it goes back
+                new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed"), Robot.getShuffleboard().getSettingNum("Shooter Intake Speed")),
+                new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(2, 0))
+            ),
             new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE),      // Get the shooter to shooting position
-            new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(2, 0)),
             new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")), // Shoot with the speed on the shuffleboard
             new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-2.5, 0))
         );
