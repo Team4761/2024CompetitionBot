@@ -10,7 +10,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Auto.AutoConstruct;  
+import frc.robot.Auto.AutoConstruct;
+import frc.robot.subsystems.leds.FlowLEDs;  
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -81,6 +82,8 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+    CommandScheduler.getInstance().schedule(new FlowLEDs());
+    // map.leds.SetAllColor(255,0,0);
     // map.swerve.zeroGyro();
     // map.swerve.resetPose();
     //RobocketsShuffleboard.teleopInit();

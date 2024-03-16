@@ -126,6 +126,7 @@ public class DriveController extends XboxController {
             if (getRightBumperPressed()) {
                 CommandScheduler.getInstance().schedule(new LoosenClimber());
             }
+
             if (getRightBumperReleased()) {
                 CommandScheduler.getInstance().schedule(new TightenClimber());
             }

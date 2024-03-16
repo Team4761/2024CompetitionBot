@@ -77,4 +77,8 @@ public class Constants
     public static double SHOOTER_SHOOT_ANGLE = Units.degreesToRadians(55);  // In radians (Is untuned WIP)
     public static double SHOOTER_TWO_NOTE_SHOOT_ANGLE = Units.degreesToRadians(50); // In radians (Is untuned WIP)
     public static double SHOOTER_THREE_NOTE_SHOOT_ANGLE = Units.degreesToRadians(47); // In radians (Is untuned WIP)
+
+
+    // LEDSSSS
+    public static int LED_PORT = 5; // DIO Port.
 }
