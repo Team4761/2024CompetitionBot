@@ -9,7 +9,7 @@ import frc.robot.Robot;
  */
 public class Shoot extends Command {
     private double speed;   // Value between -1 and 1 in rotations per second
-    
+    private long length;
     private long endTime;
 
     /**
@@ -19,12 +19,17 @@ public class Shoot extends Command {
     public Shoot (double speed) {
         this.speed = speed;
         
-        this.endTime = System.currentTimeMillis()+3000;
+        length = 3000;
     }
     public Shoot (double speed, double seconds) {
         this.speed = speed;
         
-        this.endTime = System.currentTimeMillis()+(long)(seconds*1000);
+        length = (long)(seconds*1000);
+    }
+    
+    @Override
+    public void initialize() {
+        this.endTime = System.currentTimeMillis()+length;
     }
 
     /**

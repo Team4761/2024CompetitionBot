@@ -25,7 +25,7 @@ public class LedSubsystem extends SubsystemBase {
     BufferedImage there;
 
     int ticks;
-    int currentPort = 0;
+    int currentPort = 5;
     
 
     AddressableLED leds;

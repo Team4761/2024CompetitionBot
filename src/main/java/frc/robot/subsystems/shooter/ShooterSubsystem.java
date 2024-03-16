@@ -3,7 +3,6 @@ package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.math.MathUtil;
@@ -14,8 +13,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.controllers.VibrateController;
 import frc.robot.subsystems.swerve.MathStuff;
 
 
@@ -40,7 +42,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final double SHOOTER_ANGLE_OFFSET = Units.degreesToRadians(76) / (Math.PI*2);  // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
     private static double MAX_ANGLE = Units.degreesToRadians(72);
-    private static double MIN_ANGLE = Units.degreesToRadians(0);
+    private static double MIN_ANGLE = 0;//Units.degreesToRadians(0);
 
 
     public ShooterSubsystem() {
@@ -62,16 +64,36 @@ public class ShooterSubsystem extends SubsystemBase {
         intakeLowerSensor = new DigitalInput(Constants.SHOOTER_SENSOR_LOWER_PORT);
 
         targetSpeed = 0.0;
-        targetAngle = Units.degreesToRadians(72); //63 gets to 55ish
+        targetAngle = Constants.SHOOTER_START_ANGLE; //63 gets to 55ish
 
         intakeRight.setInverted(true);
     }
 
 
+    boolean lowerPieceLast = false;
     public void periodic() {
+        // rumble for intake intake breakbeam
+        if(isPieceInLowerIntake() && !lowerPieceLast) {
+            CommandScheduler.getInstance().schedule(new VibrateController(Robot.shooterController, 1));
+        } 
+        lowerPieceLast = isPieceInLowerIntake();
+
+        // theoretical code to stop shooter from moving when it would collide with intake
+        if (Robot.getMap().intake.getIntakeAngle().getDegrees()>300 || Robot.getMap().intake.getIntakeAngle().getDegrees()<20) { // intake is supposed to go from 360 at bottom to 200ish at top
+            getShooterToSetAngle();     // Gets the shooter to angle at {targetAngle} radians.
+        } else {
+            setShooterAngleSpeed(0);
+        }
+
+        if (Robot.getMap().leds != null) { // set leds to green when ready to shoot
+            if (isPieceInUpperIntake()) {
+                Robot.getMap().leds.SetAllColor(0, 100, 0);
+            }
+        }
+
         getShooterToSetSpeed();     // Gets the shooter to speed up to {targetSpeed} rotations per second.
-        getShooterToSetAngle();     // Gets the shooter to angle at {targetAngle} radians.
         
+
         SmartDashboard.putNumber("Shooter Speed L", shooterLeft.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Shooter Speed R", shooterRight.getVelocity().getValueAsDouble());
         
@@ -81,6 +103,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         SmartDashboard.putBoolean("Breakbeam lower", isPieceInLowerIntake());
         SmartDashboard.putBoolean("Breakbeam upper", isPieceInUpperIntake());
+
     }
 
 
@@ -134,7 +157,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * @param speed The speed of the shooter in rotations per second.
      */
     public void setShooterSpeed(double speed) {
-        targetSpeed = speed;
+        targetSpeed = speed;        
     }
     public double getTargetSpeed() {
         return targetSpeed;

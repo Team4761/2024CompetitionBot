@@ -14,10 +14,10 @@ public class IntakeAndShoot extends ParallelCommandGroup {
      */
     public IntakeAndShoot(double speed) {
         super(
-            new Shoot(speed, 1.8),
+            new Shoot(speed, 2),
             new SequentialCommandGroup(
-                new WaitCommand(1.3),
-                new ShooterIntake(0.5),
+                new WaitCommand(1.4),
+                new ShooterIntake(1, 600),
                 new PrintCommand("Finished IntakeAndShoot!")
             )
         );

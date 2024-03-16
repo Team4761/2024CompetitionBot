@@ -1,5 +1,6 @@
 package frc.robot.Auto.fullautos;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
@@ -11,6 +12,7 @@ import frc.robot.subsystems.intake.RunIntake;
 import frc.robot.subsystems.shooter.GetShooterToAngle;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
 import frc.robot.subsystems.swerve.Move;
+import frc.robot.subsystems.swerve.SwerveGoCartesianF;
 
 /**
  * <p> The robot must be placed so that when the intake drops, it falls directly on the center note on the alliance side.
@@ -40,15 +42,16 @@ public class TwoNoteAuto extends SequentialCommandGroup {
         super(
             new ShootAuto(),
             new ParallelCommandGroup(
-                new MoveBackCommand(2),
-                new RunIntake(0.3)
-            ),
+                new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-2, 0)),
+                new RunIntake(1, 2200)
+            ).withTimeout(2.5),
             new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
-            new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed")),
-            new GetShooterToAngle(Constants.SHOOTER_TWO_NOTE_SHOOT_ANGLE),
-            new Move(2,0),
-            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")),
-            new MoveBackCommand(1.0)
+            new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed"), Robot.getShuffleboard().getSettingNum("Shooter Intake Speed")),
+            //new GetShooterToAngle(Constants.SHOOTER_TWO_NOTE_SHOOT_ANGLE), no need because it goes back
+            new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE),      // Get the shooter to shooting position
+            new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(2, 0)),
+            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")), // Shoot with the speed on the shuffleboard
+            new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-2.5, 0))
         );
     }
 }

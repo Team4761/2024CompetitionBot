@@ -1,12 +1,14 @@
-package frc.robot;
+package frc.robot.controllers;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.RobocketsShuffleboard;
+import frc.robot.RobotMap;
 import frc.robot.subsystems.climber.LoosenClimber;
 import frc.robot.subsystems.climber.TightenClimber;
 import frc.robot.subsystems.swerve.SwerveTurnTo;
+import frc.robot.Constants;
 
 /**
  * <p> This is the specific controller that controls Swerve due to the fact that swerve requires 2 separate joysticks and buttons to rezero the robot's gyro/position.
@@ -168,9 +170,5 @@ public class DriveController extends XboxController {
             }
         }
 
-        // West Coast
-        if (map.westcoast != null) {
-            map.westcoast.arcadeDrive(getLeftY(), getRightX());
-        }
     }
 }

@@ -9,14 +9,20 @@ import frc.robot.Robot;
 public class ShooterIntake extends Command {
     private double speed;   // Value between -1 and 1 in rotations per second
     private long endTime;   // Stores the time when the command should finish executing
+    private long length;
 
     /**
      * <p> This initializes the speed which the robot should shoot at in rotations per second and the time which the command should finish executing.
      * @param speed A value between -1 and 1 which defines how fast the shooter should spin in rotations per second.
      */
-    public ShooterIntake (double speed) {
+    public ShooterIntake (double speed, long time) {
         this.speed = speed;
-        this.endTime = System.currentTimeMillis()+2000;
+        this.length = time;
+    }
+    
+    @Override
+    public void initialize() {
+        this.endTime = System.currentTimeMillis()+length;
     }
 
     /**

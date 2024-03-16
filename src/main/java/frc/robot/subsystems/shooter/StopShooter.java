@@ -2,7 +2,6 @@ package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.RobotMap;
 
 /**
  * For incrementally stopping the shooter
@@ -15,7 +14,6 @@ public class StopShooter extends Command {
     public StopShooter () {
         //timeout
         this.deccelRate = 2;
-        endTime = System.currentTimeMillis()+1000;
     }
     /**
      * <p> This initializes the decceleration rate of the shooter | rotations/s^2.
@@ -24,7 +22,11 @@ public class StopShooter extends Command {
     public StopShooter (double deccelRate) {
         //timeout
         this.deccelRate = deccelRate;
-        endTime = System.currentTimeMillis()+1000;
+    }
+
+    @Override
+    public void initialize() {
+        endTime = System.currentTimeMillis()+2500;
     }
 
     /**

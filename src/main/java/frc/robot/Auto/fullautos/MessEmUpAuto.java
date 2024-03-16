@@ -1,6 +1,7 @@
 package frc.robot.Auto.fullautos;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -33,8 +34,8 @@ import frc.robot.subsystems.swerve.SwerveGoCartesianF;
      */
 public class MessEmUpAuto extends SequentialCommandGroup {
     
-    private final static double DISTANCE_BETWEEN_NOTES = 0.3;          // The distance between the center of the notes in the center of the field
-    private final static double DISTANCE_FROM_LINE_TO_NOTES = 1.0;     // The distance between the alliance line and the edge of the first center note.
+    private final static double DISTANCE_BETWEEN_NOTES = Units.inchesToMeters(66.0);          // The distance between the center of the notes in the center of the field
+    private final static double DISTANCE_FROM_LINE_TO_NOTES = Units.inchesToMeters(250.50);     // The distance between the alliance line and the edge of the first center note.
 
     /**
      * <h1> This is the best auto.
