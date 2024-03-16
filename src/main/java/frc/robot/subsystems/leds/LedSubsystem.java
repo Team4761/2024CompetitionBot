@@ -105,7 +105,7 @@ public class LedSubsystem extends SubsystemBase {
 
     public void SetRowColor(int row,int r, int g, int b) {
         int start = row * LED_WIDTH;
-        for (int i = 0; i < LED_WIDTH; ++i) {
+        for (int i = 0; i < LED_LENGTH; ++i) {
             ledBuffer.setRGB(start + i, r, g, b);
         }
         leds.setData(ledBuffer);
@@ -115,23 +115,23 @@ public class LedSubsystem extends SubsystemBase {
         SetAllColor(30, 245, 30);
     }
 
-    public void Periodic(int databoardPort) {
-        if (databoardPort != currentPort) {
-            currentPort = databoardPort;
-            leds = new AddressableLED(currentPort);
-        }
-        ticks++;
-        if (ticks < 250){
-            StartColor();
-        } else if (ticks < 500) {
-            DisplayImage(hello);
-        } else {
-            DisplayImage(there);
-        }
-        if (ticks > 750) {
-            ticks = 250;
-        }
-    }
+    // public void Periodic(int databoardPort) {
+    //     if (databoardPort != currentPort) {
+    //         currentPort = databoardPort;
+    //         leds = new AddressableLED(currentPort);
+    //     }
+    //     ticks++;
+    //     if (ticks < 250){
+    //         StartColor();
+    //     } else if (ticks < 500) {
+    //         DisplayImage(hello);
+    //     } else {
+    //         DisplayImage(there);
+    //     }
+    //     if (ticks > 750) {
+    //         ticks = 250;
+    //     }
+    // }
     //Indicator of having a Note and the LEDs beung that indidcator
     public void NoteIndicator (boolean HaveNote) {
         if (HaveNote)
