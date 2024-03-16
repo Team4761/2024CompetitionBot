@@ -4,7 +4,9 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 import javax.imageio.ImageIO;
 
@@ -16,7 +18,7 @@ import java.awt.image.BufferedImage;
 
 public class LedSubsystem extends SubsystemBase {
     public static final int LED_WIDTH=1;
-    public static final int LED_LENGTH=18;
+    public static final int LED_LENGTH=19;
     public static final int LED_SIZE = LED_WIDTH*LED_LENGTH;
     int[] RGB = new int[LED_SIZE * 3];
     BufferedImage hello;
@@ -32,7 +34,7 @@ public class LedSubsystem extends SubsystemBase {
     public LedSubsystem() {
         
         try {
-            leds = new AddressableLED((int)SmartDashboard.getNumber("LED Port", 0));
+            leds = new AddressableLED(Constants.LED_PORT);
             leds.setLength(LED_SIZE);
             leds.start();
             // hello = createImageIcon("hello.png");
@@ -140,6 +142,17 @@ public class LedSubsystem extends SubsystemBase {
         {
             SetAllColor(0,0,0);
         }
+    }
+
+    public void setLEDs(Color[] colors) {
+        for(int i = 0; i < ledBuffer.getLength(); i++) {
+            ledBuffer.setRGB(i, (int)colors[i].red, (int)colors[i].green, (int)colors[i].blue);
+        }
+        leds.setData(ledBuffer);
+    }
+
+    public int getNumberOfLEDs() {
+        return LED_WIDTH * LED_LENGTH;
     }
 }
 
