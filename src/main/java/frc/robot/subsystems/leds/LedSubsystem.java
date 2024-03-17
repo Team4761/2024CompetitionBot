@@ -18,7 +18,7 @@ import java.awt.image.BufferedImage;
 
 public class LedSubsystem extends SubsystemBase {
     public static final int LED_WIDTH=1;
-    public static final int LED_LENGTH=19;
+    public static final int LED_LENGTH=11;
     public static final int LED_SIZE = LED_WIDTH*LED_LENGTH;
     int[] RGB = new int[LED_SIZE * 3];
     BufferedImage hello;
