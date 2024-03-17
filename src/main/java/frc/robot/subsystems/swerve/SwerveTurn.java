@@ -16,7 +16,7 @@ public class SwerveTurn extends Command {
     /**
      * This initializes the internal storage of the variables as well as tells the robot that the SwerveSubsystem is needed.
      * @param swerve Reference to the RobotMap's SwerveDriveSubsystem to improve performance.
-     * @param rot The desired rotation to turn the robot by in degrees. Once again, this is NOT the desired final rotation, this is just an offset from the current rotation.
+     * @param rot The desired rotation to turn the robot by. Once again, this is NOT the desired final rotation, this is just an offset from the current rotation.
      */
     public SwerveTurn(SwerveDriveSubsystem swerve, Rotation2d rot) {
         m_swerve = swerve;

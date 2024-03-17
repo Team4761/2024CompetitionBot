@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 import javax.imageio.ImageIO;
 
@@ -105,7 +106,7 @@ public class LedSubsystem extends SubsystemBase {
 
     public void SetRowColor(int row,int r, int g, int b) {
         int start = row * LED_WIDTH;
-        for (int i = 0; i < LED_WIDTH; ++i) {
+        for (int i = 0; i < LED_LENGTH; ++i) {
             ledBuffer.setRGB(start + i, r, g, b);
         }
         leds.setData(ledBuffer);
@@ -115,34 +116,34 @@ public class LedSubsystem extends SubsystemBase {
         SetAllColor(30, 245, 30);
     }
 
-    public void Periodic(int databoardPort) {
-        if (databoardPort != currentPort) {
-            currentPort = databoardPort;
-            leds = new AddressableLED(currentPort);
-        }
-        ticks++;
-        if (ticks < 250){
-            StartColor();
-        } else if (ticks < 500) {
-            DisplayImage(hello);
-        } else {
-            DisplayImage(there);
-        }
-        if (ticks > 750) {
-            ticks = 250;
-        }
-    }
+    // public void Periodic(int databoardPort) {
+    //     if (databoardPort != currentPort) {
+    //         currentPort = databoardPort;
+    //         leds = new AddressableLED(currentPort);
+    //     }
+    //     ticks++;
+    //     if (ticks < 250){
+    //         StartColor();
+    //     } else if (ticks < 500) {
+    //         DisplayImage(hello);
+    //     } else {
+    //         DisplayImage(there);
+    //     }
+    //     if (ticks > 750) {
+    //         ticks = 250;
+    //     }
+    // }
     //Indicator of having a Note and the LEDs beung that indidcator
-    public void NoteIndicator (boolean HaveNote) {
-        if (HaveNote)
-        {
-            SetAllColor(250, 90, 0);
-        }
-        else
-        {
-            SetAllColor(0,0,0);
-        }
-    }
+    // public void NoteIndicator () {
+    //     if (Robot.getMap().shooter.isPieceInUpperIntake()==true)
+    //     {
+    //         SetAllColor(250, 90, 0);
+    //     }
+    //     else
+    //     {
+    //         SetAllColor(0,0,0);
+    //     }
+    // }
 
     public void setLEDs(Color[] colors) {
         for(int i = 0; i < ledBuffer.getLength(); i++) {

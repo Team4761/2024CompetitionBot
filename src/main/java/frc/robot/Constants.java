@@ -63,7 +63,7 @@ public class Constants
 
     // Swerve PID Control
     public static double SWERVE_P = 5.0;    // The higher this value is, the longer it takes for the robot to start slowing down
-    public static double SWERVE_I = 0.5;    // The higher this value is, the more speed it gains overtime
+    public static double SWERVE_I = 0.0;    // The higher this value is, the more speed it gains overtime
     public static double SWERVE_D = 0.0;    // WIP, not implemented yet
 
     // Position Constants
@@ -72,7 +72,7 @@ public class Constants
     public static double INTAKE_ACTIVE_DRIVING_POSITION = Units.degreesToRadians(290);  // In radians
 
     public static double SHOOTER_START_ANGLE = Units.degreesToRadians(72);  // In radians
-    public static double SHOOTER_INTAKE_ANGLE = Units.degreesToRadians(47); // In radians
+    public static double SHOOTER_INTAKE_ANGLE = Units.degreesToRadians(50); // In radians
     public static double SHOOTER_IDLE_ANGLE = Units.degreesToRadians(50);  // In radians
     public static double SHOOTER_SHOOT_ANGLE = Units.degreesToRadians(60);  // In radians (Is untuned WIP)
     public static double SHOOTER_TWO_NOTE_SHOOT_ANGLE = Units.degreesToRadians(50); // In radians (Is untuned WIP)

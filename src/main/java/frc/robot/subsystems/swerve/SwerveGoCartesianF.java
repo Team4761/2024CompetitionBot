@@ -19,6 +19,8 @@ public class SwerveGoCartesianF extends Command {
 
     private boolean isFinished = false;
 
+    private Translation2d trans;
+
     /**
      * <p> This initializes the command by setting the target position to the current position + the trans position and tells the SwerveSubsystem that it is needed.
      * <p> In this, +x is the forwards direction and +y is the left direction.
@@ -27,8 +29,8 @@ public class SwerveGoCartesianF extends Command {
      */
     public SwerveGoCartesianF(SwerveDriveSubsystem swerve, Translation2d trans) {
         m_swerve = swerve;
-        addRequirements(m_swerve);  // Make it so no 2 commands can access the swerve subsystem at the same time (first come first swerve)
-        target = m_swerve.getPose().getTranslation().plus(trans);   // Set the target POSITION (not translation)
+            addRequirements(m_swerve);  // Make it so no 2 commands can access the swerve subsystem at the same time (first come first swerve)
+        this.trans = trans;   // Set the target POSITION (not translation)
     }
 
     /**
@@ -41,8 +43,12 @@ public class SwerveGoCartesianF extends Command {
     public SwerveGoCartesianF(SwerveDriveSubsystem swerve, Translation2d trans, double speedLimit) {
         m_swerve = swerve;
         addRequirements(m_swerve);
-        target = m_swerve.getPose().getTranslation().plus(trans);
         vLimit = speedLimit;
+        this.trans = trans;
+    }
+
+    public void initialize() {
+        target = m_swerve.getPose().getTranslation().plus(trans);
     }
 
 

@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
 public class GetIntakeToSetPosition extends Command {
-    private final double MARGIN_OF_ERROR = Units.degreesToRadians(10);   // The range of error that the command can stop when reaching.
+    private final double MARGIN_OF_ERROR = Units.degreesToRadians(15);   // The range of error that the command can stop when reaching.
     private final long TIMEOUT = 4000;
 
     private double angleToGoTo; // In radians
@@ -16,11 +16,11 @@ public class GetIntakeToSetPosition extends Command {
         addRequirements(Robot.getMap().intake);
         intake = Robot.getMap().intake;
         angleToGoTo = angleRadians;
-        timeOut = System.currentTimeMillis() + TIMEOUT;
     }
 
     @Override
     public void initialize() {
+        timeOut = System.currentTimeMillis() + TIMEOUT;
         intake.setAngleMotorSpeed( -(Math.signum(intake.getIntakeAngle().getRadians() - angleToGoTo)) * 0.4 );
     //    intake.goToRotation(new Rotation2d(angleToGoTo));
 

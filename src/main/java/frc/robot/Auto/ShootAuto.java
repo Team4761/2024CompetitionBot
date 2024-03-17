@@ -1,6 +1,7 @@
 package frc.robot.Auto;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -24,9 +25,11 @@ public class ShootAuto extends SequentialCommandGroup {
     */
     public ShootAuto() {
         super(
+            new ParallelCommandGroup(
                 new GetIntakeToSetPosition(Units.degreesToRadians(Constants.INTAKE_INTAKE_POSITION)),  // Move the intake down
-                new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE),      // Get the shooter to shooting position
-                new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")) // Shoot with the speed on the shuffleboard
+                new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE)      // Get the shooter to shooting position
+            ),
+            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed"), 1) // Shoot with the speed on the shuffleboard
         );
     }
 }

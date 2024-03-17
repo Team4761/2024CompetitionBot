@@ -3,16 +3,20 @@ package frc.robot.Auto.fullautos;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Auto.MoveBackCommand;
 import frc.robot.Auto.ShootAuto;
 import frc.robot.subsystems.intake.FullIntake;
+import frc.robot.subsystems.intake.RunIntake;
 import frc.robot.subsystems.shooter.GetShooterToAngle;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
 import frc.robot.subsystems.swerve.SwerveTurnTo;
+import frc.robot.subsystems.swerve.ZeroGyro;
 
 /**
  * <p> The robot must be placed so that when the intake drops, it falls directly on top of a note.
@@ -46,16 +50,38 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
      */
     public ThreeNoteAuto() {
         super(
+            new ZeroGyro(),
             new ShootAuto(),
-            // how does the robot get the second note
-            new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed"), Robot.getShuffleboard().getSettingNum("Shooter Intake Speed")),
-            new GetShooterToAngle(Constants.SHOOTER_TWO_NOTE_SHOOT_ANGLE),
-            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")),
-            new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(0.0, -1.4)),  // Translation was found using path planner and eyeballing it
-            new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Units.degreesToRadians(35))),
-            new GetShooterToAngle(Constants.SHOOTER_THREE_NOTE_SHOOT_ANGLE),
-            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")),
-            new MoveBackCommand(1.0)
+            new ParallelRaceGroup(
+                new ParallelCommandGroup(
+                    new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
+                    new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-2, 0))
+                ),
+                new RunIntake(1, 2500) //stop intaking if cartesian done and stop cartesian if 2500 timeout
+            ),
+            new ParallelCommandGroup(
+                new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed"), Robot.getShuffleboard().getSettingNum("Shooter Intake Speed")),
+                new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(2, 0))
+            ),
+            new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE),      // Get the shooter to shooting position
+            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed"), 1), // Shoot with the speed on the shuffleboard
+
+
+            new ParallelRaceGroup(
+                new ParallelCommandGroup( //3rd note start
+                    new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
+                    new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-2, 2.5)) // left?
+                ),
+                new RunIntake(1, 3000)
+            ),
+            new ParallelCommandGroup(
+                new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed"), Robot.getShuffleboard().getSettingNum("Shooter Intake Speed")),
+                new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(2, -2))
+            ),
+            new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE),      // Get the shooter to shooting position
+            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")), // Shoot with the speed on the shuffleboard
+
+            new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-3, 0))
         );
     }
 }

@@ -136,13 +136,13 @@ public class DriveController extends XboxController {
 
         // Intake
         if (map.intake != null) {
-
+/*
             if (getRightBumperPressed()) {
                 map.intake.intake(shuffleboard.getSettingNum("Intake Speed"));
             }
             else if (getLeftBumperPressed()) {
                 map.intake.outtake(shuffleboard.getSettingNum("Outtake Speed"));
-            }   
+            }  */ 
 
             if(getRightBumperReleased() || getLeftBumperReleased()){
                 map.intake.stop();
@@ -158,9 +158,9 @@ public class DriveController extends XboxController {
 
         // Shooter
         if (map.shooter != null) {
-            if (getRightBumperPressed()) {
-                map.shooter.setShooterAngle(Constants.SHOOTER_INTAKE_ANGLE);
-            }
+            //if (getRightBumperPressed()) {
+            //    map.shooter.setShooterAngle(Constants.SHOOTER_INTAKE_ANGLE);
+            //}
         }
 
         // Vision

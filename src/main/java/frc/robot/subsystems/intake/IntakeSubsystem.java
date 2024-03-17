@@ -96,8 +96,8 @@ public class IntakeSubsystem extends SubsystemBase{
      * @param speed The speed to run the motors as a number between 0.0 to 1.0
      */
     public void intake(double speed) {
-        intakeB.set(-speed);
-        intakeT.set(-speed);
+        intakeB.set(speed);
+        intakeT.set(speed);
     }
 
     /**
@@ -105,8 +105,8 @@ public class IntakeSubsystem extends SubsystemBase{
      * @param speed The speed to run the motors at as a number between 0.0 to 1.0
      */
     public void outtake(double speed) {
-        intakeB.set(speed);
-        intakeT.set(speed);
+        intakeB.set(-speed);
+        intakeT.set(-speed);
     }
 
     /**
@@ -127,7 +127,7 @@ public class IntakeSubsystem extends SubsystemBase{
         //limit movement to only inwards at outer bounds
         // speed makes angle decrease (up)
         if (speed>0) {
-            if (getIntakeAngle().getDegrees()>277 || getIntakeAngle().getDegrees()<20) { // let it go up to 205
+            if (getIntakeAngle().getDegrees()>285 || getIntakeAngle().getDegrees()<20) { // let it go up to 205
                 angleMotorLeft.set(speed);
             } else {
                 angleMotorLeft.set(0);

@@ -7,8 +7,9 @@ import frc.robot.Constants;
 import frc.robot.RobocketsShuffleboard;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.subsystems.leds.NoteIndicator;
 import frc.robot.subsystems.shooter.AutoShooterIntake;
-import frc.robot.subsystems.shooter.AutoSourceIntake;
+//import frc.robot.subsystems.shooter.AutoSourceIntake;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
 
 /**
@@ -98,11 +99,11 @@ public class ShooterController extends XboxController {
             }
             
             if (getPOV()==0) { // shoot at amp speed
-                CommandScheduler.getInstance().schedule(new IntakeAndShoot(10l));
+                CommandScheduler.getInstance().schedule(new IntakeAndShoot(10));
             }
             if (getPOV() == 180) { // down dpad for source intake
-                map.shooter.setShooterSpeed(-shuffleboard.getSettingNum("Shooter In Speed"));
-                // CommandScheduler.getInstance().schedule(new AutoSourceIntake());
+                //map.shooter.setShooterSpeed(-shuffleboard.getSettingNum("Shooter In Speed"));
+                CommandScheduler.getInstance().schedule(new AutoSourceIntake());
             }
 
             if (getYButtonPressed()) { // uptakes until top breakbeam
@@ -110,7 +111,7 @@ public class ShooterController extends XboxController {
             }
             
             if (getLeftBumperPressed()) {
-                map.shooter.setShooterAngle(Units.degreesToRadians(47));    // ground intake angle
+                map.shooter.setShooterAngle(Constants.SHOOTER_INTAKE_ANGLE);    // ground intake angle
             }
             if (getRightBumperPressed()) {
                 map.shooter.setShooterAngle(Constants.SHOOTER_SHOOT_ANGLE);    // shooting/amp/source intake angle
@@ -122,22 +123,22 @@ public class ShooterController extends XboxController {
             //if the intake button is pressed it will turn the LEds to orange
             if(getLeftBumperPressed())
             {
-                map.leds.NoteIndicator(true);
+                CommandScheduler.getInstance().schedule(new NoteIndicator());
             }
 
             if(getLeftBumperReleased())
             {
-                map.leds.NoteIndicator(true);
+                CommandScheduler.getInstance().schedule(new NoteIndicator());
             }
             //if the outake button is pressed it will turn the LEDs off
             if(getRightBumperPressed())
             {
-                map.leds.NoteIndicator(false);
+                CommandScheduler.getInstance().schedule(new NoteIndicator());
             }
             //if the outake button is pressed it will turn the LEDs off
             if(getAButtonPressed())
             {
-                map.leds.NoteIndicator(false);
+                CommandScheduler.getInstance().schedule(new NoteIndicator());
             }
         }
 
@@ -146,10 +147,10 @@ public class ShooterController extends XboxController {
             // map.intake.rotate(getRightY());
             map.intake.setAngleMotorSpeed(-deadzone(getRightY(), 0.15)*0.3);
             
-            if (getBButtonPressed()) {
+            if (getXButtonPressed()) {
                 map.intake.intake(Robot.getShuffleboard().getSettingNum("Intake Speed")); // goes up
             }
-            if (getXButtonPressed()) {
+            if (getBButtonPressed()) {
                 map.intake.outtake(Robot.getShuffleboard().getSettingNum("Outtake Speed")); // goes down
             }
             if (getXButtonReleased() || getBButtonReleased()) {
