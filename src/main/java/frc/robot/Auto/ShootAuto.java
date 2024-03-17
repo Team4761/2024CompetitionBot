@@ -2,12 +2,14 @@ package frc.robot.Auto;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.intake.GetIntakeToSetPosition;
 import frc.robot.subsystems.shooter.GetShooterToAngle;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
+import frc.robot.subsystems.shooter.Shoot;
 
 /**
  * <p> This does 3 things:
@@ -25,11 +27,14 @@ public class ShootAuto extends SequentialCommandGroup {
     */
     public ShootAuto() {
         super(
-            new ParallelCommandGroup(
-                new GetIntakeToSetPosition(Units.degreesToRadians(Constants.INTAKE_INTAKE_POSITION)),  // Move the intake down
-                new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE)      // Get the shooter to shooting position
+            new ParallelDeadlineGroup(
+                new ParallelCommandGroup(
+                    new GetIntakeToSetPosition(Units.degreesToRadians(Constants.INTAKE_INTAKE_POSITION)),  // Move the intake down
+                    new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE)      // Get the shooter to shooting position
+                ),
+                new Shoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")) // rev until intake and shooter position are done
             ),
-            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed"), 1) // Shoot with the speed on the shuffleboard
+            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed"), 0.5) // Shoot with the speed on the shuffleboard
         );
     }
 }

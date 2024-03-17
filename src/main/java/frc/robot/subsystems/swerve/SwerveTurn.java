@@ -20,7 +20,7 @@ public class SwerveTurn extends Command {
      */
     public SwerveTurn(SwerveDriveSubsystem swerve, Rotation2d rot) {
         m_swerve = swerve;
-        addRequirements(m_swerve);
+        //addRequirements(m_swerve); runs in parallel with cartesian
         target = m_swerve.getGyroRotation().plus(rot);
     }
 

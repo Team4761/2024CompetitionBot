@@ -8,7 +8,6 @@ import frc.robot.RobotMap;
 import frc.robot.subsystems.climber.LoosenClimber;
 import frc.robot.subsystems.climber.TightenClimber;
 import frc.robot.subsystems.swerve.SwerveTurnTo;
-import frc.robot.Constants;
 
 /**
  * <p> This is the specific controller that controls Swerve due to the fact that swerve requires 2 separate joysticks and buttons to rezero the robot's gyro/position.
@@ -144,9 +143,9 @@ public class DriveController extends XboxController {
                 map.intake.outtake(shuffleboard.getSettingNum("Outtake Speed"));
             }  */ 
 
-            if(getRightBumperReleased() || getLeftBumperReleased()){
+            /* if(getRightBumperReleased() || getLeftBumperReleased()){
                 map.intake.stop();
-            }
+            } */
 
             /*else if (getAButtonPressed()){
                 map.intake.goToRotation(new Rotation2d(Constants.INTAKE_START_POSITION));    // Starting position (upright)

@@ -6,14 +6,13 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Auto.MoveBackCommand;
 import frc.robot.Auto.ShootAuto;
 import frc.robot.subsystems.intake.FullIntake;
-import frc.robot.subsystems.intake.RunIntake;
+import frc.robot.subsystems.intake.IntakeUntilBreakbeam;
 import frc.robot.subsystems.shooter.GetShooterToAngle;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
-import frc.robot.subsystems.swerve.Move;
-import frc.robot.subsystems.swerve.SwerveGoCartesianF;
+import frc.robot.subsystems.shooter.Shoot;
+import frc.robot.subsystems.swerve.SwerveGoTo;
 import frc.robot.subsystems.swerve.ZeroGyro;
 
 /**
@@ -42,22 +41,36 @@ public class TwoNoteAuto extends SequentialCommandGroup {
      */
     public TwoNoteAuto() {
         super(
+            // zero, drop intake and shoot first note
             new ZeroGyro(),
-            new ShootAuto(),
-            new ParallelRaceGroup(
-                new ParallelCommandGroup(
-                    new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
-                    new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-2, 0))
-                ),
-                new RunIntake(1, 2500) //stop intaking if cartesian done and stop cartesian if 2500 timeout
+            new ShootAuto(), 
+
+            // get shooter to intake angle, and go to 2nd note and intake until reached destination or intake breakbeamed
+            new ParallelCommandGroup(
+                new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
+
+                new ParallelRaceGroup( // doesnt need to drive if intaked
+                //meters, note is 114 inches back from front, speaker is ~36 inches, robot ~30, and intake extends out a little more
+                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(-1.5, 0)), // should need to go back ~50 inches or ~1.27m
+                    new IntakeUntilBreakbeam(4000) 
+                )
             ),
+            
+            // intake to pizza and go to shoot position
             new ParallelCommandGroup(
                 new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed"), Robot.getShuffleboard().getSettingNum("Shooter Intake Speed")),
-                new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(2, 0))
+                new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0, 0)) //go back to start position
+                
             ),
-            new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE),      // Get the shooter to shooting position
-            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed"), 1), // Shoot with the speed on the shuffleboard
-            new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-2.5, 0))
+            
+            // get to shooter angle while revving
+            new ParallelRaceGroup(
+                new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE),      // Get the shooter to shooting position
+                new Shoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")) // rev motor while shooter is angling
+            ),
+
+            // shoot second note and go back
+            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed"), 0.5) // change rev to go parallel with shooterangle
         );
     }
 }

@@ -5,11 +5,8 @@
 package frc.robot;
 
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Auto.AutoConstruct;
 import frc.robot.subsystems.leds.FlowLEDs;
 import frc.robot.controllers.DriveController;
@@ -67,6 +64,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    if (map.shooter != null)
+      map.shooter.setShooterAngle(map.shooter.getShooterAngle().getRadians());
     AutoConstruct.scheduleSelectedCommand(map);
   }
 

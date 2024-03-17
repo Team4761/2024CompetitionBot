@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.controllers.VibrateController;
-import frc.robot.subsystems.swerve.MathStuff;
 
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -55,7 +54,7 @@ public class ShooterSubsystem extends SubsystemBase {
         encoder = new DutyCycleEncoder(2); //needs port
         //right now 0 is parallel to ground and increases going up
 
-        anglePID = new PIDController(5, 0.2, 0.1);    // Placeholder values, has yet to be tuned.
+        anglePID = new PIDController(5, 0, 0.1);    // Placeholder values, has yet to be tuned.
         angleFeedForward = new ArmFeedforward(0,0.18,1.1,0.01); //recalc numbers with questionable inputs
         
         //ks = 0, kg = 0.91, kv = 1.95    // Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
@@ -79,7 +78,7 @@ public class ShooterSubsystem extends SubsystemBase {
         lowerPieceLast = isPieceInLowerIntake();
 
         // theoretical code to stop shooter from moving when it would collide with intake
-        if (Robot.getMap().intake.getIntakeAngle().getDegrees()>300 || Robot.getMap().intake.getIntakeAngle().getDegrees()<20) { // intake is supposed to go from 360 at bottom to 200ish at top
+        if (Robot.getMap().intake.getIntakeAngle().getDegrees()<70) { // intake goes from 0ish at bottom to 100ish at top
             getShooterToSetAngle();     // Gets the shooter to angle at {targetAngle} radians.
         } else {
             setShooterAngleSpeed(0);

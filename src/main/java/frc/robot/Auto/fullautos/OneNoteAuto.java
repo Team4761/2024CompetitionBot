@@ -25,6 +25,7 @@ public class OneNoteAuto extends SequentialCommandGroup {
      */
     public OneNoteAuto() {
         super(
+            new ZeroGyro(),
             new ShootAuto(),
             // new ZeroGyro(), why is this needed
             new MoveBackCommand(3.0),

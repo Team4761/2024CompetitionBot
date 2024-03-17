@@ -32,7 +32,8 @@ public class IntakeSubsystem extends SubsystemBase{
 
     private Rotation2d targetAngle = new Rotation2d(); // The angle the intake should get to where 0 degrees is (undecided).
 
-    private static double INTAKE_ANGLE_OFFSET = Units.degreesToRadians(0);    // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
+    //commented cause flipping math is weird
+    // private static double INTAKE_ANGLE_OFFSET = Units.degreesToRadians(80);    // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
     private static double MAX_ANGLE = Units.degreesToRadians(90);
     private static double MIN_ANGLE = Units.degreesToRadians(0);
 
@@ -50,7 +51,6 @@ public class IntakeSubsystem extends SubsystemBase{
 
         anglePID = new PIDController(0, 0, 0);  // These values have yet to be tuned. was 1,0,0
         angleFeedForward = new ArmFeedforward(0,0, 0); //ks = 0, kg = 0.91, kv = 1.95// Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
-
     }
 
     boolean beamLast = false;
@@ -58,6 +58,7 @@ public class IntakeSubsystem extends SubsystemBase{
         // rumble when intake breakbeam broken
         if(isPieceInIntake() && !beamLast) {
             CommandScheduler.getInstance().schedule(new VibrateController(Robot.driveController, 1));
+            CommandScheduler.getInstance().schedule(new VibrateController(Robot.shooterController, 1));
         }
         beamLast = isPieceInIntake();
 
@@ -127,17 +128,19 @@ public class IntakeSubsystem extends SubsystemBase{
         //limit movement to only inwards at outer bounds
         // speed makes angle decrease (up)
         if (speed>0) {
-            if (getIntakeAngle().getDegrees()>285 || getIntakeAngle().getDegrees()<20) { // let it go up to 205
+            if (getIntakeAngle().getDegrees()<110) { // let it go up to 110
                 angleMotorLeft.set(speed);
             } else {
                 angleMotorLeft.set(0);
             }
-        } else {
-            if (getIntakeAngle().getDegrees()<350&&getIntakeAngle().getDegrees()>10) { // let it go down to 350
+        }
+        else {
+            if (getIntakeAngle().getDegrees()>10) {
                 angleMotorLeft.set(speed);
             } else {
                 angleMotorLeft.set(0);
             }
+            
         }
     }
 
@@ -161,7 +164,9 @@ public class IntakeSubsystem extends SubsystemBase{
      * @return the angle of the shooter in radians where up is positive and 0 radians is perpendicular with the ground.
      */
     public Rotation2d getIntakeAngle() {
-        return new Rotation2d(encoder.getAbsolutePosition() * Constants.ENCODER_UNITS_TO_RADIANS + INTAKE_ANGLE_OFFSET);
+        // 80 start  to 60   to   0ish   to   350ish at top to
+        // 10           30        90      to    100
+        return new Rotation2d(- ((encoder.getAbsolutePosition() * Constants.ENCODER_UNITS_TO_RADIANS + 100)%360-190));
     }
 
     /**
@@ -179,6 +184,12 @@ public class IntakeSubsystem extends SubsystemBase{
 
     public boolean isPieceInIntake() {
         return !intakeSensor.get();
+        
+        // If the break beam wasn't working, it would constantly return true, which is wrong.
+        // if (isBreakBeamWorking)
+        //     return !intakeSensor.get();
+        // else
+        //     return false;
     }
 
     /**
@@ -188,4 +199,22 @@ public class IntakeSubsystem extends SubsystemBase{
     public void setAngleMotorSpeedDebugging(double speed) {
         angleMotorLeft.set(speed);
     }
+
+
+    /**
+     * <p> This should only be called at the start of auto/tele-op when there is NO piece in the intake.
+     * <p> If there is no piece, then the signal returns true (1), so I use this to make sure that the break beam is on. If it was off, it would return false (0)
+     * @return True if the break beam is working. False if the break beam is not working.
+     */
+    /*
+    public boolean isBreakBeamWorking() {
+        if (intakeSensor.get()) {
+            SmartDashboard.putBoolean("Is Break Beam Working?", true);
+            return true;
+        }
+        else {
+            SmartDashboard.putBoolean("Is Break Beam Working?", false);
+            return false;
+        }
+    }*/
 }
