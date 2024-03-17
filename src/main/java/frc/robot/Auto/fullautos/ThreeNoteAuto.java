@@ -16,6 +16,7 @@ import frc.robot.subsystems.shooter.GetShooterToAngle;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
 import frc.robot.subsystems.swerve.SwerveTurnTo;
+import frc.robot.subsystems.swerve.ZeroGyro;
 
 /**
  * <p> The robot must be placed so that when the intake drops, it falls directly on top of a note.
@@ -49,14 +50,29 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
      */
     public ThreeNoteAuto() {
         super(
-            new TwoNoteAuto(),
+            new ZeroGyro(),
+            new ShootAuto(),
+            new ParallelRaceGroup(
+                new ParallelCommandGroup(
+                    new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
+                    new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-2, 0))
+                ),
+                new RunIntake(1, 2500) //stop intaking if cartesian done and stop cartesian if 2500 timeout
+            ),
+            new ParallelCommandGroup(
+                new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed"), Robot.getShuffleboard().getSettingNum("Shooter Intake Speed")),
+                new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(2, 0))
+            ),
+            new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE),      // Get the shooter to shooting position
+            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed"), 1), // Shoot with the speed on the shuffleboard
+
 
             new ParallelRaceGroup(
                 new ParallelCommandGroup( //3rd note start
                     new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
-                    new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-2, 2))
+                    new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-2, 2.5)) // left?
                 ),
-                new RunIntake(1, 2800)
+                new RunIntake(1, 3000)
             ),
             new ParallelCommandGroup(
                 new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed"), Robot.getShuffleboard().getSettingNum("Shooter Intake Speed")),

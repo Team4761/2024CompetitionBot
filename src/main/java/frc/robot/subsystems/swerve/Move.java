@@ -49,7 +49,7 @@ public class Move extends Command {
         SmartDashboard.putNumber("Auto PValue", Pvalue);
         SmartDashboard.putNumber("Distance To Target", target.getDistance(curTrans));
 
-        isFinished = target.getDistance(curTrans) <= 0.01;  // If the distance is less than or equal to 1cm, then it is finished
+        isFinished = target.getDistance(curTrans) <= 0.1;  // If the distance is less than or equal to 1cm, then it is finished
 
         if (!isFinished)
             m_swerve.swerveDriveF(speedGo, strafeGo, 0, false);        // Do field oriented swerve with the strafe and speed speeds

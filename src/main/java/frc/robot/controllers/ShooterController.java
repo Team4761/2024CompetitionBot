@@ -98,11 +98,11 @@ public class ShooterController extends XboxController {
             }
             
             if (getPOV()==0) { // shoot at amp speed
-                CommandScheduler.getInstance().schedule(new IntakeAndShoot(10l));
+                CommandScheduler.getInstance().schedule(new IntakeAndShoot(10));
             }
             if (getPOV() == 180) { // down dpad for source intake
-                map.shooter.setShooterSpeed(-shuffleboard.getSettingNum("Shooter In Speed"));
-                // CommandScheduler.getInstance().schedule(new AutoSourceIntake());
+                //map.shooter.setShooterSpeed(-shuffleboard.getSettingNum("Shooter In Speed"));
+                CommandScheduler.getInstance().schedule(new AutoSourceIntake());
             }
 
             if (getYButtonPressed()) { // uptakes until top breakbeam
@@ -110,7 +110,7 @@ public class ShooterController extends XboxController {
             }
             
             if (getLeftBumperPressed()) {
-                map.shooter.setShooterAngle(Units.degreesToRadians(47));    // ground intake angle
+                map.shooter.setShooterAngle(Constants.SHOOTER_INTAKE_ANGLE);    // ground intake angle
             }
             if (getRightBumperPressed()) {
                 map.shooter.setShooterAngle(Constants.SHOOTER_SHOOT_ANGLE);    // shooting/amp/source intake angle

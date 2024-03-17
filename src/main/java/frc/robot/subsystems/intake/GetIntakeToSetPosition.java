@@ -16,11 +16,11 @@ public class GetIntakeToSetPosition extends Command {
         addRequirements(Robot.getMap().intake);
         intake = Robot.getMap().intake;
         angleToGoTo = angleRadians;
-        timeOut = System.currentTimeMillis() + TIMEOUT;
     }
 
     @Override
     public void initialize() {
+        timeOut = System.currentTimeMillis() + TIMEOUT;
         intake.setAngleMotorSpeed( -(Math.signum(intake.getIntakeAngle().getRadians() - angleToGoTo)) * 0.4 );
     //    intake.goToRotation(new Rotation2d(angleToGoTo));
 

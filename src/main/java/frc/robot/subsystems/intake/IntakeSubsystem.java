@@ -127,7 +127,7 @@ public class IntakeSubsystem extends SubsystemBase{
         //limit movement to only inwards at outer bounds
         // speed makes angle decrease (up)
         if (speed>0) {
-            if (getIntakeAngle().getDegrees()>277 || getIntakeAngle().getDegrees()<20) { // let it go up to 205
+            if (getIntakeAngle().getDegrees()>285 || getIntakeAngle().getDegrees()<20) { // let it go up to 205
                 angleMotorLeft.set(speed);
             } else {
                 angleMotorLeft.set(0);

@@ -14,6 +14,7 @@ import frc.robot.subsystems.shooter.GetShooterToAngle;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
 import frc.robot.subsystems.swerve.Move;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
+import frc.robot.subsystems.swerve.ZeroGyro;
 
 /**
  * <p> The robot must be placed so that when the intake drops, it falls directly on the center note on the alliance side.
@@ -41,6 +42,7 @@ public class TwoNoteAuto extends SequentialCommandGroup {
      */
     public TwoNoteAuto() {
         super(
+            new ZeroGyro(),
             new ShootAuto(),
             new ParallelRaceGroup(
                 new ParallelCommandGroup(
@@ -54,7 +56,7 @@ public class TwoNoteAuto extends SequentialCommandGroup {
                 new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(2, 0))
             ),
             new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE),      // Get the shooter to shooting position
-            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")), // Shoot with the speed on the shuffleboard
+            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed"), 1), // Shoot with the speed on the shuffleboard
             new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-2.5, 0))
         );
     }
