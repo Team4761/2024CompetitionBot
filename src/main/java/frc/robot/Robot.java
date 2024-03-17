@@ -84,11 +84,12 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    CommandScheduler.getInstance().schedule(new FlowLEDs());
-    // map.leds.SetAllColor(255,0,0);
-    // map.swerve.zeroGyro();
-    // map.swerve.resetPose();
-    //RobocketsShuffleboard.teleopInit();
+    if (map.autoEndingAngle != null && map.swerve != null) {
+      map.swerve.zeroGyro(map.autoEndingAngle);
+    }
+    // if (map.leds != null)
+    //   map.leds.SetAllColor(255,0,0);
+    // CommandScheduler.getInstance().schedule(new FlowLEDs());
   }
 
   /** This function is called periodically during operator control. */

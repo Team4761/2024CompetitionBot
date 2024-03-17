@@ -1,5 +1,7 @@
 package frc.robot.Auto.fullautos;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Auto.MoveBackCommand;
 import frc.robot.Auto.ShootAuto;
@@ -25,7 +27,8 @@ public class OneNoteAuto extends SequentialCommandGroup {
         super(
             new ShootAuto(),
             // new ZeroGyro(), why is this needed
-            new MoveBackCommand(3.0)
+            new MoveBackCommand(3.0),
+            new SetEndingAngle(new Rotation2d(Units.degreesToRadians(180)))
         );
     }
 }

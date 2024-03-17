@@ -29,8 +29,7 @@ public class DiagonalOneNoteAuto extends SequentialCommandGroup {
     public DiagonalOneNoteAuto(boolean isRobotOnLeftSide) {
         super(
             new ZeroGyro(isRobotOnLeftSide ? Constants.STARTING_ANGLE_DIAGONAL : -Constants.STARTING_ANGLE_DIAGONAL),
-            new ShootAuto(),
-            new MoveBackCommand(3.0)
+            new OneNoteAuto()
         );
     }
 }

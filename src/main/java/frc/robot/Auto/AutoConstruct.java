@@ -34,6 +34,10 @@ public class AutoConstruct extends SendableChooser<String> {
     private static final String kShootAuto = "shootAuto";
     private static final String kMessEmUpAutoLeft = "messEmUpAutoLeft";
     private static final String kMessEmUpAutoRight = "messEmUpAutoRight";
+    private static final String kLeftDiagonalOneNote = "leftDiagonalOneNote";
+    private static final String kRightDiagonalOneNote = "rightDiagonalOneNote";
+    private static final String kLeftDiagonalTwoNote = "leftDiagonalTwoNote";
+    private static final String kRightDiagonalTwoNote = "rightDiagonalTwoNote";
     private static final String kDoNothing = "doNothingAuto";
 
     private static final String kOneNoteAuto = "oneNoteAuto";
@@ -70,6 +74,10 @@ public class AutoConstruct extends SendableChooser<String> {
         addOption("Three Note Auto", kThreeNoteAuto);
         addOption("Mess Em Up Auto Left", kMessEmUpAutoLeft);
         addOption("Mess Em Up Auto Right", kMessEmUpAutoRight);
+        addOption("Diagonal One Note Auto Left", kLeftDiagonalOneNote);
+        addOption("Diagonal One Note Auto Right", kRightDiagonalOneNote);
+        addOption("Diagonal Two Note Auto Left", kLeftDiagonalTwoNote);
+        addOption("Diagonal Two Note Auto Right", kRightDiagonalTwoNote);
         addOption("Do Nothing Auto", kDoNothing);
 
         autoSelector = this;
@@ -152,6 +160,19 @@ public class AutoConstruct extends SendableChooser<String> {
             case kMessEmUpAutoRight:
                 scheduledCommand = new MessEmUpAuto(false);
                 break;
+            case kLeftDiagonalOneNote:
+                scheduledCommand = new DiagonalOneNoteAuto(true);
+                break;
+            case kRightDiagonalOneNote:
+                scheduledCommand = new DiagonalOneNoteAuto(false);
+                break;
+            case kLeftDiagonalTwoNote:
+                scheduledCommand = new DiagonalTwoNoteAuto(true);
+                break;
+            case kRightDiagonalTwoNote:
+                scheduledCommand = new DiagonalTwoNoteAuto(false);
+                break;
+
             case kDoNothing:
                 break;
             default:
