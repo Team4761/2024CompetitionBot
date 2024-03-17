@@ -134,16 +134,16 @@ public class LedSubsystem extends SubsystemBase {
     //     }
     // }
     //Indicator of having a Note and the LEDs beung that indidcator
-    public void NoteIndicator () {
-        if (Robot.getMap().shooter.isPieceInUpperIntake()==true)
-        {
-            SetAllColor(250, 90, 0);
-        }
-        else
-        {
-            SetAllColor(0,0,0);
-        }
-    }
+    // public void NoteIndicator () {
+    //     if (Robot.getMap().shooter.isPieceInUpperIntake()==true)
+    //     {
+    //         SetAllColor(250, 90, 0);
+    //     }
+    //     else
+    //     {
+    //         SetAllColor(0,0,0);
+    //     }
+    // }
 
     public void setLEDs(Color[] colors) {
         for(int i = 0; i < ledBuffer.getLength(); i++) {
