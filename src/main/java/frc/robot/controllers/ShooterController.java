@@ -7,6 +7,7 @@ import frc.robot.Constants;
 import frc.robot.RobocketsShuffleboard;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.subsystems.leds.NoteIndicator;
 import frc.robot.subsystems.shooter.AutoShooterIntake;
 //import frc.robot.subsystems.shooter.AutoSourceIntake;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
@@ -122,22 +123,22 @@ public class ShooterController extends XboxController {
             //if the intake button is pressed it will turn the LEds to orange
             if(getLeftBumperPressed())
             {
-                map.leds.NoteIndicator();
+                CommandScheduler.getInstance().schedule(new NoteIndicator());
             }
 
             if(getLeftBumperReleased())
             {
-                map.leds.NoteIndicator();
+                CommandScheduler.getInstance().schedule(new NoteIndicator());
             }
             //if the outake button is pressed it will turn the LEDs off
             if(getRightBumperPressed())
             {
-                map.leds.NoteIndicator();
+                CommandScheduler.getInstance().schedule(new NoteIndicator());
             }
             //if the outake button is pressed it will turn the LEDs off
             if(getAButtonPressed())
             {
-                map.leds.NoteIndicator();
+                CommandScheduler.getInstance().schedule(new NoteIndicator());
             }
         }
 

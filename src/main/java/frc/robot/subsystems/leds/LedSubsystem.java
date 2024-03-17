@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 import javax.imageio.ImageIO;
 
@@ -133,8 +134,8 @@ public class LedSubsystem extends SubsystemBase {
     //     }
     // }
     //Indicator of having a Note and the LEDs beung that indidcator
-    public void NoteIndicator (boolean HaveNote) {
-        if (HaveNote)
+    public void NoteIndicator () {
+        if (Robot.getMap().shooter.isPieceInUpperIntake()==true)
         {
             SetAllColor(250, 90, 0);
         }
