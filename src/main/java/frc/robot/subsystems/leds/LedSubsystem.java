@@ -19,7 +19,7 @@ import java.awt.image.BufferedImage;
 
 public class LedSubsystem extends SubsystemBase {
     public static final int LED_WIDTH=1;
-    public static final int LED_LENGTH=11;
+    public static final int LED_LENGTH=100;
     public static final int LED_SIZE = LED_WIDTH*LED_LENGTH;
     int[] RGB = new int[LED_SIZE * 3];
     BufferedImage hello;
@@ -27,7 +27,6 @@ public class LedSubsystem extends SubsystemBase {
 
     int ticks;
     int currentPort = 5;
-    
 
     AddressableLED leds;
     AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_SIZE);
@@ -147,7 +146,7 @@ public class LedSubsystem extends SubsystemBase {
 
     public void setLEDs(Color[] colors) {
         for(int i = 0; i < ledBuffer.getLength(); i++) {
-            ledBuffer.setRGB(i, (int)colors[i].red, (int)colors[i].green, (int)colors[i].blue);
+            ledBuffer.setRGB(i, (int)colors[i].red*255, (int)colors[i].green*255, (int)colors[i].blue*255);
         }
         leds.setData(ledBuffer);
     }

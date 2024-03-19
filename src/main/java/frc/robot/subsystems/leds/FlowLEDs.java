@@ -6,6 +6,8 @@ import frc.robot.Robot;
 
 public class FlowLEDs extends Command {
     
+    private long TIME_PER_CYCLE = 50;
+
     private LedSubsystem leds;
     
     private final Color MAIN = new Color(100,0,0);
@@ -29,8 +31,8 @@ public class FlowLEDs extends Command {
         maxCycle = 100;
         numberOfLEDs = Robot.getMap().leds.getNumberOfLEDs();
         buffer = new Color[numberOfLEDs];
-        offsets = new double[]{(MAIN.red-SECONDARY.red) / maxCycle, (MAIN.green-SECONDARY.green) / maxCycle, (MAIN.blue-SECONDARY.blue)};
-        nextTime = System.currentTimeMillis() + 1000;
+        offsets = new double[]{(double)(MAIN.red*255-SECONDARY.red*255) / maxCycle, (double)(MAIN.green*255-SECONDARY.green*255) / maxCycle, (double)(MAIN.blue*255-SECONDARY.blue*255)};
+        nextTime = System.currentTimeMillis() + TIME_PER_CYCLE;
     }
 
 
@@ -51,7 +53,12 @@ public class FlowLEDs extends Command {
                 cycle = 0;
             }
 
-            nextTime = System.currentTimeMillis() + 1000;
+            nextTime = System.currentTimeMillis() + TIME_PER_CYCLE;
         }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
     }
 }

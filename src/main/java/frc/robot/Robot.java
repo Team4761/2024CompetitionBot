@@ -88,8 +88,8 @@ public class Robot extends TimedRobot {
       map.swerve.zeroGyro(map.autoEndingAngle);
     }
     if (map.leds != null)
-      map.leds.SetAllColor(255,0,0);
-    // CommandScheduler.getInstance().schedule(new FlowLEDs());
+      // map.leds.SetAllColor(255,0,0);
+      CommandScheduler.getInstance().schedule(new FlowLEDs());
   }
 
   /** This function is called periodically during operator control. */

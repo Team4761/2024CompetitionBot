@@ -16,7 +16,7 @@ public class MoveBackCommand extends SequentialCommandGroup{
      */
     public MoveBackCommand(double distance){
         super(
-            new Move(-distance, 0),
+            new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(-distance, 0)),
             new PrintCommand("Finished Move Back!")
         );
     }

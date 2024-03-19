@@ -9,6 +9,7 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.subsystems.leds.NoteIndicator;
 import frc.robot.subsystems.shooter.AutoShooterIntake;
+import frc.robot.subsystems.shooter.AutoSourceIntake;
 //import frc.robot.subsystems.shooter.AutoSourceIntake;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
 
