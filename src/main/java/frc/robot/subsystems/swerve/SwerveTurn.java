@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 /**
@@ -10,7 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public class SwerveTurn extends Command {
     private SwerveDriveSubsystem m_swerve;
     private Rotation2d target;
-
+    private Rotation2d rot;
     private double Pvalue = 0;
 
     /**
@@ -20,7 +21,11 @@ public class SwerveTurn extends Command {
      */
     public SwerveTurn(SwerveDriveSubsystem swerve, Rotation2d rot) {
         m_swerve = swerve;
+        this.rot = rot;
         //addRequirements(m_swerve); runs in parallel with cartesian
+    }
+
+    public void initialize() {
         target = m_swerve.getGyroRotation().plus(rot);
     }
 
@@ -30,7 +35,7 @@ public class SwerveTurn extends Command {
      */
     @Override
     public void execute() {
-        Pvalue = Math.min(Math.max(MathStuff.subtract(target, m_swerve.getGyroRotation()).getRotations()*30, -0.9), 0.9);
+        Pvalue = MathUtil.clamp(MathStuff.subtract(target, m_swerve.getGyroRotation()).getRotations()*30, -0.9, 0.9);
         //System.out.println(Pvalue);
         
         m_swerve.setDriveRot(Pvalue, false);

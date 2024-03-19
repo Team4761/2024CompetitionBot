@@ -1,10 +1,12 @@
 package frc.robot.Auto.fullautos;
 
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
-import frc.robot.Auto.MoveBackCommand;
+import frc.robot.Robot;
 import frc.robot.Auto.ShootAuto;
+import frc.robot.subsystems.swerve.SwerveGoCartesianF;
 import frc.robot.subsystems.swerve.ZeroGyro;
 
 /**
@@ -15,6 +17,7 @@ import frc.robot.subsystems.swerve.ZeroGyro;
  * <p> 4) It then moves back 1 meter.
  */
 public class DiagonalOneNoteAuto extends SequentialCommandGroup {
+    //subwoofer is 36.37in into field and ~41in hypotenuse, about 60 degree angle from front of field
 
     /**
      * <p> This starts by zeroing the robot such that the backwards direction is perpendicular to the alliance wall INSTEAD of being based on the robot's current rotation.
@@ -28,8 +31,13 @@ public class DiagonalOneNoteAuto extends SequentialCommandGroup {
      */
     public DiagonalOneNoteAuto(boolean isRobotOnLeftSide) {
         super(
+            // 120 offset on left side would make 0 degrees/forward be away from alliance wall
             new ZeroGyro(isRobotOnLeftSide ? Constants.STARTING_ANGLE_DIAGONAL : -Constants.STARTING_ANGLE_DIAGONAL),
-            new OneNoteAuto()
+            //new OneNoteAuto() cant because it zeros the gyro
+            
+            new ShootAuto(),
+            new WaitCommand(10), // to not disturb any 4 note autos
+            new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(3, 0)) // forwards should be away from alliance wall with gyro offset
         );
     }
 }

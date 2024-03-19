@@ -78,7 +78,7 @@ public class Constants
     public static double SHOOTER_TWO_NOTE_SHOOT_ANGLE = Units.degreesToRadians(50); // In radians (Is untuned WIP)
     public static double SHOOTER_THREE_NOTE_SHOOT_ANGLE = Units.degreesToRadians(47); // In radians (Is untuned WIP)
 
-    public static double STARTING_ANGLE_DIAGONAL = Units.degreesToRadians(60);
+    public static double STARTING_ANGLE_DIAGONAL = Units.degreesToRadians(120); // 120 degree offset to have forwards be away from alliance wall
 
 
     // LEDSSSS

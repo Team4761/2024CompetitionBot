@@ -120,14 +120,14 @@ public class ShooterSubsystem extends SubsystemBase {
         double kP = 0.08;
 
         double accelFactor = kP * (targetSpeed-shooterLeft.getVelocity().getValueAsDouble()); // P kinda
-        accelFactor = MathUtil.clamp(-2, accelFactor, 2);
+        accelFactor = MathUtil.clamp(accelFactor, -2, 2);
         double spdOut = accelFactor + shootingFFBot.calculate(targetSpeed);
 
         shooterLeft.setVoltage(spdOut); //probably test then use setVoltage
         
         //other half
         accelFactor = kP * (targetSpeed-shooterRight.getVelocity().getValueAsDouble()); // P kinda
-        accelFactor = MathUtil.clamp(-2, accelFactor, 2);
+        accelFactor = MathUtil.clamp(accelFactor, -2, 2);
         spdOut = accelFactor + shootingFFTop.calculate(targetSpeed);
 
         if (!(getShooterAngle().getRadians() < 0))
@@ -145,7 +145,7 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void getShooterToSetAngle() {
         double currentAngle = getShooterAngle().getRadians();
-        double speed = MathUtil.clamp(-4, anglePID.calculate(currentAngle, targetAngle), 4) + angleFeedForward.calculate(targetAngle, 3*MathUtil.clamp(-0.75, targetAngle-currentAngle, 0.75));
+        double speed = MathUtil.clamp(anglePID.calculate(currentAngle, targetAngle), -4, 4) + angleFeedForward.calculate(targetAngle, 3*MathUtil.clamp(targetAngle-currentAngle, -0.75, 0.75));
 
         // Neither of the below have been tested (i.e. idk which one should be reversed rn)
         angleMotorRight.setVoltage(speed); //voltage because battery drain stuff
@@ -186,7 +186,7 @@ public class ShooterSubsystem extends SubsystemBase {
         else if (targetAngle + angleRadians > MAX_ANGLE)
             targetAngle = MAX_ANGLE;
         else
-            targetAngle = MathUtil.clamp(0, targetAngle+angleRadians, Math.PI/2);
+            targetAngle = MathUtil.clamp(targetAngle+angleRadians, 0, Math.PI/2);
         
     }
 
