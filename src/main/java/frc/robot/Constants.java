@@ -71,14 +71,16 @@ public class Constants
     public static double INTAKE_INTAKE_POSITION = Units.degreesToRadians(350.0); // In radians
     public static double INTAKE_ACTIVE_DRIVING_POSITION = Units.degreesToRadians(290);  // In radians
 
-    public static double SHOOTER_START_ANGLE = Units.degreesToRadians(72);  // In radians
+    public static double SHOOTER_START_ANGLE = Units.degreesToRadians(70);  // In radians
     public static double SHOOTER_INTAKE_ANGLE = Units.degreesToRadians(50); // In radians
     public static double SHOOTER_IDLE_ANGLE = Units.degreesToRadians(50);  // In radians
     public static double SHOOTER_SHOOT_ANGLE = Units.degreesToRadians(60);  // In radians (Is untuned WIP)
     public static double SHOOTER_TWO_NOTE_SHOOT_ANGLE = Units.degreesToRadians(50); // In radians (Is untuned WIP)
     public static double SHOOTER_THREE_NOTE_SHOOT_ANGLE = Units.degreesToRadians(47); // In radians (Is untuned WIP)
 
+    public static double STARTING_ANGLE_DIAGONAL = Units.degreesToRadians(120); // 120 degree offset to have forwards be away from alliance wall
+
 
     // LEDSSSS
-    public static int LED_PORT = 5; // DIO Port.
+    public static int LED_PORT = 6; // DIO Port.
 }

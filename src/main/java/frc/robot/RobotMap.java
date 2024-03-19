@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -26,6 +27,8 @@ public class RobotMap
     public LedSubsystem leds = null;
     public ClimberSubsystem climber = null;
 
+    public Rotation2d autoEndingAngle = null;   // The expected angle of the robot when auto ends
+
     // Gian: Ok neat system, this is not something I did on the team
     // But why is the swerve drive commented out?
     /**
@@ -36,15 +39,19 @@ public class RobotMap
      */
     public RobotMap() 
     {
-
         intake = new IntakeSubsystem();
         swerve = new SwerveDriveSubsystem(new Translation2d(0.31115, 0.31115), new Translation2d(0.31115, -0.31115), new Translation2d(-0.31115, 0.31115), new Translation2d(-0.31115, -0.31115));    // All translations are the swerve module positions relative to the center of the bot
-        //vision = new VisionSubsystem();
+        vision = new VisionSubsystem();
         shooter = new ShooterSubsystem();
-        leds = new LedSubsystem();
+        // leds = new LedSubsystem();
         // climber = new ClimberSubsystem();
 
         // ONLY FOR TESTING
         // westcoast = new WestCoastSubsystem();
+    }
+
+
+    public void setAutoEndingAngle(Rotation2d endingAngle) {
+        this.autoEndingAngle = endingAngle;
     }
 }

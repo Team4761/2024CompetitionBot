@@ -2,8 +2,6 @@ package frc.robot;
 
 import java.util.ArrayList;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -20,10 +18,6 @@ import frc.robot.subsystems.leds.LedChargeUp;
 import frc.robot.subsystems.shooter.GetShooterToAngle;
 import frc.robot.subsystems.shooter.Shoot;
 import frc.robot.subsystems.shooter.ShootAtAngle;
-import frc.robot.subsystems.swerve.SwerveDriveStop;
-import frc.robot.subsystems.swerve.SwerveGoCartesianF;
-import frc.robot.subsystems.swerve.SwerveTurn;
-import frc.robot.subsystems.swerve.SwerveTurnTo;
 
 /**
  * <p> This is a handler class for everything that has to do with the shufflboard.
