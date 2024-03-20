@@ -18,8 +18,10 @@ import java.awt.image.BufferedImage;
 
 
 public class LedSubsystem extends SubsystemBase {
+    //Row length
     public static final int LED_WIDTH=1;
-    public static final int LED_LENGTH=11;
+    //Collum length
+    public static final int LED_LENGTH=19;
     public static final int LED_SIZE = LED_WIDTH*LED_LENGTH;
     int[] RGB = new int[LED_SIZE * 3];
     BufferedImage hello;
@@ -94,7 +96,7 @@ public class LedSubsystem extends SubsystemBase {
 
     public void turnOff() {
         SetAllColor(0,0,0);
-        leds.close();
+        //leds.close(); Comment out just in case 
     }
 
     public void SetAllColor(int r, int g, int b) {
@@ -106,7 +108,7 @@ public class LedSubsystem extends SubsystemBase {
 
     public void SetRowColor(int row,int r, int g, int b) {
         int start = row * LED_WIDTH;
-        for (int i = 0; i < LED_LENGTH; ++i) {
+        for (int i = 0; i < LED_WIDTH; ++i) {
             ledBuffer.setRGB(start + i, r, g, b);
         }
         leds.setData(ledBuffer);
@@ -145,15 +147,46 @@ public class LedSubsystem extends SubsystemBase {
     //     }
     // }
 
-    public void setLEDs(Color[] colors) {
-        for(int i = 0; i < ledBuffer.getLength(); i++) {
+    public void setLEDs(Color[] colors) 
+    {
+        for(int i = 0; i < ledBuffer.getLength(); i++) 
+        {
             ledBuffer.setRGB(i, (int)colors[i].red, (int)colors[i].green, (int)colors[i].blue);
         }
         leds.setData(ledBuffer);
     }
 
-    public int getNumberOfLEDs() {
-        return LED_WIDTH * LED_LENGTH;
+    public int getNumberOfLEDs() 
+    {
+        return LED_SIZE;
+    }
+    public void setRGB(int i,int r, int b,int g)
+    {
+       ledBuffer.setRGB(i,r,g,b);    
+    }
+    public void four()
+    {
+        ledBuffer.setRGB((Math.round((ledBuffer.getLength()/2))-1-2), 250, 10, 0);
+        ledBuffer.setRGB((Math.round((ledBuffer.getLength()/2))-1+0), 0, 0, 10);
+        ledBuffer.setRGB((Math.round((ledBuffer.getLength()/2))-1+2), 0, 0, 0);
+    }
+    public void seven()
+    {
+        ledBuffer.setRGB((Math.round((ledBuffer.getLength()/2))-1-2), 250, 10, 0);
+        ledBuffer.setRGB((Math.round((ledBuffer.getLength()/2))-1+0), 250, 10, 0);
+        ledBuffer.setRGB((Math.round((ledBuffer.getLength()/2))-1+2), 250, 10, 0);
+    }
+    public void six()
+    {
+        ledBuffer.setRGB((Math.round((ledBuffer.getLength()/2))-1-2), 250, 10, 0);
+        ledBuffer.setRGB((Math.round((ledBuffer.getLength()/2))-1+0), 250, 10, 0);
+        ledBuffer.setRGB((Math.round((ledBuffer.getLength()/2))-1+2), 0, 0, 0);
+    }
+    public void one()
+    {
+        ledBuffer.setRGB((Math.round((ledBuffer.getLength()/2))-1-2), 0, 0, 0);
+        ledBuffer.setRGB((Math.round((ledBuffer.getLength()/2))-1+0), 0, 0, 0);
+        ledBuffer.setRGB((Math.round((ledBuffer.getLength()/2))-1+2), 250, 10, 0);
     }
 }
 
