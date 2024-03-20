@@ -62,7 +62,7 @@ public class Constants
     public static double KRAKEN_RPM_TO_MPS_CONVERSION = DRIVETRAIN_WHEEL_CIRCUMFERENCE_M / 60.0;
 
     // Swerve PID Control
-    public static double SWERVE_P = 5.0;    // The higher this value is, the longer it takes for the robot to start slowing down
+    public static double SWERVE_P = 2.5;    // The higher this value is, the longer it takes for the robot to start slowing down
     public static double SWERVE_I = 0.0;    // The higher this value is, the more speed it gains overtime
     public static double SWERVE_D = 0.0;    // WIP, not implemented yet
 

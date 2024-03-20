@@ -22,6 +22,7 @@ public class IntakeUntilBreakbeam extends Command {
      */
     
     public IntakeUntilBreakbeam() {
+
     }
 
     public IntakeUntilBreakbeam(long timeout) {
@@ -38,7 +39,7 @@ public class IntakeUntilBreakbeam extends Command {
      */
     @Override
     public void execute() {
-        map.intake.intake(Robot.getShuffleboard().getSettingNum("Intake Speed"));
+        map.intake.intake(0.5);
     }
 
     /**

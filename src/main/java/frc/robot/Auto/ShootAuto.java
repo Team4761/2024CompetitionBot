@@ -34,7 +34,7 @@ public class ShootAuto extends SequentialCommandGroup {
                 ),
                 new Shoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed")) // rev until intake and shooter position are done
             ),
-            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed"), 0.5) // Shoot with the speed on the shuffleboard
+            new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed"), 1) // Shoot with the speed on the shuffleboard
         );
     }
 }

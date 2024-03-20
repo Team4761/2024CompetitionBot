@@ -8,6 +8,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.intake.FullIntake;
 import frc.robot.subsystems.intake.IntakeUntilBreakbeam;
+import frc.robot.subsystems.intake.RunIntake;
 import frc.robot.subsystems.shooter.GetShooterToAngle;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
 import frc.robot.subsystems.shooter.Shoot;
@@ -54,7 +55,8 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
 
                 new ParallelRaceGroup( // doesnt need to drive if intaked
                     new SwerveGoTo(Robot.getMap().swerve, new Translation2d(-1.4, 2)), // rotate during this
-                    new IntakeUntilBreakbeam(4000) 
+                    new RunIntake(0.7, 3000)
+                    //new IntakeUntilBreakbeam(4000) 
                 )
             ),
 

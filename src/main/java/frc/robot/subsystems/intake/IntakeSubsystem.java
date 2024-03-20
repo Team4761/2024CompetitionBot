@@ -127,15 +127,16 @@ public class IntakeSubsystem extends SubsystemBase{
     public void setAngleMotorSpeed(double speed){
         //limit movement to only inwards at outer bounds
         // speed makes angle decrease (up)
+        // should add lowering speed limit near edges
         if (speed>0) {
-            if (getIntakeAngle().getDegrees()<110) { // let it go up to 110
+            if (getIntakeAngle().getDegrees()<93) { // let it go up to 110
                 angleMotorLeft.set(speed);
             } else {
                 angleMotorLeft.set(0);
             }
         }
         else {
-            if (getIntakeAngle().getDegrees()>10) {
+            if (getIntakeAngle().getDegrees()>20) {
                 angleMotorLeft.set(speed);
             } else {
                 angleMotorLeft.set(0);
@@ -166,7 +167,7 @@ public class IntakeSubsystem extends SubsystemBase{
     public Rotation2d getIntakeAngle() {
         // 80 start  to 60   to   0ish   to   350ish at top to
         // 10           30        90      to    100
-        return new Rotation2d(- ((encoder.getAbsolutePosition() * Constants.ENCODER_UNITS_TO_RADIANS + 100)%360-190));
+        return new Rotation2d(Units.degreesToRadians( -((encoder.getAbsolutePosition() * 360 + 100)%360-190)));
     }
 
     /**
