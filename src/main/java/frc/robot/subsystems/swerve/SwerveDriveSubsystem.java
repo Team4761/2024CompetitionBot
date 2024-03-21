@@ -391,11 +391,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         m_backRightModule.getSteerMotor().set(0.5);
     }
 
-    public SwerveDriveKinematics getKinematics(){
-        return m_kinematics;
-    }
-
     public SwerveModulePosition[] getSwerveModulePositions(){
         return m_swervePositions;
+    }
+
+    //Necessary for Pose Estiamtor Subsystem
+    public SwerveDriveKinematics getKinematics(){
+        return m_kinematics;
     }
 }

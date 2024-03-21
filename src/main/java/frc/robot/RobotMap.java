@@ -41,9 +41,9 @@ public class RobotMap
     {
         intake = new IntakeSubsystem();
         swerve = new SwerveDriveSubsystem(new Translation2d(0.31115, 0.31115), new Translation2d(0.31115, -0.31115), new Translation2d(-0.31115, 0.31115), new Translation2d(-0.31115, -0.31115));    // All translations are the swerve module positions relative to the center of the bot
-        //vision = new VisionSubsystem();
+        vision = new VisionSubsystem();
         shooter = new ShooterSubsystem();
-        leds = new LedSubsystem();
+        // leds = new LedSubsystem();
         // climber = new ClimberSubsystem();
 
         // ONLY FOR TESTING

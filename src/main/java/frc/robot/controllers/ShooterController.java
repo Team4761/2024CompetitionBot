@@ -1,6 +1,5 @@
 package frc.robot.controllers;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
@@ -10,7 +9,6 @@ import frc.robot.RobotMap;
 import frc.robot.subsystems.leds.NoteIndicator;
 import frc.robot.subsystems.shooter.AutoShooterIntake;
 import frc.robot.subsystems.shooter.AutoSourceIntake;
-//import frc.robot.subsystems.shooter.AutoSourceIntake;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
 
 /**

@@ -20,7 +20,7 @@ public class SwerveTurnTo extends Command {
      */
     public SwerveTurnTo(SwerveDriveSubsystem swerve, Rotation2d rot) {
         m_swerve = swerve;
-        addRequirements(m_swerve);
+        // addRequirements(m_swerve); runs in parallel with cartesian
         target = rot;
     }
 
