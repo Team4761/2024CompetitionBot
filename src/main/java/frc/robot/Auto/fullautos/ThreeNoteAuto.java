@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.intake.FullIntake;
@@ -63,7 +64,10 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
             // intake and go back to 0,0
             new ParallelCommandGroup(
                 new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed"), Robot.getShuffleboard().getSettingNum("Shooter Intake Speed")),
-                new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0, 0))
+                new SequentialCommandGroup(
+                    new WaitCommand(0.1),
+                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0, 0))
+                )
             ),
 
             // get shooter to angle and rev

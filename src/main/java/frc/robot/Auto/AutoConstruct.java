@@ -2,12 +2,14 @@ package frc.robot.Auto;
 
 import com.pathplanner.lib.util.PathPlannerLogging;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
+import frc.robot.subsystems.swerve.SwerveTurnTo;
 import frc.robot.RobotMap;
 import frc.robot.Auto.fullautos.*;
 
@@ -41,6 +43,8 @@ public class AutoConstruct extends SendableChooser<String> {
     private static final String kTwoNoteAuto = "twoNoteAuto";
     private static final String kThreeNoteAuto = "threeNoteAuto";
 
+    private static final String kRotateTestAuto = "rotateTestAuto";
+
     private static AutoConstruct autoSelector;
     private static String m_autoSelected;
 
@@ -66,6 +70,9 @@ public class AutoConstruct extends SendableChooser<String> {
         // addOption("April Tag Dance", kAprilDance);
         // addOption("PathPlanner 2 Meter Up", kPathPlanner2Up);
         // addOption("PathPlanner 2 Meter Spin", kPathPlanner2MeterSpin);
+
+        addOption("Rotate Test", kRotateTestAuto);
+
         addOption("One Note Auto", kOneNoteAuto);
         addOption("Two Note Auto", kTwoNoteAuto);
         addOption("Three Note Auto", kThreeNoteAuto);
@@ -123,6 +130,9 @@ public class AutoConstruct extends SendableChooser<String> {
             //     break;
             case kShootAuto:
                 scheduledCommand = new ShootAuto();
+                break;
+            case kRotateTestAuto:
+                scheduledCommand = new SwerveTurnTo(map.swerve, new Rotation2d(Math.PI/2));
                 break;
             // case kPathPlanner1Auto:
             //     scheduledCommand = new PathPlannerAuto("1 Meter Auto").andThen(new PrintCommand("Path Finished!"));

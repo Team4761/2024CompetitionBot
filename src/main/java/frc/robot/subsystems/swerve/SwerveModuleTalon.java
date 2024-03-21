@@ -24,10 +24,12 @@ public class SwerveModuleTalon extends SubsystemBase{
     private double offset;
 
     private double sM;
+    private double driveKS = 0.3;
+
     private final double driveConversionFactor = 0.0525772192354474; //0.0388385473906813; // This converts the encoders arbitrary units to meters travelled by the motor. The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
     // private final double TOLERANCE_VOLTAGE_STEER = 0.25; // The minimum speed the steer should be able to get to in voltage. This is to prevent jittering.
 
-    private double kS = 0.2; //kS feedforward for rotate motor
+    private double kS = 0.12; //kS feedforward for rotate motor
 
     // m/s, rotation2d
     private SwerveModuleState targetState = new SwerveModuleState();
@@ -61,9 +63,10 @@ public class SwerveModuleTalon extends SubsystemBase{
         //applySmartMotion();
     }
     
-    public SwerveModuleTalon(int driveID, int steerID, int encoderID, double o, boolean invertDrive, double steerMult, double kS) {
+    public SwerveModuleTalon(int driveID, int steerID, int encoderID, double o, boolean invertDrive, double steerMult, double kS, double kSDrive) {
         this(driveID, steerID, encoderID, o, invertDrive, steerMult);
         this.kS = kS;
+        this.driveKS = kSDrive;
     }
 
     public SwerveModuleTalon(int driveID, int steerID, int encoderID, double o, boolean invertDrive, double steerMult, boolean simplePID) {
@@ -178,7 +181,7 @@ public class SwerveModuleTalon extends SubsystemBase{
         
         //if(true)
         double driveP = targetState.speedMetersPerSecond*10;
-        double driveFF = Math.signum(driveP)*0.36;
+        double driveFF = Math.signum(driveP)*driveKS;
         drive.setVoltage(driveP+driveFF);
     }
 

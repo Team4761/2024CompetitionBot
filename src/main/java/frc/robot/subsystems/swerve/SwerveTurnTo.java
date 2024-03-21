@@ -1,6 +1,8 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 /**
@@ -12,6 +14,8 @@ public class SwerveTurnTo extends Command {
     private Rotation2d target;
 
     private double Pvalue = 0;
+    private double rotationDifference = 0;
+    private Rotation2d lastRot;
 
     /**
      * This initializes the internal storage of the variables as well as tells the robot that the SwerveSubsystem is needed.
@@ -24,18 +28,26 @@ public class SwerveTurnTo extends Command {
         target = rot;
     }
 
+    @Override
+    public void initialize() {
+        lastRot = m_swerve.getGyroRotation();
+    }
+
     /**
      * <p> This finds the differnce between the target rotation and the current rotation and then uses that to set the speed.
      * <p> This means that the closer the robot gets to the desired rotation, the slower it will go.
      */
     @Override
     public void execute() {
-        Pvalue = Math.min(Math.max(MathStuff.subtract(target, m_swerve.getGyroRotation()).getRotations()*30, -0.9), 0.9);
+        Pvalue = MathUtil.clamp(-MathStuff.subtract(target, m_swerve.getGyroRotation()).getRotations()*Constants.SWERVE_ROTATE_P, -0.9, 0.9);
         //System.out.println(Pvalue);
         
         // make better subsystem support for this stuff
         m_swerve.setDriveRot(Pvalue, false);
         
+        // degrees, to check if swerve is speeding past target or coming to a stop
+        rotationDifference = Math.abs(m_swerve.getGyroRotation().minus(lastRot).getDegrees());
+        lastRot = m_swerve.getGyroRotation();
     }
     
     /**
@@ -45,7 +57,7 @@ public class SwerveTurnTo extends Command {
     @Override
     public boolean isFinished() {
         System.out.println(Pvalue);
-        if(Pvalue<0.01) {
+        if(Math.abs(Pvalue)<0.02 && rotationDifference<0.1) { // && if robot moves <5 degrees/s in the past frame
             System.out.println("DONEONODNONE");
             return true;
         }

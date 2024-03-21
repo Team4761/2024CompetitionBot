@@ -60,7 +60,7 @@ public class SwerveGoTo extends Command {
     public void execute() {
         Translation2d curTrans = m_swerve.getPose().getTranslation();   // Current translation travelled from 0,0
         // adjust pid off units
-        Pvalue = Math.min(target.getDistance(curTrans)*Constants.SWERVE_P, 0.5);    // As you get closer to the target, you slow down.
+        Pvalue = Math.min(target.getDistance(curTrans)*Constants.SWERVE_P, 0.7);    // As you get closer to the target, you slow down.
         
         // I SHOULD BE 0.0
         //Ivalue += Constants.SWERVE_I / 100.0;   // The speed (Ivalue) builds up over time
@@ -79,7 +79,7 @@ public class SwerveGoTo extends Command {
         SmartDashboard.putNumber("Auto PValue", Pvalue);
         SmartDashboard.putNumber("Distance To Target", target.getDistance(curTrans));
 
-        isFinished = target.getDistance(curTrans) <= 0.1;  // If the distance is less than or equal to 10cm, then it is finished
+        isFinished = target.getDistance(curTrans) <= 0.08;  // If the distance is less than or equal to 10cm, then it is finished
 
         if (!isFinished)
             m_swerve.setDriveFXY(speedGo, strafeGo, false);        // Do field oriented swerve with the strafe and speed speeds
