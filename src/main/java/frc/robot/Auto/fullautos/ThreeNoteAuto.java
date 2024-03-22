@@ -53,13 +53,13 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
         super(
             //new TwoNoteAuto(), // shoot start note and center note, should be at 0,0 at the end
 
-            // go to and intake left(when looking at drivers) note
+            // go to and intake left(when looking at alliance wall) note
             new ParallelCommandGroup(
                 new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
                 
                 new ParallelDeadlineGroup( // doesnt need to drive if intaked
-                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(-1.4, 2)), // rotate during this
-                    new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI/6)),
+                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(-1.4, 1.5)), // rotate during this
+                    new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI/4)),
                     new RunIntake(0.7, 3000)
                     //new IntakeUntilBreakbeam(4000) 
                     

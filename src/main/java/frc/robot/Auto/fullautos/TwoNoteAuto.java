@@ -52,7 +52,7 @@ public class TwoNoteAuto extends SequentialCommandGroup {
 
                 new ParallelRaceGroup( // doesnt need to drive if intaked
                 //meters, note is 114 inches back from front, speaker is ~36 inches, robot ~30, and intake extends out a little more
-                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(-1.5, 0)), // should need to go back ~50 inches or ~1.27m
+                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(-1.4, 0)), // should need to go back ~50 inches or ~1.27m
                     new RunIntake(0.7, 2500)
                     //new IntakeUntilBreakbeam(4000) 
                 )
