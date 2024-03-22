@@ -40,17 +40,11 @@ import frc.robot.subsystems.swerve.SwerveModuleTalon;
 public class SwerveDriveSubsystem extends SubsystemBase {
 
     SwerveModuleState[] targetStates = new SwerveModuleState[4];
-
-    // motors offset in degrees && i think negative is ccw
-    // private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , 83.30076,false,  -1.0);    // Formerly -54.5, 1.0,  1.0
-    // private SwerveModuleTalon m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT ,   -61.74209, false, -1.0);      // Formerly -6, -1.0, -1.0
-    // private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT , Constants.BL_ENCODER_PORT ,  -69.78506, true, -1.0);       // Formerly -68, 1.0, -1.0
-    // private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , -16.87491, true,  -1.0);      // Formerly 82, 1.0,  -1.0
     
-    private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , -29.5313 ,false,  1.0, 0.12, 0.25);    // Formerly -54.5, 1.0,  1.0
-    private SwerveModuleTalon m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT ,   22.6757, false, 1.0, 0.12, 0.3); //last value is kS value for rotating motor to stop it from being stuck      // Formerly -6, -1.0, -1.0
-    private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT , Constants.BL_ENCODER_PORT ,  23.2-180, false, 1.0, 0.12, 0.35);       // Formerly -68, 1.0, -1.0
-    private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , 243, false,  1.0, 0.12, 0.5);      // Formerly 82, 1.0,  -1.0
+    private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , -29.5313, false, 1.0); 
+    private SwerveModuleTalon m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT ,22.6757, false, 1.0); 
+    private SwerveModuleTalon m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT , Constants.BL_ENCODER_PORT , 23.2-180, false, 1.0);  
+    private SwerveModuleTalon m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , 243.00, false, 1.0); 
 
     public static boolean isRobotRelative = false;
 
@@ -154,7 +148,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // update pose
 
         m_pose = m_odometry.update(
-            getGyroRotation(),
+            getGyroRotation().times(-1),
             m_swervePositions
         );
         m_pose = new Pose2d(m_pose.getX(), m_pose.getY(), m_pose.getRotation());   // The y value needs to be negative to make left +y
@@ -170,10 +164,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Back Left Rot", m_backLeftModule.getPosition().angle.getDegrees());
         SmartDashboard.putNumber("Back Right Rot", m_backRightModule.getPosition().angle.getDegrees());
 
-        SmartDashboard.putNumber("Front Left Drive", m_frontLeftModule.getPosition().distanceMeters);
-        SmartDashboard.putNumber("Front Right Drive", m_frontRightModule.getPosition().distanceMeters);
-        SmartDashboard.putNumber("Back Left Drive", m_backLeftModule.getPosition().distanceMeters);
-        SmartDashboard.putNumber("Back Right Drive", m_backRightModule.getPosition().distanceMeters);
+        SmartDashboard.putNumber("FL Drive Target", targetStates[0].speedMetersPerSecond);
+        SmartDashboard.putNumber("FL Drive Velocity", m_frontLeftModule.getDriveVelocity());
         
         SmartDashboard.putNumber("Front Left Target", targetStates[0].angle.getDegrees());
         SmartDashboard.putNumber("Front Right Target", targetStates[1].angle.getDegrees());
@@ -189,7 +181,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Robot Relative", isRobotRelative);
 
         
-        targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromRobotRelativeSpeeds(speedX, speedY, speedRot*0.8, getGyroRotation()));
+        targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromRobotRelativeSpeeds(speedX, speedY, speedRot, getGyroRotation()));
             
             
         pointDir = getGyroRotation();

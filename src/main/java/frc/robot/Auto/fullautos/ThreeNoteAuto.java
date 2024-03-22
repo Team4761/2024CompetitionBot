@@ -1,7 +1,9 @@
 package frc.robot.Auto.fullautos;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -14,6 +16,7 @@ import frc.robot.subsystems.shooter.GetShooterToAngle;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
 import frc.robot.subsystems.shooter.Shoot;
 import frc.robot.subsystems.swerve.SwerveGoTo;
+import frc.robot.subsystems.swerve.SwerveTurnTo;
 /**
  * <p> The robot must be placed so that when the intake drops, it falls directly on top of a note.
  * <p>
@@ -48,16 +51,18 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
         // notes are placed with a 57 inch offset left/right, 1.45ish meters
 
         super(
-            new TwoNoteAuto(), // shoot start note and center note, should be at 0,0 at the end
+            //new TwoNoteAuto(), // shoot start note and center note, should be at 0,0 at the end
 
             // go to and intake left(when looking at drivers) note
             new ParallelCommandGroup(
                 new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
-
-                new ParallelRaceGroup( // doesnt need to drive if intaked
+                
+                new ParallelDeadlineGroup( // doesnt need to drive if intaked
                     new SwerveGoTo(Robot.getMap().swerve, new Translation2d(-1.4, 2)), // rotate during this
+                    new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI/6)),
                     new RunIntake(0.7, 3000)
                     //new IntakeUntilBreakbeam(4000) 
+                    
                 )
             ),
 
@@ -66,7 +71,10 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
                 new FullIntake(Robot.getShuffleboard().getSettingNum("Intake Speed"), Robot.getShuffleboard().getSettingNum("Shooter Intake Speed")),
                 new SequentialCommandGroup(
                     new WaitCommand(0.1),
-                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0, 0))
+                    new ParallelCommandGroup(
+                        new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0, 0)),
+                        new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d())
+                    )
                 )
             ),
 

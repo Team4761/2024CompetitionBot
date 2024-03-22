@@ -39,7 +39,7 @@ public class SwerveTurnTo extends Command {
      */
     @Override
     public void execute() {
-        Pvalue = MathUtil.clamp(-MathStuff.subtract(target, m_swerve.getGyroRotation()).getRotations()*Constants.SWERVE_ROTATE_P, -0.9, 0.9);
+        Pvalue = MathUtil.clamp(-MathStuff.subtract(target, m_swerve.getGyroRotation()).getRotations()*Constants.SWERVE_ROTATE_P, -0.8, 0.8);
         //System.out.println(Pvalue);
         
         // make better subsystem support for this stuff

@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -13,6 +14,8 @@ public class SwerveTurn extends Command {
     private Rotation2d target;
     private Rotation2d rot;
     private double Pvalue = 0;
+    private double rotationDifference = 0;
+    private Rotation2d lastRot;
 
     /**
      * This initializes the internal storage of the variables as well as tells the robot that the SwerveSubsystem is needed.
@@ -27,6 +30,7 @@ public class SwerveTurn extends Command {
 
     public void initialize() {
         target = m_swerve.getGyroRotation().plus(rot);
+        lastRot = m_swerve.getGyroRotation();
     }
 
     /**
@@ -35,10 +39,14 @@ public class SwerveTurn extends Command {
      */
     @Override
     public void execute() {
-        Pvalue = MathUtil.clamp(MathStuff.subtract(target, m_swerve.getGyroRotation()).getRotations()*30, -0.9, 0.9);
-        //System.out.println(Pvalue);
+        Pvalue = MathUtil.clamp(-MathStuff.subtract(target, m_swerve.getGyroRotation()).getRotations()*Constants.SWERVE_ROTATE_P, -0.8, 0.8);
+
         
         m_swerve.setDriveRot(Pvalue, false);
+        
+        // degrees, to check if swerve is speeding past target or coming to a stop
+        rotationDifference = Math.abs(m_swerve.getGyroRotation().minus(lastRot).getDegrees());
+        lastRot = m_swerve.getGyroRotation();
         
     }
     
@@ -49,7 +57,7 @@ public class SwerveTurn extends Command {
     @Override
     public boolean isFinished() {
         System.out.println(Pvalue);
-        if(Pvalue<0.01) {
+        if(Math.abs(Pvalue)<0.02 && rotationDifference<0.1) { // && if robot moves <5 degrees/s in the past frame
             System.out.println("DONEONODNONE");
             return true;
         }

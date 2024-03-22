@@ -53,7 +53,7 @@ public class Constants
     public static double DRIVETRAIN_WHEEL_DIAMETER_M = 0.1016; // wheel diameter in meters. This is 4 inches btw
     public static double DRIVETRAIN_WHEEL_CIRCUMFERENCE_M = DRIVETRAIN_WHEEL_DIAMETER_M*Math.PI; // wheel circumference in meters
     public static double DRIVETRAIN_MAX_SPEED_MPS = 4.0; // random number! :D
-    public static double DRIVETRAIN_GEAR_RATIO = 6.75; //random number!
+    public static double DRIVETRAIN_GEAR_RATIO = 6.12; //gear ratio in L3 swerve
     public static double RPM_TO_MPS_CONVERSION = DRIVETRAIN_WHEEL_CIRCUMFERENCE_M / 60.0;
     public static double SPARKMAX_UNITS_PER_ROTATION = 42;
     public static double DRIVETRAIN_ENCODER_UNITS_TO_METERS = DRIVETRAIN_WHEEL_CIRCUMFERENCE_M / SPARKMAX_UNITS_PER_ROTATION / DRIVETRAIN_GEAR_RATIO;    // The scale factor for the drivetrain wheels encoder units to meters
@@ -62,7 +62,7 @@ public class Constants
     public static double KRAKEN_RPM_TO_MPS_CONVERSION = DRIVETRAIN_WHEEL_CIRCUMFERENCE_M / 60.0;
 
     // Swerve PID Control
-    public static double SWERVE_P = 0.8;    // The higher this value is, the longer it takes for the robot to start slowing down
+    public static double SWERVE_P = 2;    // The higher this value is, the longer it takes for the robot to start slowing down
     public static double SWERVE_I = 0.0;    // The higher this value is, the more speed it gains overtime
     public static double SWERVE_D = 0.0;    // WIP, not implemented yet
 

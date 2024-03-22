@@ -1,8 +1,11 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.ExponentialProfile.Constraints;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.units.*;
 import frc.robot.Constants;
 
 /**
@@ -15,9 +18,12 @@ public class SwerveGoTo extends Command {
     protected Translation2d target;
     private double Pvalue = 0;
     //private double Ivalue = 0;
-    private double vLimit = 0.7;
+    private double maxVelocity = 4; //hard value
+    private double vLimit = 0; // soft value based on acceleration cap
 
     private boolean isFinished = false;
+
+    protected double lastTime;
 
     /**
      * <p> This initializes the command by setting the target position to target
@@ -43,31 +49,37 @@ public class SwerveGoTo extends Command {
     public SwerveGoTo(SwerveDriveSubsystem swerve, Translation2d target, double speedLimit) {
         m_swerve = swerve;
         //addRequirements(m_swerve);
-        vLimit = speedLimit;
+        maxVelocity = speedLimit;
         this.target = target;   // Set the target POSITION 
     }
 
-
-
+    public void initialize() {
+        lastTime = System.currentTimeMillis();
+    }
     /**
      * <p> While the command is running, the speed of the robot is determined by how far away the robot is from the desired location AND how long the command has run.
      * <p> The closer the robot gets to the target position, the slower it goes.
      * <p> The longer the command runs, the faster the robot goes.
-     * <p> After finding the desired speed, it then uses the pythagorean theorum to limit the speed to {vLimit}
+     * <p> After finding the desired speed, it then uses the pythagorean theorum to limit the speed to {maxVelocity}
      * <p> This also checks whether or not the robot is within 1cm of the target position, and if it is, the command ends.
      */
     @Override
     public void execute() {
         Translation2d curTrans = m_swerve.getPose().getTranslation();   // Current translation travelled from 0,0
-        // adjust pid off units
-        Pvalue = Math.min(target.getDistance(curTrans)*Constants.SWERVE_P, 0.7);    // As you get closer to the target, you slow down.
         
+        // limit acceleration
+        double accelLimit = 4; //4 m/s^2
+        double timeDifference = (System.currentTimeMillis()-lastTime)/1000;
+        lastTime = System.currentTimeMillis();
+
+        vLimit = Math.min(maxVelocity, vLimit+accelLimit*timeDifference); // cap the acceleration
+
         // I SHOULD BE 0.0
         //Ivalue += Constants.SWERVE_I / 100.0;   // The speed (Ivalue) builds up over time
 
         //correct forwards -y and left +y to actual speeds:
-        double strafeGo = /*Math.min(1,Ivalue) * */Pvalue * (target.getY()-curTrans.getY());  // The left/right speed where left = +y
-        double speedGo = /*Math.min(1,Ivalue) * */Pvalue * (target.getX()-curTrans.getX());    // The forwards/backwards speed where forwards = +x
+        double strafeGo = Constants.SWERVE_P * (target.getY()-curTrans.getY());  // The left/right speed where left = +y
+        double speedGo = Constants.SWERVE_P * (target.getX()-curTrans.getX());    // The forwards/backwards speed where forwards = +x
 
         double hypoSpeed = Math.sqrt(strafeGo*strafeGo+speedGo*speedGo);    // Calculate the desired TOTAL speed (the hypotenus of the right triangle formed by the speed vectors)
         if (hypoSpeed>vLimit) { // If the desired speed is greater than the max speed, limit the strafe AND speed speed
