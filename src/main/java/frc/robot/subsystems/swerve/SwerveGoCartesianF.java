@@ -39,6 +39,5 @@ public class SwerveGoCartesianF extends SwerveGoTo {
 
     public void initialize() {
         super.target = m_swerve.getPose().getTranslation().plus(trans);
-        super.lastTime = System.currentTimeMillis();
     }
 }

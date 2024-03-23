@@ -23,8 +23,7 @@ import frc.robot.controllers.VibrateController;
 public class ShooterSubsystem extends SubsystemBase {
     private TalonFX shooterLeft;        // Motor for the left of the actual shooter, assuming that the front of the shooter is the forward direction
     private TalonFX shooterRight;       // Motor for the right of the actual shooter, assuming that the front of the shooter is the forward direction
-    private CANSparkMax intakeLeft;     // Motor for the left intake of the shooter, assuming that the front of the shooter is the forward direction
-    private CANSparkMax intakeRight;    // Motor for the right intake of the shooter, assuming that the front of the shooter is the forward direction
+    private TalonFX intake;
     private CANSparkMax angleMotorRight;// Motor for angling the shooter up and down, assuming that the front of the shooter is the forward direction
 
     private DutyCycleEncoder encoder;    // Absolute encoder for the angle of the shooter
@@ -47,15 +46,14 @@ public class ShooterSubsystem extends SubsystemBase {
     public ShooterSubsystem() {
         shooterLeft = new TalonFX(Constants.SHOOTER_LEFT_MOTOR_PORT); //top and bottom no?
         shooterRight = new TalonFX(Constants.SHOOTER_RIGHT_MOTOR_PORT);
-        intakeLeft = new CANSparkMax(Constants.SHOOTER_INTAKE_LEFT_MOTOR_PORT, MotorType.kBrushless);
-        intakeRight = new CANSparkMax(Constants.SHOOTER_INTAKE_RIGHT_MOTOR_PORT, MotorType.kBrushless);
+        intake = new TalonFX(Constants.SHOOTER_INTAKE_MOTOR_PORT);
         angleMotorRight = new CANSparkMax(Constants.SHOOTER_ANGLE_RIGHT_MOTOR_PORT, MotorType.kBrushless);
 
         encoder = new DutyCycleEncoder(2); //needs port
         //right now 0 is parallel to ground and increases going up
 
-        anglePID = new PIDController(5, 0, 0.1);    // Placeholder values, has yet to be tuned.
-        angleFeedForward = new ArmFeedforward(0,0.18,1.1,0.01); //recalc numbers with questionable inputs
+        anglePID = new PIDController(10, 0, 0.1);    // Placeholder values, has yet to be tuned.
+        angleFeedForward = new ArmFeedforward(0,0.2,1.1,0.01); //recalc numbers with questionable inputs
         
         //ks = 0, kg = 0.91, kv = 1.95    // Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
 
@@ -65,7 +63,7 @@ public class ShooterSubsystem extends SubsystemBase {
         targetSpeed = 0.0;
         targetAngle = Constants.SHOOTER_START_ANGLE; //63 gets to 55ish
 
-        intakeRight.setInverted(true);
+        //intake.setInverted(true);
     }
 
 
@@ -145,7 +143,7 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void getShooterToSetAngle() {
         double currentAngle = getShooterAngle().getRadians();
-        double speed = MathUtil.clamp(anglePID.calculate(currentAngle, targetAngle), -4, 4) + angleFeedForward.calculate(targetAngle, 3*MathUtil.clamp(targetAngle-currentAngle, -0.75, 0.75));
+        double speed = MathUtil.clamp(anglePID.calculate(currentAngle, targetAngle), -4, 4) + angleFeedForward.calculate(targetAngle, 4*MathUtil.clamp(targetAngle-currentAngle, -0.75, 0.75));
 
         // Neither of the below have been tested (i.e. idk which one should be reversed rn)
         angleMotorRight.setVoltage(speed); //voltage because battery drain stuff
@@ -195,8 +193,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * @param speed The speed of the intake as a number between -1.0 and 1.0 inclusive which represents 100% speed outtake and intake respectively.
      */
     public void setIntakeSpeed(double speed) {
-        intakeLeft.set(speed);
-        intakeRight.set(speed); // setted inverted to true
+        intake.set(speed);
     }
 
     /**

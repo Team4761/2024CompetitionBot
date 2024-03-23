@@ -42,6 +42,9 @@ public class AutoConstruct extends SendableChooser<String> {
     private static final String kOneNoteAuto = "oneNoteAuto";
     private static final String kTwoNoteAuto = "twoNoteAuto";
     private static final String kThreeNoteAuto = "threeNoteAuto";
+    private static final String kFourNoteAuto = "fourNoteAuto";
+    private static final String kLongFR = "longFR";
+    private static final String kLongCL = "longCL";
 
     private static final String kRotateTestAuto = "rotateTestAuto";
 
@@ -76,6 +79,10 @@ public class AutoConstruct extends SendableChooser<String> {
         addOption("One Note Auto", kOneNoteAuto);
         addOption("Two Note Auto", kTwoNoteAuto);
         addOption("Three Note Auto", kThreeNoteAuto);
+        addOption("Four Note Auto", kFourNoteAuto);
+        addOption("Long Note Far Right Auto", kLongFR);
+        addOption("Long Note Close Left Auto", kLongCL);
+
         addOption("Mess Em Up Auto Left", kMessEmUpAutoLeft);
         addOption("Mess Em Up Auto Right", kMessEmUpAutoRight);
         addOption("Diagonal One Note Auto Left", kLeftDiagonalOneNote);
@@ -160,6 +167,15 @@ public class AutoConstruct extends SendableChooser<String> {
                 break;
             case kThreeNoteAuto:
                 scheduledCommand = new ThreeNoteAuto();
+                break;
+            case kFourNoteAuto:
+                scheduledCommand = new FourNoteAuto();
+                break;
+            case kLongFR:
+                scheduledCommand = new FarMiddleTwoNoteAuto(false);
+                break;
+            case kLongCL:
+                scheduledCommand = new FarMiddleTwoNoteAuto(true);
                 break;
             case kMessEmUpAutoLeft:
                 scheduledCommand = new MessEmUpAuto(true);

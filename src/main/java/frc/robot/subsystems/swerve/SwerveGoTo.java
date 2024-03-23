@@ -23,8 +23,6 @@ public class SwerveGoTo extends Command {
 
     private boolean isFinished = false;
 
-    protected double lastTime;
-
     /**
      * <p> This initializes the command by setting the target position to target
      * <p> In this, +x is the forwards direction and +y is the left direction.
@@ -44,7 +42,7 @@ public class SwerveGoTo extends Command {
      * <p> In this, +x is the forwards direction and +y is the left direction.
      * @param swerve A reference to the SwerveDriveSubsystem in the RobotMap to improve performance.
      * @param target The position to go to from the 0,0 odometry
-     * @param speedLimit The max speed that the robot can get to as a number between 0.0 - 1.0 as 0% speed to 100% speed.
+     * @param speedLimit The max speed that the robot can get to as a number between 0.0 - ~4, in m/s
      */
     public SwerveGoTo(SwerveDriveSubsystem swerve, Translation2d target, double speedLimit) {
         m_swerve = swerve;
@@ -53,9 +51,6 @@ public class SwerveGoTo extends Command {
         this.target = target;   // Set the target POSITION 
     }
 
-    public void initialize() {
-        lastTime = System.currentTimeMillis();
-    }
     /**
      * <p> While the command is running, the speed of the robot is determined by how far away the robot is from the desired location AND how long the command has run.
      * <p> The closer the robot gets to the target position, the slower it goes.
@@ -68,14 +63,15 @@ public class SwerveGoTo extends Command {
         Translation2d curTrans = m_swerve.getPose().getTranslation();   // Current translation travelled from 0,0
         
         // limit acceleration
+        /* 
         double accelLimit = 4; //4 m/s^2
         double timeDifference = (System.currentTimeMillis()-lastTime)/1000;
         lastTime = System.currentTimeMillis();
 
-        vLimit = Math.min(maxVelocity, vLimit+accelLimit*timeDifference); // cap the acceleration
-
-        // I SHOULD BE 0.0
-        //Ivalue += Constants.SWERVE_I / 100.0;   // The speed (Ivalue) builds up over time
+        vLimit = Math.min(maxVelocity, vLimit+accelLimit*timeDifference); 
+        accel limiter moved to swervedrivesubsystem
+        */ 
+        vLimit=maxVelocity;
 
         //correct forwards -y and left +y to actual speeds:
         double strafeGo = Constants.SWERVE_P * (target.getY()-curTrans.getY());  // The left/right speed where left = +y
@@ -86,12 +82,13 @@ public class SwerveGoTo extends Command {
             strafeGo = strafeGo/hypoSpeed*vLimit;
             speedGo = speedGo/hypoSpeed*vLimit;
         }
+
         SmartDashboard.putNumber("Auto Strafe Velocity", strafeGo);
         SmartDashboard.putNumber("Auto Foward Velocity", speedGo);
         SmartDashboard.putNumber("Auto PValue", Pvalue);
         SmartDashboard.putNumber("Distance To Target", target.getDistance(curTrans));
 
-        isFinished = target.getDistance(curTrans) <= 0.08;  // If the distance is less than or equal to 10cm, then it is finished
+        isFinished = target.getDistance(curTrans) <= 0.06;  // If the distance is less than or equal to 10cm, then it is finished
 
         if (!isFinished)
             m_swerve.setDriveFXY(speedGo, strafeGo, false);        // Do field oriented swerve with the strafe and speed speeds

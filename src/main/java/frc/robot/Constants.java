@@ -11,6 +11,10 @@ public class Constants
     public static int DRIVE_CONTROLLER_PORT = 0;   // On Dashboard under controller section
     public static int SHOOTER_CONTROLLER_PORT = 1;  // On Dashboard under controller section
 
+    // Auto Constants, because may differ from driver preferences
+    public static double AUTO_UPTAKE_SPEED = 0.16;
+    public static double AUTO_INTAKE_SPEED = 0.9;
+
     // Swerve
     public static int FL_DRIVE_PORT = 20;    // CAN Port.
     public static int FR_DRIVE_PORT = 22;    // CAN Port.
@@ -35,8 +39,7 @@ public class Constants
     // Shooter
     public static int SHOOTER_LEFT_MOTOR_PORT = 15;  // CAN Port.
     public static int SHOOTER_RIGHT_MOTOR_PORT = 16;  // CAN Port.
-    public static int SHOOTER_INTAKE_LEFT_MOTOR_PORT = 2;  // CAN Port. 
-    public static int SHOOTER_INTAKE_RIGHT_MOTOR_PORT = 3;  // CAN Port.
+    public static int SHOOTER_INTAKE_MOTOR_PORT = 2;  // CAN Port. 
     public static int SHOOTER_ANGLE_RIGHT_MOTOR_PORT = 11;  // CAN Port.
     public static int SHOOTER_SENSOR_UPPER_PORT = 0;    // DIO Port. breakbeams
     public static int SHOOTER_SENSOR_LOWER_PORT = 1;    // DIO Port.
@@ -61,16 +64,19 @@ public class Constants
     // Kraken Swerve Drive
     public static double KRAKEN_RPM_TO_MPS_CONVERSION = DRIVETRAIN_WHEEL_CIRCUMFERENCE_M / 60.0;
 
+    // Swerve driving acceleration limit (m/s^2)
+    public static double SWERVE_ACCELERATION_LIMIT = 3; 
+
     // Swerve PID Control
     public static double SWERVE_P = 2;    // The higher this value is, the longer it takes for the robot to start slowing down
     public static double SWERVE_I = 0.0;    // The higher this value is, the more speed it gains overtime
     public static double SWERVE_D = 0.0;    // WIP, not implemented yet
 
-    public static double SWERVE_ROTATE_P = 5;
+    public static double SWERVE_ROTATE_P = 6;
 
     // Position Constants
-    public static double INTAKE_START_POSITION = Units.degreesToRadians(263.0); // In radians
-    public static double INTAKE_INTAKE_POSITION = Units.degreesToRadians(350.0); // In radians
+    public static double INTAKE_START_POSITION = Units.degreesToRadians(100.0); // In radians
+    public static double INTAKE_INTAKE_POSITION = Units.degreesToRadians(22); // In radians
     public static double INTAKE_ACTIVE_DRIVING_POSITION = Units.degreesToRadians(290);  // In radians
 
     public static double SHOOTER_START_ANGLE = Units.degreesToRadians(70);  // In radians

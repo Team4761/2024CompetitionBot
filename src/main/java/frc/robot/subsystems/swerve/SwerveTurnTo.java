@@ -10,8 +10,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
  * <p> This does NOT turn to a specific rotation, this turns an offset from the current rotation.
  */
 public class SwerveTurnTo extends Command {
-    private SwerveDriveSubsystem m_swerve;
-    private Rotation2d target;
+    protected SwerveDriveSubsystem m_swerve;
+    protected Rotation2d target;
 
     private double Pvalue = 0;
     private double rotationDifference = 0;
@@ -39,7 +39,7 @@ public class SwerveTurnTo extends Command {
      */
     @Override
     public void execute() {
-        Pvalue = MathUtil.clamp(-MathStuff.subtract(target, m_swerve.getGyroRotation()).getRotations()*Constants.SWERVE_ROTATE_P, -0.8, 0.8);
+        Pvalue = MathUtil.clamp(-MathStuff.subtract(target, m_swerve.getGyroRotation()).getRotations()*Constants.SWERVE_ROTATE_P, -1.1, 1.1);
         //System.out.println(Pvalue);
         
         // make better subsystem support for this stuff
@@ -56,9 +56,7 @@ public class SwerveTurnTo extends Command {
      */
     @Override
     public boolean isFinished() {
-        System.out.println(Pvalue);
-        if(Math.abs(Pvalue)<0.02 && rotationDifference<0.1) { // && if robot moves <5 degrees/s in the past frame
-            System.out.println("DONEONODNONE");
+        if(Math.abs(Pvalue)<0.033 && rotationDifference<0.15) { // && if robot moves <5 degrees/s in the past frame
             return true;
         }
         return false;

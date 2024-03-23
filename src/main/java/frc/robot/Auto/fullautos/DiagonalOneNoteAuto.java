@@ -32,7 +32,7 @@ public class DiagonalOneNoteAuto extends SequentialCommandGroup {
     public DiagonalOneNoteAuto(boolean isRobotOnLeftSide) {
         super(
             // 120 offset on left side would make 0 degrees/forward be away from alliance wall
-            new ZeroGyro(isRobotOnLeftSide ? Constants.STARTING_ANGLE_DIAGONAL : -Constants.STARTING_ANGLE_DIAGONAL),
+            new ZeroGyro(isRobotOnLeftSide ? -Constants.STARTING_ANGLE_DIAGONAL : Constants.STARTING_ANGLE_DIAGONAL),
             //new OneNoteAuto() cant because it zeros the gyro
             
             new ShootAuto(),

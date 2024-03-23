@@ -9,13 +9,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
  * <p> This turns a specific number of degrees.
  * <p> This does NOT turn to a specific rotation, this turns an offset from the current rotation.
  */
-public class SwerveTurn extends Command {
-    private SwerveDriveSubsystem m_swerve;
-    private Rotation2d target;
-    private Rotation2d rot;
-    private double Pvalue = 0;
-    private double rotationDifference = 0;
-    private Rotation2d lastRot;
+public class SwerveTurn extends SwerveTurnTo {
+    private Rotation2d rotation;
 
     /**
      * This initializes the internal storage of the variables as well as tells the robot that the SwerveSubsystem is needed.
@@ -23,53 +18,13 @@ public class SwerveTurn extends Command {
      * @param rot The desired rotation to turn the robot by. Once again, this is NOT the desired final rotation, this is just an offset from the current rotation.
      */
     public SwerveTurn(SwerveDriveSubsystem swerve, Rotation2d rot) {
-        m_swerve = swerve;
-        this.rot = rot;
-        //addRequirements(m_swerve); runs in parallel with cartesian
+        super(swerve, rot);
+        rotation = rot;
     }
 
+    @Override
     public void initialize() {
-        target = m_swerve.getGyroRotation().plus(rot);
-        lastRot = m_swerve.getGyroRotation();
-    }
-
-    /**
-     * <p> This finds the differnce between the target rotation and the current rotation and then uses that to set the speed.
-     * <p> This means that the closer the robot gets to the desired rotation, the slower it will go.
-     */
-    @Override
-    public void execute() {
-        Pvalue = MathUtil.clamp(-MathStuff.subtract(target, m_swerve.getGyroRotation()).getRotations()*Constants.SWERVE_ROTATE_P, -0.8, 0.8);
-
-        
-        m_swerve.setDriveRot(Pvalue, false);
-        
-        // degrees, to check if swerve is speeding past target or coming to a stop
-        rotationDifference = Math.abs(m_swerve.getGyroRotation().minus(lastRot).getDegrees());
-        lastRot = m_swerve.getGyroRotation();
-        
-    }
-    
-    /**
-     * <p> This checks for if the speed that the robot will be set to rotate is less than 0.01 radians / second.
-     * @return True if the speed is slow (which means the robot is very close to the desired rotation). False if the speed is fast.
-     */
-    @Override
-    public boolean isFinished() {
-        System.out.println(Pvalue);
-        if(Math.abs(Pvalue)<0.02 && rotationDifference<0.1) { // && if robot moves <5 degrees/s in the past frame
-            System.out.println("DONEONODNONE");
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * <p> After getting to the desired rotation, tell swerve that it should be at the {target} rotation and set its speed to 0 to stop it from moving.
-     */
-    @Override
-    public void end(boolean interrupted) {
-        m_swerve.setTargetAngle(target);
-        m_swerve.setDriveRot(0, false);
+        super.initialize();
+        super.target = m_swerve.getGyroRotation().plus(rotation);
     }
 }
