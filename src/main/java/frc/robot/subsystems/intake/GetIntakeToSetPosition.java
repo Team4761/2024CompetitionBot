@@ -38,6 +38,6 @@ public class GetIntakeToSetPosition extends Command {
 
     @Override
     public void end(boolean isInterrupted) {
-        intake.setAngleMotorSpeed(0);
+        intake.setAngleMotorSpeed(-0.02);
     }
 }

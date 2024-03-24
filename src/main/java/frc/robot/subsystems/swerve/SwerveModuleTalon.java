@@ -28,7 +28,7 @@ public class SwerveModuleTalon extends SubsystemBase{
 
     private SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.3, 2.3); // 4.8m/s max so 12V/4.8 = 2.5V/(m/s) for kv
 
-    private final double driveConversionFactor = 0.0525772192354474; //0.0388385473906813; // This converts the encoders arbitrary units to meters travelled by the motor. The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
+    //private final double driveConversionFactor = 0.0525772192354474; //0.0388385473906813; // This converts the encoders arbitrary units to meters travelled by the motor. The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
     // private final double TOLERANCE_VOLTAGE_STEER = 0.25; // The minimum speed the steer should be able to get to in voltage. This is to prevent jittering.
 
     private double kS = 0.12; //kS feedforward for rotate motor
@@ -189,9 +189,9 @@ public class SwerveModuleTalon extends SubsystemBase{
     }
 
     public SwerveModulePosition getPosition() {
-        SmartDashboard.putNumber("Module Position", drive.getPosition().getValueAsDouble());
+        //SmartDashboard.putNumber("Module Position", drive.getPosition().getValueAsDouble());
         return new SwerveModulePosition(
-            drive.getPosition().getValueAsDouble()*driveConversionFactor,   // The meters that the wheel has moved
+            drive.getPosition().getValueAsDouble() / Constants.DRIVETRAIN_GEAR_RATIO * Constants.DRIVETRAIN_WHEEL_CIRCUMFERENCE_M,   // The meters that the wheel has moved
             getRotation() // 2048 ticks to radians is 2pi/2048
         );
     }

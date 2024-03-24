@@ -41,8 +41,8 @@ public class Constants
     public static int SHOOTER_RIGHT_MOTOR_PORT = 16;  // CAN Port.
     public static int SHOOTER_INTAKE_MOTOR_PORT = 2;  // CAN Port. 
     public static int SHOOTER_ANGLE_RIGHT_MOTOR_PORT = 11;  // CAN Port.
-    public static int SHOOTER_SENSOR_UPPER_PORT = 0;    // DIO Port. breakbeams
-    public static int SHOOTER_SENSOR_LOWER_PORT = 1;    // DIO Port.
+    public static int SHOOTER_SENSOR_UPPER_PORT = 1;    // DIO Port. breakbeams
+    public static int SHOOTER_SENSOR_LOWER_PORT = 0;    // DIO Port.
     //public static int BREAKBEAM_IS_BROKEN = 0;
 
     public static double ENCODER_UNITS_TO_RADIANS = Math.PI * 2;  // Based on the motor's current position, this converts the native units to the rotation in radians.
@@ -76,7 +76,7 @@ public class Constants
 
     // Position Constants
     public static double INTAKE_START_POSITION = Units.degreesToRadians(100.0); // In radians
-    public static double INTAKE_INTAKE_POSITION = Units.degreesToRadians(22); // In radians
+    public static double INTAKE_INTAKE_POSITION = Units.degreesToRadians(23); // In radians
     public static double INTAKE_ACTIVE_DRIVING_POSITION = Units.degreesToRadians(290);  // In radians
 
     public static double SHOOTER_START_ANGLE = Units.degreesToRadians(70);  // In radians

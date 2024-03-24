@@ -1,5 +1,6 @@
 package frc.robot.Auto.fullautos;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -63,8 +64,8 @@ public class TwoNoteAuto extends SequentialCommandGroup {
             // intake to pizza and go to shoot position
             new ParallelDeadlineGroup(
                 new ParallelCommandGroup(
-                    new FullIntake(Constants.AUTO_INTAKE_SPEED, Constants.AUTO_UPTAKE_SPEED),
-                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0, 0)) //go back to start position
+                    new FullIntake(Constants.AUTO_INTAKE_SPEED, Constants.AUTO_UPTAKE_SPEED, new Rotation2d(Constants.SHOOTER_SHOOT_ANGLE)),
+                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0.1, 0)) //go back to start position
                 ),
                 new SequentialCommandGroup(
                     new WaitCommand(0.5), // trying not to run shooter when also intaking and accelerating swerve

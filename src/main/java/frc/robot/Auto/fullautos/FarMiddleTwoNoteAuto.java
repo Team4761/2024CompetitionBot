@@ -50,7 +50,7 @@ public class FarMiddleTwoNoteAuto extends SequentialCommandGroup {
             new ParallelDeadlineGroup(
                 new ParallelCommandGroup(
                     new SwerveGoTo(Robot.getMap().swerve, new Translation2d(1.3, isRobotOnLeftSide ? 3 : -3)), // avoid far note again
-                    new FullIntake(0.5, Constants.AUTO_UPTAKE_SPEED) // can take its time because long 
+                    new FullIntake(0.5, Constants.AUTO_UPTAKE_SPEED, new Rotation2d(Constants.SHOOTER_SHOOT_ANGLE))
                 ),
                 new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(isRobotOnLeftSide ? -Constants.STARTING_ANGLE_DIAGONAL : Constants.STARTING_ANGLE_DIAGONAL)) // go back to shooting angle, 120 degrees
             ),

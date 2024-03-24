@@ -10,6 +10,7 @@ import frc.robot.subsystems.leds.NoteIndicator;
 import frc.robot.subsystems.shooter.AutoShooterIntake;
 import frc.robot.subsystems.shooter.AutoSourceIntake;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
+import frc.robot.subsystems.shooter.RevShooter;
 
 /**
  * This is the code for the controller that controls the shooter and the intake.
@@ -93,8 +94,11 @@ public class ShooterController extends XboxController {
 
             map.shooter.rotate(-0.03*deadzone(getLeftY(), 0.08)); // sets target pos
 
-            if (getAButtonPressed()) { //shoot
-                CommandScheduler.getInstance().schedule(new IntakeAndShoot(shuffleboard.getSettingNum("Shooter Out Speed")));
+            if (getAButton()) { //shoot
+                CommandScheduler.getInstance().schedule(new RevShooter(shuffleboard.getSettingNum("Shooter Out Speed"), 0.1));
+            }
+            if (getAButtonReleased()) {
+                CommandScheduler.getInstance().schedule(new IntakeAndShoot(shuffleboard.getSettingNum("Shooter Out Speed"), 0));
             }
             
             if (getPOV()==0) { // shoot at amp speed

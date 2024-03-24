@@ -56,8 +56,11 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
                 new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
                 
                 new ParallelDeadlineGroup( // doesnt need to drive if intaked
-                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(1.3, 1.5)), // rotate during this
-                    new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI*0.8)),
+                    new SequentialCommandGroup(
+                        new WaitCommand(0.15),
+                        new SwerveGoTo(Robot.getMap().swerve, new Translation2d(1.3, 1.5)) // rotate during this
+                    ),
+                    new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI*0.75)),
                     new RunIntake(0.7, 3000)
                     //new IntakeUntilBreakbeam(4000) 
                     
@@ -67,8 +70,8 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
             // intake and go back to 0,0
             new ParallelDeadlineGroup(
                 new ParallelCommandGroup(
-                    new FullIntake(Constants.AUTO_INTAKE_SPEED, Constants.AUTO_UPTAKE_SPEED),
-                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0, 0)),
+                    new FullIntake(Constants.AUTO_INTAKE_SPEED, Constants.AUTO_UPTAKE_SPEED, new Rotation2d(Constants.SHOOTER_SHOOT_ANGLE)),
+                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0.15, 0)),
                     new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI))
                 ),
                 new SequentialCommandGroup(

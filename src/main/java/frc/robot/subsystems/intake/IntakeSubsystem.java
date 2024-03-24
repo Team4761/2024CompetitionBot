@@ -57,8 +57,8 @@ public class IntakeSubsystem extends SubsystemBase{
     public void periodic() {
         // rumble when intake breakbeam broken
         if(isPieceInIntake() && !beamLast) {
-            CommandScheduler.getInstance().schedule(new VibrateController(Robot.driveController, 1));
-            CommandScheduler.getInstance().schedule(new VibrateController(Robot.shooterController, 1));
+            //CommandScheduler.getInstance().schedule(new VibrateController(Robot.driveController, 1));
+            //CommandScheduler.getInstance().schedule(new VibrateController(Robot.shooterController, 1));
         }
         beamLast = isPieceInIntake();
 
