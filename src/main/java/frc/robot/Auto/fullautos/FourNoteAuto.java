@@ -30,7 +30,7 @@ public class FourNoteAuto extends SequentialCommandGroup {
                 new ParallelDeadlineGroup( 
                     new SequentialCommandGroup(
                         new WaitCommand(0.15),
-                        new SwerveGoTo(Robot.getMap().swerve, new Translation2d(1.35, -1.5))
+                        new SwerveGoTo(Robot.getMap().swerve, new Translation2d(1.6, -1.65))
                     ),
                     new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(-Math.PI*0.75)),
                     new RunIntake(0.7, 3000)
@@ -42,7 +42,7 @@ public class FourNoteAuto extends SequentialCommandGroup {
             new ParallelDeadlineGroup(
                 new ParallelCommandGroup(
                     new FullIntake(Constants.AUTO_INTAKE_SPEED, Constants.AUTO_UPTAKE_SPEED, new Rotation2d(Constants.SHOOTER_SHOOT_ANGLE)),
-                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0.2, 0)),
+                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0.3, -0.1)),
                     new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI))
                 ),
                 new SequentialCommandGroup(

@@ -65,7 +65,7 @@ public class TwoNoteAuto extends SequentialCommandGroup {
             new ParallelDeadlineGroup(
                 new ParallelCommandGroup(
                     new FullIntake(Constants.AUTO_INTAKE_SPEED, Constants.AUTO_UPTAKE_SPEED, new Rotation2d(Constants.SHOOTER_SHOOT_ANGLE)),
-                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0.1, 0)) //go back to start position
+                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0.15, 0)) //go back to start position
                 ),
                 new SequentialCommandGroup(
                     new WaitCommand(0.5), // trying not to run shooter when also intaking and accelerating swerve

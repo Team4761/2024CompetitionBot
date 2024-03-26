@@ -26,9 +26,10 @@ public class ShootAuto extends ParallelCommandGroup {
     public ShootAuto() {
         super(
             new GetIntakeToSetPosition(Constants.INTAKE_INTAKE_POSITION),  // Move the intake down
+            new RevShooter(40, 0.5),
             new SequentialCommandGroup(
                 new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE),      // Get the shooter to shooting position
-                new IntakeAndShoot(Robot.getShuffleboard().getSettingNum("Shooter Out Speed"), 0.8) // Shoot with the speed on the shuffleboard
+                new IntakeAndShoot(40, 0.4) // Shoot 
             )
         );
     }

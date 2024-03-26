@@ -88,7 +88,7 @@ public class SwerveGoTo extends Command {
         SmartDashboard.putNumber("Auto PValue", Pvalue);
         SmartDashboard.putNumber("Distance To Target", target.getDistance(curTrans));
 
-        isFinished = target.getDistance(curTrans) <= 0.06;  // If the distance is less than or equal to 10cm, then it is finished
+        isFinished = target.getDistance(curTrans) <= 0.05;  // If the distance is less than or equal to 10cm, then it is finished
 
         if (!isFinished)
             m_swerve.setDriveFXY(speedGo, strafeGo, false);        // Do field oriented swerve with the strafe and speed speeds

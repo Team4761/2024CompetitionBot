@@ -64,8 +64,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    if (map.shooter != null)
-      map.shooter.setShooterAngle(map.shooter.getShooterAngle().getRadians());
+    //if (map.shooter != null)
+      //map.shooter.setShooterAngle(map.shooter.getShooterAngle().getRadians());
     AutoConstruct.scheduleSelectedCommand(map);
   }
 

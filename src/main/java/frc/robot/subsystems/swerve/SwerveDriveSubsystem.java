@@ -20,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 // import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -156,6 +157,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Odometry x", m_pose.getX());
         SmartDashboard.putNumber("Odometry y", m_pose.getY());
 
+
+        //Shuffleboard.getTab("Swerve").add("Front Left Rot", m_frontLeftModule.getPosition().angle.getDegrees());
+        //Shuffleboard.getTab("Swerve").add("Front Right Rot", m_frontRightModule.getPosition().angle.getDegrees());
+        //Shuffleboard.getTab("Swerve").add("Back Left Rot", m_backLeftModule.getPosition().angle.getDegrees());
+        //Shuffleboard.getTab("Swerve").add("Back Right Rot", m_backRightModule.getPosition().angle.getDegrees());
         
         SmartDashboard.putNumber("Front Left Rot", m_frontLeftModule.getPosition().angle.getDegrees());
         SmartDashboard.putNumber("Front Right Rot", m_frontRightModule.getPosition().angle.getDegrees());

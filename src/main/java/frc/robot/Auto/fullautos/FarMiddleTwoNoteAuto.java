@@ -14,6 +14,7 @@ import frc.robot.subsystems.intake.RunIntake;
 import frc.robot.subsystems.shooter.GetShooterToAngle;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
 import frc.robot.subsystems.shooter.RevShooter;
+import frc.robot.subsystems.swerve.SwerveGoThrough;
 import frc.robot.subsystems.swerve.SwerveGoTo;
 import frc.robot.subsystems.swerve.SwerveTurnTo;
 import frc.robot.subsystems.swerve.ZeroGyro;
@@ -35,7 +36,7 @@ public class FarMiddleTwoNoteAuto extends SequentialCommandGroup {
             // note is 75 inches from center of speaker, robot is probably 40ish inches off that 
             // around 300 inches to middle of field
             new ParallelDeadlineGroup(
-                new SwerveGoTo(Robot.getMap().swerve, new Translation2d(2.5, isRobotOnLeftSide ? 3 : -3)), // avoid 4 note auto area
+                new SwerveGoThrough(Robot.getMap().swerve, new Translation2d(2.5, isRobotOnLeftSide ? 3 : -3), 4, 0.2), // avoid 4 note auto area
                 new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI)), // get the robot turning
                 new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE) // prep shooter for intaking
             ),
@@ -44,23 +45,28 @@ public class FarMiddleTwoNoteAuto extends SequentialCommandGroup {
                 new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI)), // get the robot so the intake faces the note
                 new SequentialCommandGroup(
                     new WaitCommand(1),
-                    new RunIntake(0.5, 10000) // intake the note
+                    new RunIntake(0.7, 10000) // intake the note
                 )
             ),
             new ParallelDeadlineGroup(
                 new ParallelCommandGroup(
-                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(1.3, isRobotOnLeftSide ? 3 : -3)), // avoid far note again
-                    new FullIntake(0.5, Constants.AUTO_UPTAKE_SPEED, new Rotation2d(Constants.SHOOTER_SHOOT_ANGLE))
+                    new SwerveGoThrough(Robot.getMap().swerve, new Translation2d(2.5, isRobotOnLeftSide ? 3 : -3), 4, 0.2), // avoid far note again
+                    new FullIntake(0.7, Constants.AUTO_UPTAKE_SPEED, new Rotation2d(Constants.SHOOTER_SHOOT_ANGLE))
                 ),
-                new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(isRobotOnLeftSide ? -Constants.STARTING_ANGLE_DIAGONAL : Constants.STARTING_ANGLE_DIAGONAL)) // go back to shooting angle, 120 degrees
+                new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(isRobotOnLeftSide ? Constants.STARTING_ANGLE_DIAGONAL : -Constants.STARTING_ANGLE_DIAGONAL)) // go back to shooting angle, 120 degrees
             ),
-            new ParallelCommandGroup(
-                new SwerveGoTo(Robot.getMap().swerve, new Translation2d()), // go back to starting position
-                new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(isRobotOnLeftSide ? -Constants.STARTING_ANGLE_DIAGONAL : Constants.STARTING_ANGLE_DIAGONAL)), // go back to shooting angle, 120 degrees
-                new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE),
-                new RevShooter(40, 10)
+            new ParallelDeadlineGroup(
+                new ParallelCommandGroup(
+                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d()), // go back to starting position
+                    new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(isRobotOnLeftSide ? Constants.STARTING_ANGLE_DIAGONAL : -Constants.STARTING_ANGLE_DIAGONAL)), // go back to shooting angle, 120 degrees
+                    new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE)
+                ),
+                new SequentialCommandGroup(
+                    new WaitCommand(0.8),
+                    new RevShooter(40, 10)
+                )
             ),
-            new IntakeAndShoot(40, 0.05) // shoot
+            new IntakeAndShoot(40, 0.0) // shoot
             // ideally find a further point to take 2nd and 3rd shot from
         );
     }
