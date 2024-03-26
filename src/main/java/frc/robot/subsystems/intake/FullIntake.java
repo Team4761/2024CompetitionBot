@@ -1,8 +1,11 @@
 package frc.robot.subsystems.intake;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.subsystems.shooter.GetShooterToAngle;
 
 /**
  * <p> This is the holy grail of intake commands (if it works).
@@ -16,6 +19,7 @@ public class FullIntake extends Command {
     private double uptakeSpeed;   // The speed to run the uptake at
     private long timeOut;   // The time at which the command should end.
 
+    private Rotation2d endShooterAngle = null; // angle to set shooter to after done intaking
     /**
      * <p> This initializes the speed and RobotMap.
      * @param speed The speed to run the intake at as a number between 0.0 to 1.0
@@ -32,6 +36,11 @@ public class FullIntake extends Command {
         this.intakeSpeed = inSpeed;
         this.uptakeSpeed = upSpeed;
         this.map = Robot.getMap();
+    }
+
+    public FullIntake(double inSpeed, double speed, Rotation2d shooterEndAngle) {
+        this(inSpeed, speed);
+        endShooterAngle=shooterEndAngle;
     }
 
     @Override
@@ -70,5 +79,8 @@ public class FullIntake extends Command {
     public void end(boolean isInterrupted) {
         map.intake.intake(0.0);
         map.shooter.setIntakeSpeed(0.0);
+        if(endShooterAngle!=null) {
+            CommandScheduler.getInstance().schedule(new GetShooterToAngle(endShooterAngle.getRadians()));
+        }
     }
 }

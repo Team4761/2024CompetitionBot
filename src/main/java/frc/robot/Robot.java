@@ -64,8 +64,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    if (map.shooter != null)
-      map.shooter.setShooterAngle(map.shooter.getShooterAngle().getRadians());
+    //if (map.shooter != null)
+      //map.shooter.setShooterAngle(map.shooter.getShooterAngle().getRadians());
     AutoConstruct.scheduleSelectedCommand(map);
   }
 
@@ -83,6 +83,12 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+    CommandScheduler.getInstance().cancelAll();
+
+    if (map.shooter != null) {
+      map.shooter.setShooterAngleSpeed(0);
+      map.shooter.setShooterAngle(map.shooter.getShooterAngle().getRadians());
+    }
     if (map.autoEndingAngle != null && map.swerve != null) {
       map.swerve.zeroGyro(map.autoEndingAngle);
     }

@@ -1,10 +1,12 @@
 package frc.robot.Auto.fullautos;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Auto.MoveBackCommand;
+import frc.robot.Robot;
 import frc.robot.Auto.ShootAuto;
+import frc.robot.subsystems.swerve.SwerveGoTo;
 import frc.robot.subsystems.swerve.ZeroGyro;
 
 /**
@@ -27,7 +29,7 @@ public class OneNoteAuto extends SequentialCommandGroup {
         super(
             new ZeroGyro(),
             new ShootAuto(),
-            new MoveBackCommand(3.0),
+            new SwerveGoTo(Robot.getMap().swerve, new Translation2d(-3, 0)),
             new SetEndingAngle(new Rotation2d(Units.degreesToRadians(180)))
         );
     }

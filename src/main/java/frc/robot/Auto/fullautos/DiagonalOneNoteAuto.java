@@ -32,11 +32,11 @@ public class DiagonalOneNoteAuto extends SequentialCommandGroup {
     public DiagonalOneNoteAuto(boolean isRobotOnLeftSide) {
         super(
             // 120 offset on left side would make 0 degrees/forward be away from alliance wall
-            new ZeroGyro(isRobotOnLeftSide ? Constants.STARTING_ANGLE_DIAGONAL : -Constants.STARTING_ANGLE_DIAGONAL),
+            new ZeroGyro(isRobotOnLeftSide ? -Constants.STARTING_ANGLE_DIAGONAL : Constants.STARTING_ANGLE_DIAGONAL),
             //new OneNoteAuto() cant because it zeros the gyro
             
             new ShootAuto(),
-            new WaitCommand(10), // to not disturb any 4 note autos
+            new WaitCommand(11.5), // to not disturb any 4 note autos
             new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(3, 0)) // forwards should be away from alliance wall with gyro offset
         );
     }

@@ -7,6 +7,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 import com.revrobotics.CANSparkLowLevel;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -24,10 +25,13 @@ public class SwerveModuleTalon extends SubsystemBase{
     private double offset;
 
     private double sM;
-    private final double driveConversionFactor = 0.0525772192354474; //0.0388385473906813; // This converts the encoders arbitrary units to meters travelled by the motor. The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
+
+    private SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.3, 2.3); // 4.8m/s max so 12V/4.8 = 2.5V/(m/s) for kv
+
+    //private final double driveConversionFactor = 0.0525772192354474; //0.0388385473906813; // This converts the encoders arbitrary units to meters travelled by the motor. The seemingly magic number below was gotten by driving the robot to 6m, looking at the odometry, and dividing 6 by the measured distance.
     // private final double TOLERANCE_VOLTAGE_STEER = 0.25; // The minimum speed the steer should be able to get to in voltage. This is to prevent jittering.
 
-    private double kS = 0.2; //kS feedforward for rotate motor
+    private double kS = 0.15; //kS feedforward for rotate motor
 
     // m/s, rotation2d
     private SwerveModuleState targetState = new SwerveModuleState();
@@ -61,9 +65,9 @@ public class SwerveModuleTalon extends SubsystemBase{
         //applySmartMotion();
     }
     
-    public SwerveModuleTalon(int driveID, int steerID, int encoderID, double o, boolean invertDrive, double steerMult, double kS) {
+    public SwerveModuleTalon(int driveID, int steerID, int encoderID, double o, boolean invertDrive, double steerMult, SimpleMotorFeedforward drivefeedforward) {
         this(driveID, steerID, encoderID, o, invertDrive, steerMult);
-        this.kS = kS;
+        this.driveFF = drivefeedforward;
     }
 
     public SwerveModuleTalon(int driveID, int steerID, int encoderID, double o, boolean invertDrive, double steerMult, boolean simplePID) {
@@ -162,24 +166,21 @@ public class SwerveModuleTalon extends SubsystemBase{
      */
 
     public void go() {
-
-
-        //System.out.println("speed: "+targetState.speedMetersPerSecond);
         // get to the set positions 
-            
-        double kP = 30;
-        //System.out.println(targetState.angle.getDegrees()+", "+getRotation().getDegrees()+", "+sM);
+        double kP = 21;
 
         //both need a P value to adjust it to the right speed
         double steerP = -MathStuff.subtract(targetState.angle, getRotation()).getRotations()*sM*kP;
         double steerFF = Math.signum(steerP)*kS;
-        
+
         steer.setVoltage(steerP+steerFF);
         
-        //if(true)
-        double driveP = targetState.speedMetersPerSecond*10;
-        double driveFF = Math.signum(driveP)*0.36;
-        drive.setVoltage(driveP+driveFF);
+
+        //double driveP = targetState.speedMetersPerSecond*10;
+        double driveP = 2.0 * (targetState.speedMetersPerSecond-getDriveVelocity()); //kP * velocity difference, untuned kP
+        double dff = driveFF.calculate(targetState.speedMetersPerSecond);
+
+        drive.setVoltage(driveP+dff);
     }
 
     public void setSpeeds(double d, double s) {
@@ -188,14 +189,18 @@ public class SwerveModuleTalon extends SubsystemBase{
     }
 
     public SwerveModulePosition getPosition() {
-        SmartDashboard.putNumber("Module Position", drive.getPosition().getValueAsDouble());
+        //SmartDashboard.putNumber("Module Position", drive.getPosition().getValueAsDouble());
         return new SwerveModulePosition(
-            drive.getPosition().getValueAsDouble()*driveConversionFactor,   // The meters that the wheel has moved
+            drive.getPosition().getValueAsDouble() / Constants.DRIVETRAIN_GEAR_RATIO * Constants.DRIVETRAIN_WHEEL_CIRCUMFERENCE_M,   // The meters that the wheel has moved
             getRotation() // 2048 ticks to radians is 2pi/2048
         );
     }
+    
+    // meters per second
     public double getDriveVelocity() { //rpms default supposedy, actual drive speed affected by gear ratio and wheel circumfernce
-        return drive.getVelocity().getValueAsDouble(); //*gearratio*circumference=m/s except needs units adjustment
+        //6.12:1 gear ratio from allegedly L3 swerve
+
+        return drive.getVelocity().getValueAsDouble() / Constants.DRIVETRAIN_GEAR_RATIO * Constants.DRIVETRAIN_WHEEL_CIRCUMFERENCE_M; 
     }
     public double getSteerVelocity() { //rpms default, affected by gear ratio
         return steer.getEncoder().getVelocity(); // /gearratio=rpms of the wheel spinning

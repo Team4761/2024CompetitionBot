@@ -10,6 +10,7 @@ import frc.robot.subsystems.leds.NoteIndicator;
 import frc.robot.subsystems.shooter.AutoShooterIntake;
 import frc.robot.subsystems.shooter.AutoSourceIntake;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
+import frc.robot.subsystems.shooter.RevShooter;
 
 /**
  * This is the code for the controller that controls the shooter and the intake.
@@ -79,7 +80,7 @@ public class ShooterController extends XboxController {
      */
     public void teleopPeriodic() {
         smoothLeftY[smoothNextFrameToWrite] = deadzone(getLeftY(), 0.08);
-        smoothRightY[smoothNextFrameToWrite] = deadzone(getRightY(), 0.14);
+        smoothRightY[smoothNextFrameToWrite] = deadzone(getRightY(), 0.08);
         smoothNextFrameToWrite++;
         smoothNextFrameToWrite %= SMOOTH_FRAME_LENGTH;
 
@@ -91,10 +92,13 @@ public class ShooterController extends XboxController {
         // Shooter
         if (map.shooter != null) {
 
-            map.shooter.rotate(-0.04*deadzone(getLeftY(), 0.08)); // sets target pos
+            map.shooter.rotate(-0.03*deadzone(getLeftY(), 0.08)); // sets target pos
 
-            if (getAButtonPressed()) { //shoot
-                CommandScheduler.getInstance().schedule(new IntakeAndShoot(shuffleboard.getSettingNum("Shooter Out Speed")));
+            if (getAButton()) { //shoot
+                CommandScheduler.getInstance().schedule(new RevShooter(shuffleboard.getSettingNum("Shooter Out Speed"), 0.1));
+            }
+            if (getAButtonReleased()) {
+                CommandScheduler.getInstance().schedule(new IntakeAndShoot(shuffleboard.getSettingNum("Shooter Out Speed"), 0));
             }
             
             if (getPOV()==0) { // shoot at amp speed
@@ -144,7 +148,7 @@ public class ShooterController extends XboxController {
         // Intake
         if (map.intake != null) {
             // map.intake.rotate(getRightY());
-            map.intake.setAngleMotorSpeed(-deadzone(getRightY(), 0.15)*0.3);
+            map.intake.setAngleMotorSpeed(-deadzone(getRightY(), 0.08)*0.25);
             
             if (getXButtonPressed()) {
                 map.intake.intake(Robot.getShuffleboard().getSettingNum("Intake Speed")); // goes up

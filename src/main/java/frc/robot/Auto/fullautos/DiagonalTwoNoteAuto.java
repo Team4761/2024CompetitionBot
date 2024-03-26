@@ -15,7 +15,7 @@ public class DiagonalTwoNoteAuto extends SequentialCommandGroup {
      */
     public DiagonalTwoNoteAuto(boolean isRobotOnLeftSide) {
         super(
-            new ZeroGyro(isRobotOnLeftSide ? Constants.STARTING_ANGLE_DIAGONAL : -Constants.STARTING_ANGLE_DIAGONAL),
+            new ZeroGyro(isRobotOnLeftSide ? -Constants.STARTING_ANGLE_DIAGONAL : Constants.STARTING_ANGLE_DIAGONAL),
             new TwoNoteAuto() // will not work
         );
     }

@@ -1,8 +1,6 @@
 package frc.robot.subsystems.intake;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.RobotMap;
 
 /**
  * <p> This is the holy grail of intake commands (if it works).
@@ -10,10 +8,7 @@ import frc.robot.RobotMap;
  * <p> Once the piece reaches the break-beam sensor on the top of the shooter, the command ends.
  * <p> The command will also end after a 5 second time out period.
  */
-public class IntakeUntilBreakbeam extends Command {
-    private RobotMap map;   // The robot's RobotMap to access the intake and shooter subsystems.
-    private long timeOut;   // The time at which the command should end.
-    private long length = 5000;
+public class IntakeUntilBreakbeam extends RunIntake {
 
     /**
      * <p> This initializes the speed and RobotMap.
@@ -21,24 +16,12 @@ public class IntakeUntilBreakbeam extends Command {
      * @param map The RobotMap of the robot to improve performance.
      */
     
-    public IntakeUntilBreakbeam() {
+    public IntakeUntilBreakbeam(double speed) {
+        super(speed);
     }
 
-    public IntakeUntilBreakbeam(long timeout) {
-        length = System.currentTimeMillis()+timeout;
-    }
-
-    @Override
-    public void initialize() {
-        this.timeOut = System.currentTimeMillis() + length;
-    }
-
-    /**
-     * <p> This runs both the intake's intake and the shooter's intake at a speed of {speed}
-     */
-    @Override
-    public void execute() {
-        map.intake.intake(Robot.getShuffleboard().getSettingNum("Intake Speed"));
+    public IntakeUntilBreakbeam(double speed, long timeout) {
+        super(speed, timeout);
     }
 
     /**
@@ -48,11 +31,9 @@ public class IntakeUntilBreakbeam extends Command {
      */
     @Override
     public boolean isFinished() {
-        if (map.intake.isPieceInIntake())
+        if (Robot.getMap().intake.isPieceInIntake())
             return true;
-        if (timeOut <= System.currentTimeMillis())
-            return true;
-        return false;
+        return super.isFinished();
     }
 
     /**
@@ -61,7 +42,7 @@ public class IntakeUntilBreakbeam extends Command {
      */
     @Override
     public void end(boolean isInterrupted) {
-        map.intake.intake(0.0);
-        map.shooter.setIntakeSpeed(0.0);
+        Robot.getMap().intake.intake(0.0);
+        Robot.getMap().shooter.setIntakeSpeed(0.0);
     }
 }

@@ -57,8 +57,8 @@ public class IntakeSubsystem extends SubsystemBase{
     public void periodic() {
         // rumble when intake breakbeam broken
         if(isPieceInIntake() && !beamLast) {
-            CommandScheduler.getInstance().schedule(new VibrateController(Robot.driveController, 1));
-            CommandScheduler.getInstance().schedule(new VibrateController(Robot.shooterController, 1));
+            //CommandScheduler.getInstance().schedule(new VibrateController(Robot.driveController, 1));
+            //CommandScheduler.getInstance().schedule(new VibrateController(Robot.shooterController, 1));
         }
         beamLast = isPieceInIntake();
 
@@ -127,15 +127,16 @@ public class IntakeSubsystem extends SubsystemBase{
     public void setAngleMotorSpeed(double speed){
         //limit movement to only inwards at outer bounds
         // speed makes angle decrease (up)
+        // should add lowering speed limit near edges
         if (speed>0) {
-            if (getIntakeAngle().getDegrees()<110) { // let it go up to 110
+            if (getIntakeAngle().getDegrees()<100) { // let it go up to 110
                 angleMotorLeft.set(speed);
             } else {
                 angleMotorLeft.set(0);
             }
         }
         else {
-            if (getIntakeAngle().getDegrees()>10) {
+            if (getIntakeAngle().getDegrees()>25) {
                 angleMotorLeft.set(speed);
             } else {
                 angleMotorLeft.set(0);
@@ -164,9 +165,8 @@ public class IntakeSubsystem extends SubsystemBase{
      * @return the angle of the shooter in radians where up is positive and 0 radians is perpendicular with the ground.
      */
     public Rotation2d getIntakeAngle() {
-        // 80 start  to 60   to   0ish   to   350ish at top to
-        // 10           30        90      to    100
-        return new Rotation2d(- ((encoder.getAbsolutePosition() * Constants.ENCODER_UNITS_TO_RADIANS + 100)%360-190));
+        // does some stuff to deal with 0 to 360 wrapping
+        return new Rotation2d(Units.degreesToRadians( -((encoder.getAbsolutePosition() * 360 + 150)%360-190)));
     }
 
     /**
