@@ -177,8 +177,8 @@ public class LedSubsystem extends SubsystemBase {
             ++index;
             number = number & ~bit;
         }
+        leds.setData(ledBuffer);
     }
-
 }
 
 
