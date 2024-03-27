@@ -9,14 +9,13 @@ public class VibrateController extends Command {
     private RumbleType rmblType;
     private double intensity;
     private long endTime;
-    private long length;
+    private long length = 400;
 
     // controller, rumbletype left/right/both, intensity 0-1, length in seconds
     public VibrateController (XboxController control, double intensity) {
         controller = control;
         rmblType = RumbleType.kBothRumble;
         this.intensity = intensity;
-        length = 400;
     }
     public VibrateController (XboxController control, double intensity, double length) {
         controller = control;
@@ -28,7 +27,6 @@ public class VibrateController extends Command {
         controller = control;
         rmblType = rumbleType;
         this.intensity = intensity;
-        length = 400;
     }
     public VibrateController (XboxController control, RumbleType rumbleType, double intensity, double length) {
         controller = control;

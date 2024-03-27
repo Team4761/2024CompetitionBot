@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Auto.AutoConstruct;
 import frc.robot.subsystems.leds.FlowLEDs;
+import frc.robot.subsystems.shooter.StopShooter;
 import frc.robot.controllers.DriveController;
 import frc.robot.controllers.ShooterController;  
 
@@ -88,6 +89,7 @@ public class Robot extends TimedRobot {
     if (map.shooter != null) {
       map.shooter.setShooterAngleSpeed(0);
       map.shooter.setShooterAngle(map.shooter.getShooterAngle().getRadians());
+      CommandScheduler.getInstance().schedule(new StopShooter()); // stops shooter with a deccel limit
     }
     if (map.autoEndingAngle != null && map.swerve != null) {
       map.swerve.zeroGyro(map.autoEndingAngle);

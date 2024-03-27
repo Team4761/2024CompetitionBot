@@ -14,7 +14,7 @@ public class IntakeAndShoot extends ParallelCommandGroup {
      */
     public IntakeAndShoot(double speed) {
         super(
-            new Shoot(speed, 1.7),
+            new Shoot(speed, 1.5),
             new SequentialCommandGroup(
                 new WaitCommand(1.2),
                 new ShooterIntake(0.8, 200),
@@ -24,7 +24,7 @@ public class IntakeAndShoot extends ParallelCommandGroup {
     }
     public IntakeAndShoot(double speed, double revLength) {
         super(
-            new Shoot(speed, revLength+0.5),
+            new Shoot(speed, revLength+0.25),
             new SequentialCommandGroup(
                 new WaitCommand(revLength),
                 new ShooterIntake(0.8, 200),

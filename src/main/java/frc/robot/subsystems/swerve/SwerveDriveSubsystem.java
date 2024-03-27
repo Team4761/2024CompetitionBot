@@ -82,7 +82,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public SwerveDriveSubsystem (Translation2d fL, Translation2d fR, Translation2d bL, Translation2d bR) {
         m_kinematics = new SwerveDriveKinematics(fL, fR, bL, bR);   // Load the relative positions of all our swerve modules (wheels) in relation to the origin.
         m_pose = new Pose2d();  // Starts the position at 0,0
-        m_odometry =  new SwerveDriveOdometry(m_kinematics, getGyroRotation(), m_swervePositions, m_pose); // Start the odometry at 0,0
+        m_odometry =  new SwerveDriveOdometry(m_kinematics, getGyroRotation().times(-1), m_swervePositions, m_pose); // Start the odometry at 0,0
         targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, getGyroRotation()));
         configureAutoBuilder();
     }

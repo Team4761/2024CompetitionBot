@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
 import frc.robot.subsystems.swerve.SwerveTurnTo;
+import frc.robot.subsystems.swerve.ZeroGyro;
+import frc.robot.RobocketsShuffleboard;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.Auto.fullautos.*;
 
@@ -18,6 +21,7 @@ import frc.robot.Auto.fullautos.*;
  * <p> If you have a new auto choisce to add, do it here
  */
 public class AutoConstruct extends SendableChooser<String> {
+    private static Alliance allianceSelector = new Alliance();
 
     // Internal Auto names
     private static final String kDefaultAuto = "Default";
@@ -43,8 +47,8 @@ public class AutoConstruct extends SendableChooser<String> {
     private static final String kTwoNoteAuto = "twoNoteAuto";
     private static final String kThreeNoteAuto = "threeNoteAuto";
     private static final String kFourNoteAuto = "fourNoteAuto";
-    private static final String kLongFR = "longFR";
-    private static final String kLongCL = "longCL";
+    private static final String kFarMiddleAuto = "middleFarAuto";
+    private static final String kCloseMiddleAuto = "middleCloseAuto";
 
     private static final String kRotateTestAuto = "rotateTestAuto";
 
@@ -59,14 +63,14 @@ public class AutoConstruct extends SendableChooser<String> {
     public AutoConstruct() {
         // Construct our Auto Options
         setDefaultOption("Default Auto", kDefaultAuto);
+        addOption("Do Nothing Auto", kDoNothing);
 
         // First parameter: The name of the auto displayed on SmartDashboard
         // Second parameter: The internal name of the auto
         //addOption("Do Nothing", "");
-        addOption("One Meter Left", kOneMeterLeft);
-        addOption("One Meter Forward", kOneMeterForward);
-        addOption("Prep Shooter Auto", prepShooterAuto);
-        addOption("Shoot Auto", kShootAuto);
+        //addOption("One Meter Left", kOneMeterLeft);
+        //addOption("One Meter Forward", kOneMeterForward);
+        //addOption("Prep Shooter Auto", prepShooterAuto);
         // addOption("PathPlanner 1 Meter Forward Auto", kPathPlanner1Auto);
         // addOption("PathPlanner 1 Meter Forward Path", kPathPlanner1MockAuto);
         // addOption("PathPlanner Test 2", kPathPlanner2Auto);
@@ -74,14 +78,16 @@ public class AutoConstruct extends SendableChooser<String> {
         // addOption("PathPlanner 2 Meter Up", kPathPlanner2Up);
         // addOption("PathPlanner 2 Meter Spin", kPathPlanner2MeterSpin);
 
-        addOption("Rotate Test", kRotateTestAuto);
+        //addOption("Rotate Test", kRotateTestAuto);
+
+        addOption("Shoot Auto", kShootAuto);
 
         addOption("One Note Auto", kOneNoteAuto);
         addOption("Two Note Auto", kTwoNoteAuto);
         addOption("Three Note Auto", kThreeNoteAuto);
         addOption("Four Note Auto", kFourNoteAuto);
-        addOption("Long Note Far Right Auto", kLongFR);
-        addOption("Long Note Close Left Auto", kLongCL);
+        addOption("Long Note Far Right Auto", kFarMiddleAuto);
+        addOption("Long Note Close Left Auto", kCloseMiddleAuto);
 
         addOption("Mess Em Up Auto Left", kMessEmUpAutoLeft);
         addOption("Mess Em Up Auto Right", kMessEmUpAutoRight);
@@ -89,7 +95,6 @@ public class AutoConstruct extends SendableChooser<String> {
         addOption("Diagonal One Note Auto Right", kRightDiagonalOneNote);
         addOption("Diagonal Two Note Auto Left", kLeftDiagonalTwoNote);
         addOption("Diagonal Two Note Auto Right", kRightDiagonalTwoNote);
-        addOption("Do Nothing Auto", kDoNothing);
 
         autoSelector = this;
     }
@@ -103,6 +108,8 @@ public class AutoConstruct extends SendableChooser<String> {
      * @param map Some commands require that you pass in a subsystem. Fortunately all these subsystems can be found in RobotMap, so we will just pass that in
      */
     public static void scheduleSelectedCommand(RobotMap map) {
+        boolean bluealliance = allianceSelector.getSelected()=="blueAlliance";
+
         m_autoSelected = autoSelector.getSelected();
         // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
         System.out.println("Auto selected: " + m_autoSelected);
@@ -120,27 +127,28 @@ public class AutoConstruct extends SendableChooser<String> {
             SmartDashboard.putNumber("PathPlanner Target Y", pose.getY());
             SmartDashboard.putNumber("PathPlanner Target Rot", pose.getRotation().getDegrees());
         });
+
         
         Command scheduledCommand = null;
         switch (m_autoSelected) {
-            case kDefaultAuto:
-                scheduledCommand = new MoveBackCommand(1.2);
+            case kDefaultAuto: // do nothing
+                scheduledCommand = new ZeroGyro();
                 break;
-            case kOneMeterLeft:
-                scheduledCommand = new SwerveGoCartesianF(map.swerve, new Translation2d(0, 1));
-                break;
-            case kOneMeterForward:
-                scheduledCommand = new SwerveGoCartesianF(map.swerve, new Translation2d(1, 0));
-                break;
+            //case kOneMeterLeft:
+            //    scheduledCommand = new SwerveGoCartesianF(map.swerve, new Translation2d(0, 1));
+            //    break;
+            //case kOneMeterForward:
+            //    scheduledCommand = new SwerveGoCartesianF(map.swerve, new Translation2d(1, 0));
+            //    break;
             // case prepShooterAuto:
             //     scheduledCommand = new PrepShooterAuto();
             //     break;
             case kShootAuto:
                 scheduledCommand = new ShootAuto();
                 break;
-            case kRotateTestAuto:
-                scheduledCommand = new SwerveTurnTo(map.swerve, new Rotation2d(Math.PI/2));
-                break;
+            //case kRotateTestAuto:
+            //    scheduledCommand = new SwerveTurnTo(map.swerve, new Rotation2d(Math.PI/2));
+            //    break;
             // case kPathPlanner1Auto:
             //     scheduledCommand = new PathPlannerAuto("1 Meter Auto").andThen(new PrintCommand("Path Finished!"));
             // break;
@@ -166,16 +174,16 @@ public class AutoConstruct extends SendableChooser<String> {
                 scheduledCommand = new TwoNoteAuto();
                 break;
             case kThreeNoteAuto:
-                scheduledCommand = new ThreeNoteAuto();
+                scheduledCommand = new ThreeNoteAuto(bluealliance);
                 break;
             case kFourNoteAuto:
-                scheduledCommand = new FourNoteAuto();
+                scheduledCommand = new FourNoteAuto(bluealliance);
                 break;
-            case kLongFR:
-                scheduledCommand = new FarMiddleTwoNoteAuto(false);
+            case kFarMiddleAuto:
+                scheduledCommand = new FarMiddleTwoNoteAuto(bluealliance);
                 break;
-            case kLongCL:
-                scheduledCommand = new FarMiddleTwoNoteAuto(true);
+            case kCloseMiddleAuto:
+                scheduledCommand = new FarMiddleTwoNoteAuto(bluealliance);
                 break;
             case kMessEmUpAutoLeft:
                 scheduledCommand = new MessEmUpAuto(true);
@@ -189,12 +197,12 @@ public class AutoConstruct extends SendableChooser<String> {
             case kRightDiagonalOneNote:
                 scheduledCommand = new DiagonalOneNoteAuto(false);
                 break;
-            case kLeftDiagonalTwoNote:
-                scheduledCommand = new DiagonalTwoNoteAuto(true);
-                break;
-            case kRightDiagonalTwoNote:
-                scheduledCommand = new DiagonalTwoNoteAuto(false);
-                break;
+            //case kLeftDiagonalTwoNote:
+            //    scheduledCommand = new DiagonalTwoNoteAuto(true);
+            //    break;
+            //case kRightDiagonalTwoNote:
+            //    scheduledCommand = new DiagonalTwoNoteAuto(false);
+            //    break;
 
             case kDoNothing:
                 break;
@@ -210,5 +218,9 @@ public class AutoConstruct extends SendableChooser<String> {
             System.out.println("No Autonomous Command running");
         }
         //CommandScheduler.getInstance().schedule(new SwerveGoCartesianF(map.swerve, new Translation2d(20, 20)));
+    }
+
+    public Alliance getAllianceSelector() {
+        return allianceSelector;
     }
 }

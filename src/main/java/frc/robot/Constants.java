@@ -53,7 +53,7 @@ public class Constants
 
     // Physical Constants
     // TODO: find these constants
-    public static double DRIVETRAIN_WHEEL_DIAMETER_M = 0.1016; // wheel diameter in meters. This is 4 inches btw
+    public static double DRIVETRAIN_WHEEL_DIAMETER_M = 0.0991; // wheel diameter in meters. This is 3.9 inches
     public static double DRIVETRAIN_WHEEL_CIRCUMFERENCE_M = DRIVETRAIN_WHEEL_DIAMETER_M*Math.PI; // wheel circumference in meters
     public static double DRIVETRAIN_MAX_SPEED_MPS = 4.0; // random number! :D
     public static double DRIVETRAIN_GEAR_RATIO = 6.12; //gear ratio in L3 swerve

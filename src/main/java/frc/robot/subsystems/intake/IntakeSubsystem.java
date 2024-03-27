@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.controllers.VibrateController;
+import frc.robot.subsystems.breakbeam.Breakbeam;
 
 public class IntakeSubsystem extends SubsystemBase{ 
     // Neos that actually intake (left or right facing forward)
@@ -25,7 +26,7 @@ public class IntakeSubsystem extends SubsystemBase{
 
     private DutyCycleEncoder encoder;
     
-    private DigitalInput intakeSensor;    // breakbeam at entrance of intake
+    private Breakbeam intakeSensor;    // breakbeam at entrance of intake
 
     private PIDController anglePID;         // Will be used to get the shooter a desired angle.
     private ArmFeedforward angleFeedForward;// Will be used to maintain the shooter's angle.
@@ -47,20 +48,18 @@ public class IntakeSubsystem extends SubsystemBase{
 
         encoder = new DutyCycleEncoder(3);
 
-        intakeSensor = new DigitalInput(4);
+        intakeSensor = new Breakbeam(4); 
 
         anglePID = new PIDController(0, 0, 0);  // These values have yet to be tuned. was 1,0,0
         angleFeedForward = new ArmFeedforward(0,0, 0); //ks = 0, kg = 0.91, kv = 1.95// Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
     }
 
-    boolean beamLast = false;
     public void periodic() {
         // rumble when intake breakbeam broken
-        if(isPieceInIntake() && !beamLast) {
+        if(intakeSensor.justBroken()) {
             //CommandScheduler.getInstance().schedule(new VibrateController(Robot.driveController, 1));
             //CommandScheduler.getInstance().schedule(new VibrateController(Robot.shooterController, 1));
         }
-        beamLast = isPieceInIntake();
 
         
         if (Robot.getMap().leds != null) { // set leds to blue when note is in intake
@@ -183,7 +182,7 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
     public boolean isPieceInIntake() {
-        return !intakeSensor.get();
+        return intakeSensor.isBroken();
         
         // If the break beam wasn't working, it would constantly return true, which is wrong.
         // if (isBreakBeamWorking)

@@ -15,7 +15,6 @@ import frc.robot.subsystems.intake.RunIntake;
 import frc.robot.subsystems.shooter.GetShooterToAngle;
 import frc.robot.subsystems.shooter.IntakeAndShoot;
 import frc.robot.subsystems.shooter.RevShooter;
-import frc.robot.subsystems.shooter.Shoot;
 import frc.robot.subsystems.swerve.SwerveGoTo;
 import frc.robot.subsystems.swerve.ZeroGyro;
 

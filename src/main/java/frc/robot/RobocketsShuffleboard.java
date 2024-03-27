@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Auto.Alliance;
 import frc.robot.Auto.AutoConstruct;
 import frc.robot.subsystems.climber.LoosenClimber;
 import frc.robot.subsystems.climber.TightenClimber;
@@ -76,28 +77,30 @@ public class RobocketsShuffleboard {
      */
     public void addSettings() {
         // Shooter settings
-        addShooterSetting("Shooter In Speed", 0.5);
-        addShooterSetting("Shooter Out Speed", 0.5);
-        addShooterSetting("Shooter Intake Speed", 0.5);
-        addShooterSetting("Shooter Outtake Speed", 0.5);
-        addShooterSetting("Amp Shoot Speed", 10);
+        addShooterSetting("Shooter In Speed", 10); // flywheel speed for source intake
+        addShooterSetting("Shooter Out Speed", 40); // flywheel speed for default shot
+        addShooterSetting("Shooter Intake Speed", 0.16); // uptake speed for shot and stuff
+        addShooterSetting("Shooter Outtake Speed", 0.12); // up(down)take speed for source intake
+        //addShooterSetting("Amp Shoot Speed", 10); hardcoded
 
         // Swerve settings
-        addSwerveSetting("Movement Speed", 0.5);
-        addSwerveSetting("Rotation Speed", 0.5);
-        addSwerveSetting("Is Robot Relative", true);
-        addSwerveSetting("Swerve Steer Tolerance", 1.0);
+        addSwerveSetting("Movement Speed", 1.8); // speed, this value squared is about the max speed in m/s
+        addSwerveSetting("Rotation Speed", 1.8); // rotation speed, this value is also squared
+        addSwerveSetting("Is Robot Relative", true); // ?
+        addSwerveSetting("Swerve Steer Tolerance", 1.0); // ?
 
         // Intake settings
-        addIntakeSetting("Intake Speed", 0.5);
-        addIntakeSetting("Outtake Speed", 0.5);
-        addIntakeSetting("Full Intake Setting", 0.5);
+        addIntakeSetting("Intake Speed", 0.8); // intaking speed
+        addIntakeSetting("Outtake Speed", 0.6); // outtaking speed
+        addIntakeSetting("Full Intake Setting", 0.8); // intake speed when intaking up to uptake
 
         // Climber settings
         addClimberSetting("Climber Speed", 0.5);
 
         // Auto settings
-        shuffleboard.settingsAuto.add("Auto", new AutoConstruct()); // Cannot be found using the getSettingNum function. Must use the AutoConstruct.scheduleSelectedCommand() method.
+        AutoConstruct autoConstruct = new AutoConstruct();
+        shuffleboard.settingsAuto.add("Auto", autoConstruct); // Cannot be found using the getSettingNum function. Must use the AutoConstruct.scheduleSelectedCommand() method.
+        shuffleboard.settingsAuto.add("Alliance", autoConstruct.getAllianceSelector());
     }
 
     /**

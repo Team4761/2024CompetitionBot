@@ -28,20 +28,20 @@ public class FarMiddleTwoNoteAuto extends SequentialCommandGroup {
      * <p> For when a teamate has a reliable 4 note auto but dont want to risk a collision, or when you're faster then an opposing middle auto
      * @param isRobotOnLeftSide When looking at the robot from the alliance wall, is the robot on the left of the speaker.
      */
-    public FarMiddleTwoNoteAuto(boolean isRobotOnLeftSide) { // false when far blue, true when far red
+    public FarMiddleTwoNoteAuto(boolean blueAlliance) { // false when far blue, true when far red
         super(
-            new ZeroGyro(isRobotOnLeftSide ? -Constants.STARTING_ANGLE_DIAGONAL : Constants.STARTING_ANGLE_DIAGONAL), // make 0 degrees away from alliance wall
+            new ZeroGyro(blueAlliance ? Constants.STARTING_ANGLE_DIAGONAL : -Constants.STARTING_ANGLE_DIAGONAL), // make 0 degrees away from alliance wall
             new ShootAuto(),
 
             // note is 75 inches from center of speaker, robot is probably 40ish inches off that 
             // around 300 inches to middle of field
             new ParallelDeadlineGroup(
-                new SwerveGoThrough(Robot.getMap().swerve, new Translation2d(2.5, isRobotOnLeftSide ? 3 : -3), 4, 0.2), // avoid 4 note auto area
+                new SwerveGoThrough(Robot.getMap().swerve, new Translation2d(2.3, blueAlliance ? -3 : 3), 4, 0.2), // avoid 4 note auto area
                 new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI)), // get the robot turning
                 new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE) // prep shooter for intaking
             ),
             new ParallelDeadlineGroup(
-                new SwerveGoTo(Robot.getMap().swerve, new Translation2d(7.5, isRobotOnLeftSide ? 3.8 : -3.8)), // go for close middle note
+                new SwerveGoTo(Robot.getMap().swerve, new Translation2d(7.5, blueAlliance ? -3.8 : 3.8)), // go for close middle note
                 new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI)), // get the robot so the intake faces the note
                 new SequentialCommandGroup(
                     new WaitCommand(1),
@@ -50,15 +50,15 @@ public class FarMiddleTwoNoteAuto extends SequentialCommandGroup {
             ),
             new ParallelDeadlineGroup(
                 new ParallelCommandGroup(
-                    new SwerveGoThrough(Robot.getMap().swerve, new Translation2d(2.5, isRobotOnLeftSide ? 3 : -3), 4, 0.2), // avoid far note again
+                    new SwerveGoThrough(Robot.getMap().swerve, new Translation2d(2.3, blueAlliance ? -3 : 3), 4, 0.2), // avoid far note again
                     new FullIntake(0.7, Constants.AUTO_UPTAKE_SPEED, new Rotation2d(Constants.SHOOTER_SHOOT_ANGLE))
                 ),
-                new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(isRobotOnLeftSide ? Constants.STARTING_ANGLE_DIAGONAL : -Constants.STARTING_ANGLE_DIAGONAL)) // go back to shooting angle, 120 degrees
+                new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(blueAlliance ? -Constants.STARTING_ANGLE_DIAGONAL : Constants.STARTING_ANGLE_DIAGONAL)) // go back to shooting angle, 120 degrees
             ),
             new ParallelDeadlineGroup(
                 new ParallelCommandGroup(
-                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d()), // go back to starting position
-                    new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(isRobotOnLeftSide ? Constants.STARTING_ANGLE_DIAGONAL : -Constants.STARTING_ANGLE_DIAGONAL)), // go back to shooting angle, 120 degrees
+                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0.1, 0)), // go back to starting position
+                    new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(blueAlliance ? -Constants.STARTING_ANGLE_DIAGONAL : Constants.STARTING_ANGLE_DIAGONAL)), // go back to shooting angle, 120 degrees
                     new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE)
                 ),
                 new SequentialCommandGroup(

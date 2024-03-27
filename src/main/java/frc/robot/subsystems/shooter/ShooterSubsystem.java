@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.controllers.VibrateController;
+import frc.robot.subsystems.breakbeam.Breakbeam;
 
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -32,8 +33,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private ArmFeedforward angleFeedForward;// Will be used to maintain the shooter's angle.
 
     // The break beam sensors are from https://www.adafruit.com/product/2168
-    private DigitalInput intakeUpperSensor;    // This is the break beam sensor right before the top of the shooter
-    private DigitalInput intakeLowerSensor;    // This is the break beam sensor in between the shooter and the actual intake
+    private Breakbeam intakeUpperSensor;    // This is the break beam sensor right before the top of the shooter
+    private Breakbeam intakeLowerSensor;    // This is the break beam sensor in between the shooter and the actual intake
 
     private double targetSpeed;         // Shooting speed in rotations of the wheel / second
     private double targetAngle;         // Shooting angle in radians. The origin should be when the shooter is perpendicular with the ground (flat and fully outstretched).
@@ -52,13 +53,13 @@ public class ShooterSubsystem extends SubsystemBase {
         encoder = new DutyCycleEncoder(2); //needs port
         //right now 0 is parallel to ground and increases going up
 
-        anglePID = new PIDController(10, 0, 0.1);    // Placeholder values, has yet to be tuned.
+        anglePID = new PIDController(17, 0, 0.1);    // Placeholder values, has yet to be tuned.
         angleFeedForward = new ArmFeedforward(0,0.2,1.1,0.01); //recalc numbers with questionable inputs
         
         //ks = 0, kg = 0.91, kv = 1.95    // Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
 
-        intakeUpperSensor = new DigitalInput(Constants.SHOOTER_SENSOR_UPPER_PORT);
-        intakeLowerSensor = new DigitalInput(Constants.SHOOTER_SENSOR_LOWER_PORT);
+        intakeUpperSensor = new Breakbeam(Constants.SHOOTER_SENSOR_UPPER_PORT);
+        intakeLowerSensor = new Breakbeam(Constants.SHOOTER_SENSOR_LOWER_PORT);
 
         targetSpeed = 0.0;
         targetAngle = Constants.SHOOTER_START_ANGLE; //63 gets to 55ish
@@ -67,13 +68,10 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
 
-    boolean lowerPieceLast = false;
     public void periodic() {
-        // rumble for intake intake breakbeam
-        if(isPieceInLowerIntake() && !lowerPieceLast) {
+        if(intakeLowerSensor.justUnbroken()) {
             CommandScheduler.getInstance().schedule(new VibrateController(Robot.shooterController, 1));
         } 
-        lowerPieceLast = isPieceInLowerIntake();
 
         // theoretical code to stop shooter from moving when it would collide with intake
         if (Robot.getMap().intake.getIntakeAngle().getDegrees()<70) { // intake goes from 0ish at bottom to 100ish at top
@@ -110,8 +108,8 @@ public class ShooterSubsystem extends SubsystemBase {
      * <p> This must be called during the periodic function to work.
      */
     
-    private SimpleMotorFeedforward shootingFFTop= new SimpleMotorFeedforward(0.01, 0.125); //right
-    private SimpleMotorFeedforward shootingFFBot= new SimpleMotorFeedforward(0.01, 0.125); //left
+    private SimpleMotorFeedforward shootingFFTop= new SimpleMotorFeedforward(0.01, 0.12); //right
+    private SimpleMotorFeedforward shootingFFBot= new SimpleMotorFeedforward(0.01, 0.12); //left
 
     public void getShooterToSetSpeed() {
 
@@ -143,7 +141,8 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void getShooterToSetAngle() {
         double currentAngle = getShooterAngle().getRadians();
-        double speed = MathUtil.clamp(anglePID.calculate(currentAngle, targetAngle), -4, 4) + angleFeedForward.calculate(targetAngle, 4*MathUtil.clamp(targetAngle-currentAngle, -0.75, 0.75));
+        // double speed = MathUtil.clamp(anglePID.calculate(currentAngle, targetAngle), -4, 4) + angleFeedForward.calculate(targetAngle, 4*MathUtil.clamp(targetAngle-currentAngle, -0.75, 0.75));
+        double speed = MathUtil.clamp(anglePID.calculate(currentAngle, targetAngle), -6, 6) + angleFeedForward.calculate(targetAngle, 0);
 
         // Neither of the below have been tested (i.e. idk which one should be reversed rn)
         angleMotorRight.setVoltage(speed); //voltage because battery drain stuff
@@ -218,7 +217,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * @return True if there is a piece in the upper shooter. False if there is none.
      */
     public boolean isPieceInUpperIntake() {
-        return !intakeUpperSensor.get();
+        return intakeUpperSensor.isBroken();
     }
 
     /**
@@ -227,6 +226,6 @@ public class ShooterSubsystem extends SubsystemBase {
      * @return True if there is a piece in the lower shooter. False if there is none.
      */
     public boolean isPieceInLowerIntake() {
-        return !intakeLowerSensor.get();
+        return intakeLowerSensor.isBroken();
     }
 }

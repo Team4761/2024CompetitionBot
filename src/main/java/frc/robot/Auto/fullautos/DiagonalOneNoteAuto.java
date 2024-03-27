@@ -37,7 +37,7 @@ public class DiagonalOneNoteAuto extends SequentialCommandGroup {
             
             new ShootAuto(),
             new WaitCommand(11.5), // to not disturb any 4 note autos
-            new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(3, 0)) // forwards should be away from alliance wall with gyro offset
+            new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(2, 0)) // forwards should be away from alliance wall with gyro offset
         );
     }
 }

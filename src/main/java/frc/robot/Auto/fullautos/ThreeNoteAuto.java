@@ -45,9 +45,9 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
      * <p> 8) It revs up the shooter and then shoots.
      * <p> 9) It backs up 1 meter.
      */
-    public ThreeNoteAuto() {
-        // notes are placed with a 57 inch offset left/right, 1.45ish meters
+    public ThreeNoteAuto(boolean blueAlliance) { // do flipping stuff. also on 4 note, also measure swerve width/length/wheel diameter
 
+        // notes are placed with a 57 inch offset left/right, 1.45ish meters
         super(
             new TwoNoteAuto(), // shoot start note and center note, should be at 0,0 at the end
 
@@ -58,9 +58,9 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
                 new ParallelDeadlineGroup( // doesnt need to drive if intaked
                     new SequentialCommandGroup(
                         new WaitCommand(0.15),
-                        new SwerveGoTo(Robot.getMap().swerve, new Translation2d(1.55, 1.55)) // rotate during this
+                        new SwerveGoTo(Robot.getMap().swerve, new Translation2d(1.55, blueAlliance ? 1.55 : -1.55)) // rotate during this
                     ),
-                    new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI*0.75)),
+                    new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(blueAlliance ? 0.75*Math.PI : -0.75*Math.PI)),
                     new RunIntake(0.7, 3000)
                     //new IntakeUntilBreakbeam(4000) 
                     
