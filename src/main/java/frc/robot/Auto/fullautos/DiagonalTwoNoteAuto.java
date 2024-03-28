@@ -34,7 +34,7 @@ public class DiagonalTwoNoteAuto extends SequentialCommandGroup {
             new ParallelCommandGroup(
                 new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
                 new ParallelDeadlineGroup(
-                    new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(2, isRobotOnLeftSide ? -0.15 : 0.15)), // forwards should be away from alliance wall with gyro offset
+                    new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(2, isRobotOnLeftSide ? 0.15 : -0.15)), // forwards should be away from alliance wall with gyro offset
                     new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI)),
                     new RunIntake(Constants.AUTO_INTAKE_SPEED, 3000)
                 )
@@ -42,7 +42,7 @@ public class DiagonalTwoNoteAuto extends SequentialCommandGroup {
 
             // go back while full intaking and returning to starting angle
             new ParallelCommandGroup(
-                new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(0.15, isRobotOnLeftSide ? -0.05 : 0.05)),
+                new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(0.15, isRobotOnLeftSide ? 0.05 : -0.05)),
                 new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(isRobotOnLeftSide ? Constants.STARTING_ANGLE_DIAGONAL : -Constants.STARTING_ANGLE_DIAGONAL)),
                 new FullIntake(Constants.AUTO_INTAKE_SPEED, Constants.AUTO_UPTAKE_SPEED)
             ),

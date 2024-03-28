@@ -35,6 +35,8 @@ public class FarMiddleTwoNoteAuto extends SequentialCommandGroup {
 
             // note is 75 inches from center of speaker, robot is probably 40ish inches off that 
             // around 300 inches to middle of field
+
+            // go right if blue left is red
             new ParallelDeadlineGroup(
                 new SwerveGoThrough(Robot.getMap().swerve, new Translation2d(2.3, blueAlliance ? -3 : 3), 4, 0.2), // avoid 4 note auto area
                 new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI)), // get the robot turning

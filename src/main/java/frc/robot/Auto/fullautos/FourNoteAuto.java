@@ -18,21 +18,21 @@ import frc.robot.subsystems.swerve.SwerveTurnTo;
 
 
 // may need to 
-public class FourNoteAuto extends SequentialCommandGroup {
+public class FourNoteAuto extends SequentialCommandGroup { 
     public FourNoteAuto(boolean blueAlliance) {
         super(
             new ThreeNoteAuto(blueAlliance),
 
-            // go to and intake right (when looking at alliance wall) note
+            // go to and intake left if red, right if blue
             new ParallelCommandGroup(
                 new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE),
                 
                 new ParallelDeadlineGroup( 
                     new SequentialCommandGroup(
-                        new WaitCommand(0.15),
-                        new SwerveGoTo(Robot.getMap().swerve, new Translation2d(1.6, blueAlliance ? -1.65: 1.65))
+                        new WaitCommand(0.1),
+                        new SwerveGoTo(Robot.getMap().swerve, new Translation2d(1.7, blueAlliance ? -1.65: 1.65))
                     ),
-                    new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(blueAlliance ? -0.75*Math.PI: 0.75*Math.PI)),
+                    new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(blueAlliance ? -0.8*Math.PI: 0.8*Math.PI)),
                     new RunIntake(0.7, 3000)
                     //new IntakeUntilBreakbeam(4000) 
                 )
@@ -42,7 +42,7 @@ public class FourNoteAuto extends SequentialCommandGroup {
             new ParallelDeadlineGroup(
                 new ParallelCommandGroup(
                     new FullIntake(Constants.AUTO_INTAKE_SPEED, Constants.AUTO_UPTAKE_SPEED, new Rotation2d(Constants.SHOOTER_SHOOT_ANGLE)),
-                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0.3, blueAlliance ? -0.1 : 0.1)),
+                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0.4, blueAlliance ? -0.15 : 0.15)),
                     new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI))
                 ),
                 new SequentialCommandGroup(
