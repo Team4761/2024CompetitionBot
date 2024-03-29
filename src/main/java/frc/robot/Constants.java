@@ -14,6 +14,7 @@ public class Constants
     // Auto Constants, because may differ from driver preferences
     public static double AUTO_UPTAKE_SPEED = 0.16;
     public static double AUTO_INTAKE_SPEED = 0.95;
+    public static double AUTO_SHOOT_ANGLE = Units.degreesToRadians(53);
 
     // Swerve
     public static int FL_DRIVE_PORT = 20;    // CAN Port.

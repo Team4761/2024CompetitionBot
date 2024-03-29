@@ -57,11 +57,11 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
                 
                 new ParallelDeadlineGroup( // doesnt need to drive if intaked
                     new SequentialCommandGroup(
-                        new WaitCommand(0.1),
-                        new SwerveGoTo(Robot.getMap().swerve, new Translation2d(1.55, blueAlliance ? 1.55 : -1.55)) // rotate during this
+                        new WaitCommand(0.2),
+                        new SwerveGoTo(Robot.getMap().swerve, new Translation2d(1.42, blueAlliance ? 1.57 : -1.57)) // rotate during this
                     ),
-                    new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(blueAlliance ? 0.8*Math.PI : -0.8*Math.PI)),
-                    new RunIntake(0.7, 3000)
+                    new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(blueAlliance ? 0.75*Math.PI : -0.75*Math.PI)),
+                    new RunIntake(0.8, 4000)
                     //new IntakeUntilBreakbeam(4000) 
                     
                 )
@@ -71,7 +71,7 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
             new ParallelDeadlineGroup(
                 new ParallelCommandGroup(
                     new FullIntake(Constants.AUTO_INTAKE_SPEED, Constants.AUTO_UPTAKE_SPEED, new Rotation2d(Constants.SHOOTER_SHOOT_ANGLE)).withTimeout(4),
-                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0.25, 0)),
+                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0.28, blueAlliance ? 0.1 : -0.1)), // needs to account for drift, 0.25, 0.1 offset ends up near where 0,0 should be
                     new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI))
                 ),
                 new SequentialCommandGroup(
@@ -82,7 +82,7 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
 
             // get shooter to angle and rev
             new ParallelDeadlineGroup(
-                new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE),      // Get the shooter to shooting position
+                new GetShooterToAngle(Constants.AUTO_SHOOT_ANGLE),      // Get the shooter to shooting position
                 new RevShooter(40, 4) // rev motor while shooter is angling
             ),
 

@@ -5,6 +5,7 @@
 package frc.robot;
 
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Auto.AutoConstruct;
@@ -40,6 +41,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     boolean win = true; // This is the most important line. DO NOT REMOVE.
     System.out.println("Status on winning: " + win);
+    CameraServer.startAutomaticCapture();
   }
 
   /**
@@ -83,7 +85,7 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {
+  public void teleopInit() {  
     CommandScheduler.getInstance().cancelAll();
 
     if (map.shooter != null) {

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.swerve.SwerveGoCartesianF;
 import frc.robot.subsystems.swerve.SwerveTurnTo;
 import frc.robot.subsystems.swerve.ZeroGyro;
+import frc.robot.subsystems.vision.TurnToTag;
 import frc.robot.RobocketsShuffleboard;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
@@ -86,8 +87,10 @@ public class AutoConstruct extends SendableChooser<String> {
         addOption("Two Note Auto", kTwoNoteAuto);
         addOption("Three Note Auto", kThreeNoteAuto);
         addOption("Four Note Auto", kFourNoteAuto);
-        addOption("Long Note Far Right Auto", kFarMiddleAuto);
-        addOption("Long Note Close Left Auto", kCloseMiddleAuto);
+        addOption("Two Note Unintrusive", kFarMiddleAuto);
+        addOption("Two Note Squeeze", kCloseMiddleAuto);
+
+        addOption("turn to aptil test", kAprilDance);
 
         addOption("Mess Em Up Auto Left", kMessEmUpAutoLeft);
         addOption("Mess Em Up Auto Right", kMessEmUpAutoRight);
@@ -161,9 +164,9 @@ public class AutoConstruct extends SendableChooser<String> {
             // case kPathPlanner2Auto:
             //     scheduledCommand = new PathPlannerAuto("Simple Swerve Auto");
             // break;
-            // case kAprilDance:
-            //     // we do not have code for this yet
-            // break;
+            //case kAprilDance:
+                //scheduledCommand = new TurnToTag(Robot.getMap().swerve, Robot.getMap().vision);
+                //break;
             // case kPathPlanner2MeterSpin:
             //     scheduledCommand = new PathPlannerAuto("2 Meter Spin");
             // break;
@@ -197,12 +200,12 @@ public class AutoConstruct extends SendableChooser<String> {
             case kRightDiagonalOneNote:
                 scheduledCommand = new DiagonalOneNoteAuto(false);
                 break;
-            //case kLeftDiagonalTwoNote:
-            //    scheduledCommand = new DiagonalTwoNoteAuto(true);
-            //    break;
-            //case kRightDiagonalTwoNote:
-            //    scheduledCommand = new DiagonalTwoNoteAuto(false);
-            //    break;
+            case kLeftDiagonalTwoNote:
+                scheduledCommand = new DiagonalTwoNoteAuto(true);
+                break;
+            case kRightDiagonalTwoNote:
+                scheduledCommand = new DiagonalTwoNoteAuto(false);
+                break;
 
             case kDoNothing:
                 break;
