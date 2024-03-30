@@ -179,3 +179,4 @@ logs/
 ctre_sim/
 src/main/java/frc/robot/subsystems/swerve/SwerveDriveSubsystemBackupWithAutocorrect.java
 src/main/java/frc/robot/Auto/AutoTrap.java
+src/main/java/frc/robot/subsystems/vision/AlignToTrap.java
