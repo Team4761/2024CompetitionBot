@@ -41,7 +41,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     boolean win = true; // This is the most important line. DO NOT REMOVE.
     System.out.println("Status on winning: " + win);
-    CameraServer.startAutomaticCapture();
+    CameraServer.startAutomaticCapture(0);
+    CameraServer.startAutomaticCapture(1);
   }
 
   /**

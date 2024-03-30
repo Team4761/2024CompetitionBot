@@ -38,12 +38,12 @@ public class FarMiddleTwoNoteAuto extends SequentialCommandGroup {
 
             // go right if blue left is red
             new ParallelDeadlineGroup(
-                new SwerveGoThrough(Robot.getMap().swerve, new Translation2d(2.3, blueAlliance ? -3 : 3), 4, 0.2), // avoid 4 note auto area
+                new SwerveGoThrough(Robot.getMap().swerve, new Translation2d(2.3, blueAlliance ? -2.9 : 2.9), 4, 0.2), // avoid 4 note auto area
                 new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI)), // get the robot turning
                 new GetShooterToAngle(Constants.SHOOTER_INTAKE_ANGLE) // prep shooter for intaking
             ),
             new ParallelDeadlineGroup(
-                new SwerveGoTo(Robot.getMap().swerve, new Translation2d(7.5, blueAlliance ? -3.8 : 3.8)), // go for close middle note
+                new SwerveGoTo(Robot.getMap().swerve, new Translation2d(7.5, blueAlliance ? -3.6 : 3.6)), // go for close middle note
                 new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Math.PI)), // get the robot so the intake faces the note
                 new SequentialCommandGroup(
                     new WaitCommand(1),
@@ -59,9 +59,9 @@ public class FarMiddleTwoNoteAuto extends SequentialCommandGroup {
             ),
             new ParallelDeadlineGroup(
                 new ParallelCommandGroup(
-                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0.1, 0)), // go back to starting position
+                    new SwerveGoTo(Robot.getMap().swerve, new Translation2d(0.15, 0.1)), // go back to starting position
                     new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(blueAlliance ? -Constants.STARTING_ANGLE_DIAGONAL : Constants.STARTING_ANGLE_DIAGONAL)), // go back to shooting angle, 120 degrees
-                    new GetShooterToAngle(Constants.SHOOTER_SHOOT_ANGLE)
+                    new GetShooterToAngle(Constants.AUTO_SHOOT_ANGLE)
                 ),
                 new SequentialCommandGroup(
                     new WaitCommand(0.8),
