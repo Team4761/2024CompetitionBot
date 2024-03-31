@@ -185,32 +185,22 @@ public class LedSubsystem extends SubsystemBase {
         }   
         return Truth;
     }
-    
-    public void four()
-    {    
-        ledBuffer.setRGB(((Math.round((ledBuffer.getLength()/2.0f))-1)-3), 250, 10, 0);
-        ledBuffer.setRGB(((Math.round((ledBuffer.getLength()/2.0f))-1)+0), 0, 0, 10);
-        ledBuffer.setRGB(((Math.round((ledBuffer.getLength()/2.0f))-1)+3), 0, 0, 0);
-    }
-        
-    
-    public void seven()
-    {
-        ledBuffer.setRGB(((Math.round((ledBuffer.getLength()/2.0f))-1)-3), 250, 10, 0);
-        ledBuffer.setRGB(((Math.round((ledBuffer.getLength()/2.0f))-1)+0), 250, 10, 0);
-        ledBuffer.setRGB(((Math.round((ledBuffer.getLength()/2.0f))-1)+3), 250, 10, 0);
-    }
-    public void six()
-    {
-        ledBuffer.setRGB(((Math.round((ledBuffer.getLength()/2.0f))-1)-3), 250, 10, 0);
-        ledBuffer.setRGB(((Math.round((ledBuffer.getLength()/2.0f))-1)+0), 250, 10, 0);
-        ledBuffer.setRGB(((Math.round((ledBuffer.getLength()/2.0f))-1)+3), 0, 0, 0);
-    }
-    public void one()
-    {
-        ledBuffer.setRGB(((Math.round((ledBuffer.getLength()/2.0f))-1)-3), 0, 0, 0);
-        ledBuffer.setRGB(((Math.round((ledBuffer.getLength()/2.0f))-1)+0), 0, 0, 0);
-        ledBuffer.setRGB(((Math.round((ledBuffer.getLength()/2.0f))-1)+3), 250, 10, 0);
+
+    public void binaryLed(int number) {
+        // this works only if the LED bank has enough spots to represent the binary
+        int mask = 0x01;
+        int index = 0;
+        while (number > 0) {
+            int bit = mask << index;
+            if ((number & bit) != 0) {
+                ledBuffer.setRGB(index, 250, 10, 0);
+            } else {
+                ledBuffer.setRGB(index, 0, 0, 0);
+            }
+            ++index;
+            number = number & ~bit;
+        }
+        leds.setData(ledBuffer);
     }
 }
 
