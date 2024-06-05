@@ -38,7 +38,10 @@ public class VisionSubsystem extends SubsystemBase {
 
   private RobotMap map = Robot.getMap();
 
+  private boolean isWorking = false;
+
   public VisionSubsystem(){
+    isWorking = true;
     //Replace with name of cam
     mCamera = new PhotonCamera("Camera");
     tagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
@@ -49,16 +52,18 @@ public class VisionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    var result = mCamera.getLatestResult();
-    if(result.hasTargets()){
-      Optional<EstimatedRobotPose> estimatedRobotPose = estimator.update(result);
-      if(estimatedRobotPose.isPresent()){
-        EstimatedRobotPose e = estimatedRobotPose.get();
-        SmartDashboard.putNumber("Pose X", e.estimatedPose.getX());
-        SmartDashboard.putNumber("Pose Y", e.estimatedPose.getY());
-        poseX = e.estimatedPose.getX();
-        poseY = e.estimatedPose.getY();
-        this.robotPose = e.estimatedPose.toPose2d();
+    if (isWorking) {
+      var result = mCamera.getLatestResult();
+      if(result.hasTargets()){
+        Optional<EstimatedRobotPose> estimatedRobotPose = estimator.update(result);
+        if(estimatedRobotPose.isPresent()){
+          EstimatedRobotPose e = estimatedRobotPose.get();
+          SmartDashboard.putNumber("Pose X", e.estimatedPose.getX());
+          SmartDashboard.putNumber("Pose Y", e.estimatedPose.getY());
+          poseX = e.estimatedPose.getX();
+          poseY = e.estimatedPose.getY();
+          this.robotPose = e.estimatedPose.toPose2d();
+        }
       }
     }
   }

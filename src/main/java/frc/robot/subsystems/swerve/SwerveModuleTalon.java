@@ -156,6 +156,12 @@ public class SwerveModuleTalon extends SubsystemBase{
         return steer;
     }
 
+
+    public void close() {
+        drive.close();
+        steer.close();
+    }
+
     /**
      * Responsible for driving one SwerveModuleNeo
      * <p>This function reads from the targetState object for an angle (Unit unsure) and a velocity (Meters per Second)
@@ -167,7 +173,7 @@ public class SwerveModuleTalon extends SubsystemBase{
 
     public void go() {
         // get to the set positions 
-        double kP = 21;
+        double kP = 10;
 
         //both need a P value to adjust it to the right speed
         double steerP = -MathStuff.subtract(targetState.angle, getRotation()).getRotations()*sM*kP;

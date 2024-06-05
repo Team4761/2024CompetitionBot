@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.HUSTLE.HustleSubsystem;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.leds.LedSubsystem;
@@ -27,7 +28,10 @@ public class RobotMap
     public LedSubsystem leds = null;
     public ClimberSubsystem climber = null;
 
+    public HustleSubsystem hustle = null;
+
     public Rotation2d autoEndingAngle = null;   // The expected angle of the robot when auto ends
+
 
     // Gian: Ok neat system, this is not something I did on the team
     // But why is the swerve drive commented out?
@@ -39,7 +43,7 @@ public class RobotMap
      */
     public RobotMap() 
     {
-        intake = new IntakeSubsystem();
+        // intake = new IntakeSubsystem();
 
         // remeasure these values
         swerve = new SwerveDriveSubsystem(new Translation2d(0.3111, 0.3111), new Translation2d(0.3111, -0.3111), new Translation2d(-0.3111, 0.3111), new Translation2d(-0.3111, -0.3111));    // All translations are the swerve module positions relative to the center of the bot
@@ -47,6 +51,8 @@ public class RobotMap
         shooter = new ShooterSubsystem();
         // leds = new LedSubsystem();
         // climber = new ClimberSubsystem();
+
+        hustle = new HustleSubsystem();
 
         // ONLY FOR TESTING
         // westcoast = new WestCoastSubsystem();

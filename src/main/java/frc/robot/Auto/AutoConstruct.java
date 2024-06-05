@@ -22,7 +22,6 @@ import frc.robot.Auto.fullautos.*;
  * <p> If you have a new auto choisce to add, do it here
  */
 public class AutoConstruct extends SendableChooser<String> {
-    private static Alliance allianceSelector = new Alliance();
 
     // Internal Auto names
     private static final String kDefaultAuto = "Default";
@@ -111,7 +110,6 @@ public class AutoConstruct extends SendableChooser<String> {
      * @param map Some commands require that you pass in a subsystem. Fortunately all these subsystems can be found in RobotMap, so we will just pass that in
      */
     public static void scheduleSelectedCommand(RobotMap map) {
-        boolean bluealliance = allianceSelector.getSelected()=="blueAlliance";
 
         m_autoSelected = autoSelector.getSelected();
         // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
@@ -176,18 +174,6 @@ public class AutoConstruct extends SendableChooser<String> {
             case kTwoNoteAuto:
                 scheduledCommand = new TwoNoteAuto();
                 break;
-            case kThreeNoteAuto:
-                scheduledCommand = new ThreeNoteAuto(bluealliance);
-                break;
-            case kFourNoteAuto:
-                scheduledCommand = new FourNoteAuto(bluealliance);
-                break;
-            case kFarMiddleAuto:
-                scheduledCommand = new FarMiddleTwoNoteAuto(bluealliance);
-                break;
-            case kCloseMiddleAuto:
-                scheduledCommand = new FarMiddleTwoNoteAuto(bluealliance);
-                break;
             case kMessEmUpAutoLeft:
                 scheduledCommand = new MessEmUpAuto(true);
                 break;
@@ -221,9 +207,5 @@ public class AutoConstruct extends SendableChooser<String> {
             System.out.println("No Autonomous Command running");
         }
         //CommandScheduler.getInstance().schedule(new SwerveGoCartesianF(map.swerve, new Translation2d(20, 20)));
-    }
-
-    public Alliance getAllianceSelector() {
-        return allianceSelector;
     }
 }

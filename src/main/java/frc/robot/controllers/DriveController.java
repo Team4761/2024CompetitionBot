@@ -19,6 +19,8 @@ public class DriveController extends XboxController {
     private RobotMap map;
     private RobocketsShuffleboard shuffleboard;
 
+    private boolean isSwerveEnabled = true;
+
     /**
      * Initializes the Shooter Controller and makes an internal copy of the RobotMap to save performance.
      * @param port The port of the controller on the Dashboard
@@ -49,7 +51,7 @@ public class DriveController extends XboxController {
     // This records the past 20 inputs received from the controller, and averages them out
     // This way, rather than a controller going from 0 to 1 in 1 cycle, it takes a couple cycles to reach 1
     // This way, the motors to not instantly accelerate
-    private final int SMOOTH_FRAME_LENGTH = 2;
+    private final int SMOOTH_FRAME_LENGTH = 4;
 
     private int smoothNextFrameToWrite = 0;
     private double[] smoothLeftX = new double[SMOOTH_FRAME_LENGTH];
@@ -119,6 +121,22 @@ public class DriveController extends XboxController {
             // turn to align with gyro
             if(getPOV()!=-1) {
                 CommandScheduler.getInstance().schedule(new SwerveTurnTo(map.swerve, new Rotation2d(-getPOV()*0.01745329)));
+            }
+
+            if (getStartButtonPressed()) {
+                this.isSwerveEnabled = !this.isSwerveEnabled;
+                if (isSwerveEnabled) {
+                    map.swerve.enableSwerve();
+                    if (map.hustle != null) {
+                        map.hustle.stopHustling();
+                    }
+                }
+                else {
+                    map.swerve.disableSwerve();
+                    if (map.hustle != null) {
+                        map.hustle.playTheHustle();
+                    }
+                }
             }
         }
 

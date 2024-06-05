@@ -38,6 +38,8 @@ import frc.robot.Auto.PrintText;
  */
 public class SwerveDriveSubsystem extends SubsystemBase {
 
+    private boolean enabled;
+
     SwerveModuleState[] targetStates = new SwerveModuleState[4];
     
     private SwerveModuleTalon m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , -29.5313, false, 1.0); 
@@ -76,6 +78,24 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private double speedRot = 0;
     private double speedX = 0;
     private double speedY = 0;
+
+
+
+    public void enableSwerve() {
+        enabled = true;
+        m_frontLeftModule  = new SwerveModuleTalon(Constants.FL_DRIVE_PORT , Constants.FL_ROTATE_PORT , Constants.FL_ENCODER_PORT , -29.5313, false, 1.0); 
+        m_frontRightModule = new SwerveModuleTalon(Constants.FR_DRIVE_PORT , Constants.FR_ROTATE_PORT , Constants.FR_ENCODER_PORT ,22.6757, false, 1.0); 
+        m_backLeftModule   = new SwerveModuleTalon(Constants.BL_DRIVE_PORT , Constants.BL_ROTATE_PORT , Constants.BL_ENCODER_PORT , 23.2-180, false, 1.0);  
+        m_backRightModule  = new SwerveModuleTalon(Constants.BR_DRIVE_PORT , Constants.BR_ROTATE_PORT , Constants.BR_ENCODER_PORT , 243.00, false, 1.0); 
+    }
+
+    public void disableSwerve() {
+        enabled = false;
+        m_frontLeftModule.close();
+        m_frontRightModule.close();
+        m_backLeftModule.close();
+        m_backRightModule.close();
+    }
 
 
     // positions of the wheels relative to center in meters.
@@ -130,80 +150,81 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        m_swervePositions = new SwerveModulePosition[] {
-            m_frontLeftModule.getPosition(), 
-            m_frontRightModule.getPosition(),
-            m_backLeftModule.getPosition(), 
-            m_backRightModule.getPosition()
-        };
+        if (enabled) {
+            m_swervePositions = new SwerveModulePosition[] {
+                m_frontLeftModule.getPosition(), 
+                m_frontRightModule.getPosition(),
+                m_backLeftModule.getPosition(), 
+                m_backRightModule.getPosition()
+            };
 
-        m_swerveStates = new SwerveModuleState[] {
-            m_frontLeftModule.getState(), 
-            m_frontRightModule.getState(),
-            m_backLeftModule.getState(), 
-            m_backRightModule.getState()
-        };
-        
-        // update pose
-
-        m_pose = m_odometry.update(
-            getGyroRotation().times(-1),
-            m_swervePositions
-        );
-        m_pose = new Pose2d(m_pose.getX(), m_pose.getY(), m_pose.getRotation());   // The y value needs to be negative to make left +y
-
-        //forward is +x. left is +y
-
-        SmartDashboard.putNumber("Odometry x", m_pose.getX());
-        SmartDashboard.putNumber("Odometry y", m_pose.getY());
-
-
-        //Shuffleboard.getTab("Swerve").add("Front Left Rot", m_frontLeftModule.getPosition().angle.getDegrees());
-        //Shuffleboard.getTab("Swerve").add("Front Right Rot", m_frontRightModule.getPosition().angle.getDegrees());
-        //Shuffleboard.getTab("Swerve").add("Back Left Rot", m_backLeftModule.getPosition().angle.getDegrees());
-        //Shuffleboard.getTab("Swerve").add("Back Right Rot", m_backRightModule.getPosition().angle.getDegrees());
-        
-        SmartDashboard.putNumber("Front Left Rot", m_frontLeftModule.getPosition().angle.getDegrees());
-        SmartDashboard.putNumber("Front Right Rot", m_frontRightModule.getPosition().angle.getDegrees());
-        SmartDashboard.putNumber("Back Left Rot", m_backLeftModule.getPosition().angle.getDegrees());
-        SmartDashboard.putNumber("Back Right Rot", m_backRightModule.getPosition().angle.getDegrees());
-
-        SmartDashboard.putNumber("FL Drive Target", targetStates[0].speedMetersPerSecond);
-        SmartDashboard.putNumber("FL Drive Velocity", m_frontLeftModule.getDriveVelocity());
-        
-        SmartDashboard.putNumber("Front Left Target", targetStates[0].angle.getDegrees());
-        SmartDashboard.putNumber("Front Right Target", targetStates[1].angle.getDegrees());
-        SmartDashboard.putNumber("Back Left Target", targetStates[2].angle.getDegrees());
-        SmartDashboard.putNumber("Back Right Target", targetStates[3].angle.getDegrees());
-
-        SmartDashboard.putNumber("Gyro Angle", getGyroRotation().getDegrees());
-        SmartDashboard.putNumber("speedX", speedX);
-        SmartDashboard.putNumber("speedY", speedY);
-        SmartDashboard.putNumber("speedRot", speedRot);
-        //SmartDashboard.putNumber("GyroRotation", getGyroRotation().getRadians()); see this but degrees
-
-        SmartDashboard.putBoolean("Robot Relative", isRobotRelative);
-
-        
-        targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromRobotRelativeSpeeds(speedX, speedY, speedRot, getGyroRotation()));
+            m_swerveStates = new SwerveModuleState[] {
+                m_frontLeftModule.getState(), 
+                m_frontRightModule.getState(),
+                m_backLeftModule.getState(), 
+                m_backRightModule.getState()
+            };
             
+            // update pose
+
+            m_pose = m_odometry.update(
+                getGyroRotation().times(-1),
+                m_swervePositions
+            );
+            m_pose = new Pose2d(m_pose.getX(), m_pose.getY(), m_pose.getRotation());   // The y value needs to be negative to make left +y
+
+            //forward is +x. left is +y
+
+            SmartDashboard.putNumber("Odometry x", m_pose.getX());
+            SmartDashboard.putNumber("Odometry y", m_pose.getY());
+
+
+            //Shuffleboard.getTab("Swerve").add("Front Left Rot", m_frontLeftModule.getPosition().angle.getDegrees());
+            //Shuffleboard.getTab("Swerve").add("Front Right Rot", m_frontRightModule.getPosition().angle.getDegrees());
+            //Shuffleboard.getTab("Swerve").add("Back Left Rot", m_backLeftModule.getPosition().angle.getDegrees());
+            //Shuffleboard.getTab("Swerve").add("Back Right Rot", m_backRightModule.getPosition().angle.getDegrees());
             
-        pointDir = getGyroRotation();
+            SmartDashboard.putNumber("Front Left Rot", m_frontLeftModule.getPosition().angle.getDegrees());
+            SmartDashboard.putNumber("Front Right Rot", m_frontRightModule.getPosition().angle.getDegrees());
+            SmartDashboard.putNumber("Back Left Rot", m_backLeftModule.getPosition().angle.getDegrees());
+            SmartDashboard.putNumber("Back Right Rot", m_backRightModule.getPosition().angle.getDegrees());
 
-        
+            SmartDashboard.putNumber("FL Drive Target", targetStates[0].speedMetersPerSecond);
+            SmartDashboard.putNumber("FL Drive Velocity", m_frontLeftModule.getDriveVelocity());
+            
+            SmartDashboard.putNumber("Front Left Target", targetStates[0].angle.getDegrees());
+            SmartDashboard.putNumber("Front Right Target", targetStates[1].angle.getDegrees());
+            SmartDashboard.putNumber("Back Left Target", targetStates[2].angle.getDegrees());
+            SmartDashboard.putNumber("Back Right Target", targetStates[3].angle.getDegrees());
 
-        // Gets the target states from either {swerveDriveF} or {swerveDriveR} and applies them to individual modules (wheels)
-        m_frontLeftModule .setTargetState(targetStates[0], true);
-        m_frontRightModule.setTargetState(targetStates[1], true);
-        m_backLeftModule  .setTargetState(targetStates[2], true);
-        m_backRightModule .setTargetState(targetStates[3], true);
+            SmartDashboard.putNumber("Gyro Angle", getGyroRotation().getDegrees());
+            SmartDashboard.putNumber("speedX", speedX);
+            SmartDashboard.putNumber("speedY", speedY);
+            SmartDashboard.putNumber("speedRot", speedRot);
+            //SmartDashboard.putNumber("GyroRotation", getGyroRotation().getRadians()); see this but degrees
+
+            SmartDashboard.putBoolean("Robot Relative", isRobotRelative);
+
+            
+            targetStates = m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromRobotRelativeSpeeds(speedX, speedY, speedRot, getGyroRotation()));
+                
+                
+            pointDir = getGyroRotation();
+
+            
+
+            // Gets the target states from either {swerveDriveF} or {swerveDriveR} and applies them to individual modules (wheels)
+            m_frontLeftModule .setTargetState(targetStates[0], true);
+            m_frontRightModule.setTargetState(targetStates[1], true);
+            m_backLeftModule  .setTargetState(targetStates[2], true);
+            m_backRightModule .setTargetState(targetStates[3], true);
 
 
-        m_frontLeftModule.go();
-        m_frontRightModule.go();
-        m_backLeftModule.go();
-        m_backRightModule.go();
-        
+            m_frontLeftModule.go();
+            m_frontRightModule.go();
+            m_backLeftModule.go();
+            m_backRightModule.go();
+        }
     }
 
     private double lastTime = 0;

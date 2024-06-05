@@ -100,6 +100,7 @@ public class Robot extends TimedRobot {
     if (map.leds != null)
       // map.leds.SetAllColor(255,0,0);
       CommandScheduler.getInstance().schedule(new FlowLEDs());
+
   }
 
   /** This function is called periodically during operator control. */

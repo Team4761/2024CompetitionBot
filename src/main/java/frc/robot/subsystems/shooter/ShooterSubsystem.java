@@ -40,7 +40,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private double targetAngle;         // Shooting angle in radians. The origin should be when the shooter is perpendicular with the ground (flat and fully outstretched).
 
     private final double SHOOTER_ANGLE_OFFSET = Units.degreesToRadians(76) / (Math.PI*2);  // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
-    private static double MAX_ANGLE = Units.degreesToRadians(72);
+    private static double MAX_ANGLE = Units.degreesToRadians(45);
     private static double MIN_ANGLE = 0;//Units.degreesToRadians(0);
 
 
@@ -74,8 +74,10 @@ public class ShooterSubsystem extends SubsystemBase {
         } 
 
         // theoretical code to stop shooter from moving when it would collide with intake
-        if (Robot.getMap().intake.getIntakeAngle().getDegrees()<70) { // intake goes from 0ish at bottom to 100ish at top
+        if (Robot.getMap().intake != null && Robot.getMap().intake.getIntakeAngle().getDegrees()<70) { // intake goes from 0ish at bottom to 100ish at top
             getShooterToSetAngle();     // Gets the shooter to angle at {targetAngle} radians.
+        } else if (Robot.getMap().intake == null) {
+            getShooterToSetAngle();
         } else {
             setShooterAngleSpeed(0);
         }

@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Auto.Alliance;
 import frc.robot.Auto.AutoConstruct;
 import frc.robot.subsystems.climber.LoosenClimber;
 import frc.robot.subsystems.climber.TightenClimber;
@@ -100,7 +99,6 @@ public class RobocketsShuffleboard {
         // Auto settings
         AutoConstruct autoConstruct = new AutoConstruct();
         shuffleboard.settingsAuto.add("Auto", autoConstruct); // Cannot be found using the getSettingNum function. Must use the AutoConstruct.scheduleSelectedCommand() method.
-        shuffleboard.settingsAuto.add("Alliance", autoConstruct.getAllianceSelector());
     }
 
     /**
