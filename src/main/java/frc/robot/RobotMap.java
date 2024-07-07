@@ -11,7 +11,6 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystemInterface;
-import frc.robot.subsystems.westcoast.WestCoastSubsystem;
 
 /**
  * <p> Contains all the subsystems for the robot to avoid static initialization order problems.

@@ -2,16 +2,18 @@ package frc.robot.subsystems.leds;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 
-
-
-public class LedSubsystem extends SubsystemBase  implements LedSubsystemInterface {
+public class LedSubsystem extends SubsystemBase implements LedSubsystemInterface {
     //Row length
     public static final int LED_WIDTH=1;
     //Collum length
@@ -19,8 +21,6 @@ public class LedSubsystem extends SubsystemBase  implements LedSubsystemInterfac
     public static final int LED_SIZE = LED_WIDTH*LED_LENGTH;
 
     int[] RGB = new int[LED_SIZE * 3];
-    BufferedImage hello;
-    BufferedImage there;
 
     int ticks;
     int currentPort = 5;
