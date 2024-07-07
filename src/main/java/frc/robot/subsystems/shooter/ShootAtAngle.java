@@ -12,7 +12,7 @@ public class ShootAtAngle extends SequentialCommandGroup {
     public ShootAtAngle(double angleRadians, double speed) {
         super(
             new GetShooterToAngle(angleRadians),
-            new Shoot(speed)
+            new IntakeAndShoot(speed)
         );
     }
 }

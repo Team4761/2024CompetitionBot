@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Robot;
 
 /**
@@ -8,7 +9,8 @@ import frc.robot.Robot;
  */
 public class Shoot extends Command {
     private double speed;   // Value between -1 and 1 in rotations per second
-    private long endTime;   // Stores the time when the command should finish executing
+    private long length;
+    private long endTime;
 
     /**
      * <p> This initializes the speed which the robot should shoot at in rotations per second and the time which the command should finish executing.
@@ -16,7 +18,18 @@ public class Shoot extends Command {
      */
     public Shoot (double speed) {
         this.speed = speed;
-        this.endTime = System.currentTimeMillis()+2000;
+        
+        length = 3000;
+    }
+    public Shoot (double speed, double seconds) {
+        this.speed = speed;
+        
+        length = (long)(seconds*1000);
+    }
+    
+    @Override
+    public void initialize() {
+        this.endTime = System.currentTimeMillis()+length;
     }
 
     /**
@@ -24,7 +37,9 @@ public class Shoot extends Command {
      */
     @Override
     public void execute() {
-        Robot.getMap().shooter.setShooterSpeed(speed);
+        // if (revTime <= System.currentTimeMillis())  // If finished reving, shoot
+        //     Robot.getMap().shooter.setIntakeSpeed(0.3); // Intake the piece into the shooter
+        Robot.getMap().shooter.setShooterSpeed(speed);  // Always be revving the motors
     }
 
     /**
@@ -43,6 +58,6 @@ public class Shoot extends Command {
      */
     @Override
     public void end(boolean interrupted) {
-        Robot.getMap().shooter.setShooterSpeed(0);
+        CommandScheduler.getInstance().schedule(new StopShooter());
     }
 }

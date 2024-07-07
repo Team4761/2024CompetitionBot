@@ -5,6 +5,7 @@
 package frc.robot.subsystems.vision;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -33,6 +34,8 @@ public class VisionSubsystem extends SubsystemBase implements VisionSubsystemInt
   private double poseX = 0.0;
   private double poseY = 0.0;
 
+  private Pose2d robotPose = new Pose2d();
+
   private RobotMap map = Robot.getMap();
 
 
@@ -55,6 +58,7 @@ public class VisionSubsystem extends SubsystemBase implements VisionSubsystemInt
     tagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
     robotToCamera = new Transform3d(.38, -.12, .125, new Rotation3d(0, Units.degreesToRadians(15), 0));
     estimator = new PhotonPoseEstimator(tagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, mCamera, robotToCamera);
+
   }
 
   @Override
@@ -68,6 +72,7 @@ public class VisionSubsystem extends SubsystemBase implements VisionSubsystemInt
         SmartDashboard.putNumber("Pose Y", e.estimatedPose.getY());
         poseX = e.estimatedPose.getX();
         poseY = e.estimatedPose.getY();
+        this.robotPose = e.estimatedPose.toPose2d();
       }
     }
   }
@@ -126,5 +131,9 @@ public class VisionSubsystem extends SubsystemBase implements VisionSubsystemInt
         y = -0.1;
       }
     map.swerve.swerveDriveF(x, y, 0.0, false);
+  } 
+
+  public Pose2d getVisionPose(){
+    return robotPose;
   }
 } 

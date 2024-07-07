@@ -2,8 +2,6 @@ package frc.robot;
 
 import java.util.ArrayList;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -12,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Auto.Alliance;
 import frc.robot.Auto.AutoConstruct;
 import frc.robot.subsystems.climber.LoosenClimber;
 import frc.robot.subsystems.climber.TightenClimber;
@@ -20,10 +19,6 @@ import frc.robot.subsystems.leds.LedChargeUp;
 import frc.robot.subsystems.shooter.GetShooterToAngle;
 import frc.robot.subsystems.shooter.Shoot;
 import frc.robot.subsystems.shooter.ShootAtAngle;
-import frc.robot.subsystems.swerve.SwerveDriveStop;
-import frc.robot.subsystems.swerve.SwerveGoCartesianF;
-import frc.robot.subsystems.swerve.SwerveTurn;
-import frc.robot.subsystems.swerve.SwerveTurnTo;
 
 /**
  * <p> This is a handler class for everything that has to do with the shufflboard.
@@ -82,26 +77,30 @@ public class RobocketsShuffleboard {
      */
     public void addSettings() {
         // Shooter settings
-        addShooterSetting("Shooter In Speed", 0.5);
-        addShooterSetting("Shooter Out Speed", 0.5);
-        addShooterSetting("Shooter Intake Speed", 0.5);
-        addShooterSetting("Shooter Outtake Speed", 0.5);
+        addShooterSetting("Shooter In Speed", 10); // flywheel speed for source intake
+        addShooterSetting("Shooter Out Speed", 40); // flywheel speed for default shot
+        addShooterSetting("Shooter Intake Speed", 0.16); // uptake speed for shot and stuff
+        addShooterSetting("Shooter Outtake Speed", 0.12); // up(down)take speed for source intake
+        //addShooterSetting("Amp Shoot Speed", 10); hardcoded
 
         // Swerve settings
-        addSwerveSetting("Movement Speed", 0.5);
-        addSwerveSetting("Rotation Speed", 0.5);
-        addSwerveSetting("Is Robot Relative", true);
+        addSwerveSetting("Movement Speed", 1.8); // speed, this value squared is about the max speed in m/s
+        addSwerveSetting("Rotation Speed", 1.8); // rotation speed, this value is also squared
+        addSwerveSetting("Is Robot Relative", true); // ?
+        addSwerveSetting("Swerve Steer Tolerance", 1.0); // ?
 
         // Intake settings
-        addIntakeSetting("Intake Speed", 0.5);
-        addIntakeSetting("Outtake Speed", 0.5);
-        addIntakeSetting("Full Intake Setting", 0.5);
+        addIntakeSetting("Intake Speed", 0.8); // intaking speed
+        addIntakeSetting("Outtake Speed", 0.6); // outtaking speed
+        addIntakeSetting("Full Intake Setting", 0.8); // intake speed when intaking up to uptake
 
         // Climber settings
         addClimberSetting("Climber Speed", 0.5);
 
         // Auto settings
-        shuffleboard.settingsAuto.add("Auto", new AutoConstruct()); // Cannot be found using the getSettingNum function. Must use the AutoConstruct.scheduleSelectedCommand() method.
+        AutoConstruct autoConstruct = new AutoConstruct();
+        shuffleboard.settingsAuto.add("Auto", autoConstruct); // Cannot be found using the getSettingNum function. Must use the AutoConstruct.scheduleSelectedCommand() method.
+        shuffleboard.settingsAuto.add("Alliance", autoConstruct.getAllianceSelector());
     }
 
     /**
@@ -109,10 +108,10 @@ public class RobocketsShuffleboard {
      */
     public void addCommands() {
         // Swerve commands
-        addCommand("Go 1 Meter Forward", new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(1,0)));
-        addCommand("Go 1 Meter Left", new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(0,1)));
-        addCommand("Turn 90 Degrees", new SwerveTurn(Robot.getMap().swerve, new Rotation2d(Units.degreesToRadians(90))));
-        addCommand("Turn To 90 Degrees", new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Units.degreesToRadians(90))));
+        // addCommand("Go 1 Meter Forward", new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(1,0)));
+        // addCommand("Go 1 Meter Left", new SwerveGoCartesianF(Robot.getMap().swerve, new Translation2d(0,1)));
+        // addCommand("Turn 90 Degrees", new SwerveTurn(Robot.getMap().swerve, new Rotation2d(Units.degreesToRadians(90))));
+        // addCommand("Turn To 90 Degrees", new SwerveTurnTo(Robot.getMap().swerve, new Rotation2d(Units.degreesToRadians(90))));
 
         // Shooter commands
         addCommand("Shoot", new Shoot(getSettingNum("Shooter Out Speed")));
@@ -120,10 +119,10 @@ public class RobocketsShuffleboard {
         addCommand("Shoot At 45 Degrees", new ShootAtAngle(Units.degreesToRadians(45), getSettingNum("Shooter Out Speed")));
         
         // Intake settings
-        addCommand("Full Intake", new FullIntake(getSettingNum("Full Intake Speed"), Robot.getMap()));
+        addCommand("Full Intake", new FullIntake(getSettingNum("Full Intake Speed")));
 
         // LED commands
-        // addCommand("LED Charge Up", new LedChargeUp(3000, Robot.getMap().leds)); DOESN'T WORK RN
+        addCommand("LED Charge Up", new LedChargeUp(3000, Robot.getMap()));
 
         // Climber commands
         addCommand("Loosen Climber", new LoosenClimber());

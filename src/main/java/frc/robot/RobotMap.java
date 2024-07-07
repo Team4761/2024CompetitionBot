@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -8,7 +9,6 @@ import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.leds.LedSubsystemInterface;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
-import frc.robot.subsystems.swerve.SwerveModuleNeo;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystemInterface;
 import frc.robot.subsystems.westcoast.WestCoastSubsystem;
@@ -23,19 +23,15 @@ public class RobotMap
 {
 
     // Swerve
-    // Gian: why are these neos here if we end up just making new ones in the swervedrivesubsystem?
-    public SwerveModuleNeo swerve_frontLeftModule;
-    public SwerveModuleNeo swerve_frontRightModule;
-    public SwerveModuleNeo swerve_backLeftModule;
-    public SwerveModuleNeo swerve_backRightModule;
 
     public SwerveDriveSubsystem swerve = null;
     public VisionSubsystemInterface vision = null;
     public IntakeSubsystemInterface intake = null;
     public ShooterSubsystem shooter = null;
-    public WestCoastSubsystem westcoast = null;
     public LedSubsystemInterface leds = null;
     public ClimberSubsystem climber = null;
+
+    public Rotation2d autoEndingAngle = null;   // The expected angle of the robot when auto ends
 
     // Gian: Ok neat system, this is not something I did on the team
     // But why is the swerve drive commented out?
@@ -56,5 +52,10 @@ public class RobotMap
 
         // ONLY FOR TESTING
         // westcoast = new WestCoastSubsystem();
+    }
+
+
+    public void setAutoEndingAngle(Rotation2d endingAngle) {
+        this.autoEndingAngle = endingAngle;
     }
 }

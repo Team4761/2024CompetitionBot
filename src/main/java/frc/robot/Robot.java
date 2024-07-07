@@ -5,9 +5,14 @@
 package frc.robot;
 
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Auto.AutoConstruct;
+import frc.robot.subsystems.leds.FlowLEDs;
+import frc.robot.subsystems.shooter.StopShooter;
+import frc.robot.controllers.DriveController;
+import frc.robot.controllers.ShooterController;  
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -36,6 +41,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     boolean win = true; // This is the most important line. DO NOT REMOVE.
     System.out.println("Status on winning: " + win);
+    CameraServer.startAutomaticCapture(0);
+    CameraServer.startAutomaticCapture(1);
   }
 
   /**
@@ -58,27 +65,41 @@ public class Robot extends TimedRobot {
    * below with additional strings. If using the SendableChooser make sure to add them to the
    * chooser code above as well.
    */
+
   @Override
   public void autonomousInit() {
+    //if (map.shooter != null)
+      //map.shooter.setShooterAngle(map.shooter.getShooterAngle().getRadians());
     AutoConstruct.scheduleSelectedCommand(map);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    // if (map.vision.hasTargets()) {
-    //   map.vision.dance();
-    // }
+    //if (map.vision.hasTargets()) {
+    //  map.vision.dance();
+    //}
+    //map.swerve.test();
 
     CommandScheduler.getInstance().run();
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {
-    // map.swerve.zeroGyro();
-    // map.swerve.resetPose();
-    RobocketsShuffleboard.teleopInit();
+  public void teleopInit() {  
+    CommandScheduler.getInstance().cancelAll();
+
+    if (map.shooter != null) {
+      map.shooter.setShooterAngleSpeed(0);
+      map.shooter.setShooterAngle(map.shooter.getShooterAngle().getRadians());
+      CommandScheduler.getInstance().schedule(new StopShooter()); // stops shooter with a deccel limit
+    }
+    if (map.autoEndingAngle != null && map.swerve != null) {
+      map.swerve.zeroGyro(map.autoEndingAngle);
+    }
+    if (map.leds != null)
+      // map.leds.SetAllColor(255,0,0);
+      CommandScheduler.getInstance().schedule(new FlowLEDs());
   }
 
   /** This function is called periodically during operator control. */
@@ -105,7 +126,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    map.swerve.test();
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override

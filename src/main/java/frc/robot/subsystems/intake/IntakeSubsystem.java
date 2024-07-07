@@ -1,32 +1,45 @@
 package frc.robot.subsystems.intake;
 
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.controllers.VibrateController;
+import frc.robot.subsystems.breakbeam.Breakbeam;
 import frc.robot.subsystems.vision.VisionSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystemInterface;
 import frc.robot.subsystems.vision.VisionSubsystemMock;
 
-public class IntakeSubsystem extends SubsystemBase implements IntakeSubsystemInterface { 
+public class IntakeSubsystem extends SubsystemBase implements IntakeSubsystemInterface {
     // Neos that actually intake (left or right facing forward)
-    private CANSparkMax intakeL;
-    private CANSparkMax intakeR;
+    private CANSparkMax intakeT;
+    private CANSparkMax intakeB;
 
     private CANSparkMax angleMotorLeft; // Motor for angling the shooter up and down, assuming that the front of the shooter is the forward direction
+
+    private DutyCycleEncoder encoder;
+
+    private Breakbeam intakeSensor;    // breakbeam at entrance of intake
 
     private PIDController anglePID;         // Will be used to get the shooter a desired angle.
     private ArmFeedforward angleFeedForward;// Will be used to maintain the shooter's angle.
 
-    private Rotation2d targetAngle; // The angle the intake should get to where 0 degrees is (undecided).
+    private Rotation2d targetAngle = new Rotation2d(); // The angle the intake should get to where 0 degrees is (undecided).
 
-    private static double INTAKE_ANGLE_OFFSET = 0.0;    // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
+    //commented cause flipping math is weird
+    // private static double INTAKE_ANGLE_OFFSET = Units.degreesToRadians(80);    // Should be set such that when the arm is fully outstretched (perpendicular with the ground), the encoder measures 0 radians/degrees. This is in arbitrary encoder units.
+    private static double MAX_ANGLE = Units.degreesToRadians(90);
+    private static double MIN_ANGLE = Units.degreesToRadians(0);
 
     private static IntakeSubsystemInterface singleton = null;
 
@@ -42,17 +55,40 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeSubsystemInt
     }
 
     public IntakeSubsystem() {
-        intakeL = new CANSparkMax(Constants.INTAKE_LEFT_PORT, MotorType.kBrushless);
-        intakeR = new CANSparkMax(Constants.INTAKE_RIGHT_PORT, MotorType.kBrushless);
+        intakeB = new CANSparkMax(Constants.INTAKE_BOT_PORT, MotorType.kBrushless);
+        intakeT = new CANSparkMax(Constants.INTAKE_TOP_PORT, MotorType.kBrushless);
         angleMotorLeft = new CANSparkMax(Constants.INTAKE_ANGLE_LEFT_MOTOR_PORT, MotorType.kBrushless);
 
-        anglePID = new PIDController(1.0, 0, 0);  // These values have yet to be tuned.
-        angleFeedForward = new ArmFeedforward(0, 0.91, 1.95); // Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
+        targetAngle = new Rotation2d(Constants.INTAKE_START_POSITION);
 
+        encoder = new DutyCycleEncoder(3);
+
+        intakeSensor = new Breakbeam(4);
+
+        anglePID = new PIDController(0, 0, 0);  // These values have yet to be tuned. was 1,0,0
+        angleFeedForward = new ArmFeedforward(0,0, 0); //ks = 0, kg = 0.91, kv = 1.95// Placeholder values. Can be tuned or can use https://www.reca.lc/ to tune.
     }
 
     public void periodic() {
-        getIntakeToSetAngle();
+        // rumble when intake breakbeam broken
+        if(intakeSensor.justBroken()) {
+            //CommandScheduler.getInstance().schedule(new VibrateController(Robot.driveController, 1));
+            //CommandScheduler.getInstance().schedule(new VibrateController(Robot.shooterController, 1));
+        }
+
+
+        if (Robot.getMap().leds != null) { // set leds to blue when note is in intake
+            if (isPieceInIntake()) {
+                Robot.getMap().leds.SetAllColor(0, 0, 100);
+            }
+        }
+
+
+        // getIntakeToSetAngle();
+
+        SmartDashboard.putBoolean("Intake Beam", isPieceInIntake());
+        SmartDashboard.putNumber("Intake Setpoint Desired", targetAngle.getDegrees());
+        SmartDashboard.putNumber("Intake Angle", getIntakeAngle().getDegrees());
     }
 
 
@@ -66,8 +102,9 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeSubsystemInt
         double currentVelocity = getIntakeAngleVelocity();
         double speed = anglePID.calculate(currentAngle, targetAngle.getRadians()) + angleFeedForward.calculate(targetAngle.getRadians(), 0.0);
 
-        // Neither of the below have been tested (i.e. idk which one should be reversed rn)
-        angleMotorLeft.set(speed);
+        //!(getIntakeAngle().getRadians() < 0) is always true
+        //if (!(getIntakeAngle().getRadians() < 0) || getIntakeAngle().getDegrees()-10 >= Constants.INTAKE_START_POSITION)
+        //    angleMotorLeft.set(speed);
     }
 
     /**
@@ -76,8 +113,8 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeSubsystemInt
      */
     @Override
     public void intake(double speed) {
-        intakeL.set(speed);
-        intakeR.set(-speed);
+        intakeT.set(speed*1.05); // needs more because it runs slow
+        intakeB.set(speed);
     }
 
     /**
@@ -86,8 +123,8 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeSubsystemInt
      */
     @Override
     public void outtake(double speed) {
-        intakeL.set(-speed);
-        intakeR.set(speed);
+        intakeT.set(-speed*1.05);
+        intakeB.set(-speed);
     }
 
     /**
@@ -96,16 +133,50 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeSubsystemInt
      */
     @Override
     public void rotate(double offsetRadians) {
-        targetAngle = new Rotation2d(targetAngle.getRadians() + offsetRadians);
+        // min and max currently not set correctly
+        if (targetAngle.getRadians() + offsetRadians < MIN_ANGLE) //why plus offset
+            targetAngle = new Rotation2d(MIN_ANGLE);
+        else if (targetAngle.getRadians() + offsetRadians > MAX_ANGLE)
+            targetAngle = new Rotation2d(MAX_ANGLE);
+        else
+            targetAngle = new Rotation2d(targetAngle.getRadians() + offsetRadians);
+    }
+
+    public void setAngleMotorSpeed(double speed){
+        //limit movement to only inwards at outer bounds
+        // speed makes angle decrease (up)
+        // should add lowering speed limit near edges
+        if (speed>0) {
+            if (getIntakeAngle().getDegrees()<100) { // let it go up to 110
+                angleMotorLeft.set(speed);
+            } else {
+                angleMotorLeft.set(0);
+            }
+        }
+        else {
+            if (getIntakeAngle().getDegrees()>25) {
+                angleMotorLeft.set(speed);
+            } else {
+                angleMotorLeft.set(0);
+            }
+
+        }
     }
 
     /**
      * <p> This sets the target rotation of the intake to {rotation} and will get to that rotation during its periodic function where up is positive and down is negative.
+     * <p> This constrains the rotation to a max or minimum value
      * @param rotation The new rotation to get to.
      */
     @Override
     public void goToRotation(Rotation2d rotation) {
-        targetAngle = rotation;
+
+        if (rotation.getRadians() < MIN_ANGLE)
+            targetAngle = new Rotation2d(MIN_ANGLE);
+        else if (rotation.getRadians() > MAX_ANGLE)
+            targetAngle = new Rotation2d(MAX_ANGLE);
+        else
+            targetAngle = rotation;
     }
 
     /**
@@ -114,7 +185,8 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeSubsystemInt
      */
     @Override
     public Rotation2d getIntakeAngle() {
-        return new Rotation2d((angleMotorLeft.getEncoder().getPosition() - INTAKE_ANGLE_OFFSET) * Constants.NEO_UNITS_TO_RADIANS);
+        // does some stuff to deal with 0 to 360 wrapping
+        return new Rotation2d(Units.degreesToRadians( -((encoder.getAbsolutePosition() * 360 + 150)%360-190)));
     }
 
     /**
@@ -125,4 +197,45 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeSubsystemInt
     public double getIntakeAngleVelocity() {
         return (angleMotorLeft.getEncoder().getVelocity() * Constants.SHOOTER_RPM_TO_MPS);
     }
+
+    public void stop(){
+        intakeB.set(0);
+        intakeT.set(0);
+    }
+
+    public boolean isPieceInIntake() {
+        return intakeSensor.isBroken();
+
+        // If the break beam wasn't working, it would constantly return true, which is wrong.
+        // if (isBreakBeamWorking)
+        //     return !intakeSensor.get();
+        // else
+        //     return false;
+    }
+
+    /**
+     * SHOULD ONLY BE USED FOR DEBUGGING.
+     * @param speed The speed to set the motor to as a value between -1 and 1
+     */
+    public void setAngleMotorSpeedDebugging(double speed) {
+        angleMotorLeft.set(speed);
+    }
+
+
+    /**
+     * <p> This should only be called at the start of auto/tele-op when there is NO piece in the intake.
+     * <p> If there is no piece, then the signal returns true (1), so I use this to make sure that the break beam is on. If it was off, it would return false (0)
+     * @return True if the break beam is working. False if the break beam is not working.
+     */
+    /*
+    public boolean isBreakBeamWorking() {
+        if (intakeSensor.get()) {
+            SmartDashboard.putBoolean("Is Break Beam Working?", true);
+            return true;
+        }
+        else {
+            SmartDashboard.putBoolean("Is Break Beam Working?", false);
+            return false;
+        }
+    }*/
 }

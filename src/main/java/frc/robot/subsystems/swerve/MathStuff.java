@@ -15,7 +15,7 @@ public class MathStuff {
     //angle subtraction but will result in -180 to 180 degrees
     public static Rotation2d subtract(Rotation2d a, Rotation2d b) {
         return new Rotation2d(
-        modulus(a.getRadians() - b.getRadians() + Math.PI , Math.PI*2) - Math.PI);
+        modulus(modulus(a.getRadians(), Math.PI*2) - modulus(b.getRadians(), Math.PI*2) + Math.PI , Math.PI*2) - Math.PI);
         //(a%360 - b%360 + 180 ) % 360 - 180;
         // initial mod 360 not needed 
     }

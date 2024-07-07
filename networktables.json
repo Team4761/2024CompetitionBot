@@ -32,6 +32,14 @@
     }
   },
   {
+    "name": "/Shuffleboard/Settings/Shooter/Amp Shoot Speed",
+    "type": "double",
+    "value": 10.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
     "name": "/Shuffleboard/Settings/Swerve/Movement Speed",
     "type": "double",
     "value": 0.5,
@@ -51,6 +59,14 @@
     "name": "/Shuffleboard/Settings/Swerve/Is Robot Relative",
     "type": "boolean",
     "value": true,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Shuffleboard/Settings/Swerve/Swerve Steer Tolerance",
+    "type": "double",
+    "value": 1.0,
     "properties": {
       "persistent": true
     }

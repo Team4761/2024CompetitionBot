@@ -1,6 +1,16 @@
-package frc.robot;
+package frc.robot.controllers;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants;
+import frc.robot.RobocketsShuffleboard;
+import frc.robot.Robot;
+import frc.robot.RobotMap;
+import frc.robot.subsystems.leds.NoteIndicator;
+import frc.robot.subsystems.shooter.AutoShooterIntake;
+import frc.robot.subsystems.shooter.AutoSourceIntake;
+import frc.robot.subsystems.shooter.IntakeAndShoot;
+import frc.robot.subsystems.shooter.RevShooter;
 
 /**
  * This is the code for the controller that controls the shooter and the intake.
@@ -42,7 +52,7 @@ public class ShooterController extends XboxController {
     // This records the past 5 inputs received from the controller, and averages them out
     // This way, rather than a controller going from 0 to 1 in 1 cycle, it takes a couple cycles to reach 1
     // This way, the motors to not instantly accelerate
-    private final int SMOOTH_FRAME_LENGTH = 5;
+    private final int SMOOTH_FRAME_LENGTH = 1;
 
     private int smoothNextFrameToWrite = 0;
     private double[] smoothLeftY = new double[SMOOTH_FRAME_LENGTH];     // Contains the past {SMOOTH_FRAME_LENGTH} number of inputs.
@@ -77,43 +87,39 @@ public class ShooterController extends XboxController {
         double LeftY = smooth(smoothLeftY);
         double RightY = smooth(smoothRightY);
 
-        // Intake
-        if (map.intake != null) {
-            
-            map.intake.rotate(RightY);
-
-            if (getLeftBumperPressed()) {
-                map.intake.intake(shuffleboard.getSettingNum("Intake Speed"));
-            }
-            else if (getRightBumperPressed()) {
-                map.intake.outtake(shuffleboard.getSettingNum("Outtake Speed"));
-            }
-        }
+               
 
         // Shooter
         if (map.shooter != null) {
 
-            map.shooter.rotate(LeftY);
+            map.shooter.rotate(-0.03*deadzone(getLeftY(), 0.08)); // sets target pos
 
-            if (getAButtonPressed()) {
-                //CommandScheduler.getInstance().schedule(new Shoot(SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setShooterSpeed(shuffleboard.getSettingNum("Shooter In Speed"));
+            if (getAButton()) { //shoot
+                CommandScheduler.getInstance().schedule(new RevShooter(shuffleboard.getSettingNum("Shooter Out Speed"), 0.1));
             }
-            if (getBButtonPressed()) {
-                //CommandScheduler.getInstance().schedule(new Shoot(-SmartDashboard.getNumber("Shooter Speed", 0.5)));
-                map.shooter.setShooterSpeed(-shuffleboard.getSettingNum("Shooter Out Speed"));
+            if (getAButtonReleased()) {
+                CommandScheduler.getInstance().schedule(new IntakeAndShoot(shuffleboard.getSettingNum("Shooter Out Speed"), 0));
             }
-            if (getYButtonPressed()) {
-                map.shooter.setIntakeSpeed(shuffleboard.getSettingNum("Shooter Intake Speed"));
+            
+            if (getPOV()==0) { // if pressed rev
+                CommandScheduler.getInstance().schedule(new IntakeAndShoot(10, 0.2, 0.65, 200)); //lighter longer uptake just in case  
+            } 
+
+
+            if (getPOV() == 180) { // down dpad for source intake
+                //map.shooter.setShooterSpeed(-shuffleboard.getSettingNum("Shooter In Speed"));
+                CommandScheduler.getInstance().schedule(new AutoSourceIntake());
             }
-            if (getXButtonPressed()) {
-                map.shooter.setIntakeSpeed(-shuffleboard.getSettingNum("Shooter Outtake Speed"));
+
+            if (getYButtonPressed()) { // uptakes until top breakbeam
+                CommandScheduler.getInstance().schedule(new AutoShooterIntake());
             }
-            if (getAButtonReleased() || getBButtonReleased()) {
-                map.shooter.setShooterSpeed(0);
+            
+            if (getLeftBumperPressed()) {
+                map.shooter.setShooterAngle(Constants.SHOOTER_INTAKE_ANGLE);    // ground intake angle
             }
-            if (getXButtonReleased() || getYButtonReleased()) {
-                map.shooter.setIntakeSpeed(0);
+            if (getRightBumperPressed()) {
+                map.shooter.setShooterAngle(Constants.SHOOTER_SHOOT_ANGLE);    // shooting/amp/source intake angle
             }
         }
         
@@ -122,22 +128,38 @@ public class ShooterController extends XboxController {
             //if the intake button is pressed it will turn the LEds to orange
             if(getLeftBumperPressed())
             {
-                map.leds.NoteIndicator(true);
+                CommandScheduler.getInstance().schedule(new NoteIndicator());
             }
 
             if(getLeftBumperReleased())
             {
-                map.leds.NoteIndicator(true);
+                CommandScheduler.getInstance().schedule(new NoteIndicator());
             }
             //if the outake button is pressed it will turn the LEDs off
             if(getRightBumperPressed())
             {
-                map.leds.NoteIndicator(false);
+                CommandScheduler.getInstance().schedule(new NoteIndicator());
             }
             //if the outake button is pressed it will turn the LEDs off
             if(getAButtonPressed())
             {
-                map.leds.NoteIndicator(false);
+                CommandScheduler.getInstance().schedule(new NoteIndicator());
+            }
+        }
+
+        // Intake
+        if (map.intake != null) {
+            // map.intake.rotate(getRightY());
+            map.intake.setAngleMotorSpeed(-deadzone(getRightY(), 0.08)*0.25);
+            
+            if (getXButtonPressed()) {
+                map.intake.intake(Robot.getShuffleboard().getSettingNum("Intake Speed")); // goes up
+            }
+            if (getBButtonPressed()) {
+                map.intake.outtake(Robot.getShuffleboard().getSettingNum("Outtake Speed")); // goes down
+            }
+            if (getXButtonReleased() || getBButtonReleased()) {
+                map.intake.intake(0);
             }
         }
     }
